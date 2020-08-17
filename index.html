@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>Experiment</title>
+    <link rel="shortcut icon" href="ucla.png">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Work+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+    <script src="func.js"></script>
+    <script src="index.js"></script>
+</head>
+<body>
+    <!--==========INSTRUCTIONS==========-->
+    <div class="pageBox" id="instrPage">
+        <p id="instrText"></p>
+        <button class="butNext" onclick="instr.next()">NEXT</button>
+    </div>
+    <!--==========EXPERIMENT==========-->
+    <div class="pageBox" id="exptPage">
+        <div id="exptBox">
+            <div class="column gridContainer"></div>
+            <!--<img class="column grid" id="exptImg" src="trial/expt_t0.png" alt="An error occurred when loading the picture.">-->
+            <div class="column text">
+                <p>Your total score is: </p>
+                <p>Your goal for this round is to get to: purple circle</p>
+                <p>Please choose one of the following actions to take: </p>
+                <button class="butExpt" id="butOption1">Go by myself</button>
+                <button class="butExpt"id="butOption1">Send this signal to robot: Red</button>
+                <button class="butExpt"id="butOption2">Send this signal to robot: Square</button>
+                <button class="butExpt"id="butOption3">Send this signal to robot: Triangle</button>
+                <button class="butExpt"id="butOption4">Send this signal to robot: Purple</button>
+                <button class="butExpt"id="butOption5">Send this signal to robot: Circle</button>
+                <button class="butExpt"id="butOption6">Send this signal to robot: Green</button>
+            </div>
+            
+        </div>
+    </div>
+</body>

@@ -1,0 +1,116 @@
+body {
+    background-color: #f9f9f9;
+    font-family: "Open Sans", sans-serif;
+    font-family: "Work Sans", sans-serif;
+}
+
+.pageBox{
+    display: none;
+}
+#instrText {
+    display: block;
+    font-size: 20px;
+    line-height: 30px;
+    margin-bottom: 70px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 100px;
+    text-align: justify;
+    width: 50%;
+}
+
+#exptImg {
+    display: block;
+    /*margin: 100px auto;*/
+    width: 400px;
+    height: 400px;
+    /*position: relative;*/
+}
+
+#exptBox {
+    display: block;
+    width: 1000px;
+    margin: 100px auto;
+}
+
+.shape {
+    width: 40px;
+    height: 40px;
+    padding: 5px;
+}
+
+.gridItem, .gridEmpty{
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.column {
+    float: left;
+}
+  
+/* Left and right column */
+.column.gridContainer {
+    position: relative;
+    background-color: #625757;
+    border: 2px solid #625757;
+    display: inline-grid;
+    grid-gap: 2px;
+    grid-template-columns: repeat(9, 50px);
+    grid-template-rows: repeat(10, 50px);
+    /*width: 40%;
+    border: 2px solid #625757;*/
+  }
+  
+/* Middle column */
+.column.text {
+    position: relative;
+    width: 50%;
+  }
+
+/*
+ ######  #     # ####### ####### ####### #     # 
+ #     # #     #    #       #    #     # ##    # 
+ #     # #     #    #       #    #     # # #   # 
+ ######  #     #    #       #    #     # #  #  # 
+ #     # #     #    #       #    #     # #   # # 
+ #     # #     #    #       #    #     # #    ## 
+ ######   #####     #       #    ####### #     # 
+                                                 
+*/
+
+.butNext{
+    background-color: #bcbab8;
+    border-color: #625757;
+    border-style: solid;
+    border-width: 1px;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    font-size: 16px;
+    margin: auto;
+    width: 100px;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.butNext:hover {
+    background-color: #9d8f8f;
+}
+.butExpt {
+    background-color: #bcbab8;
+    border-color: #625757;
+    border-style: solid;
+    border-width: 1px;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    font-size: 16px;
+    margin: 10px;
+    width: 300px;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.butExpt:hover {
+    background-color: #9d8f8f;
+}
