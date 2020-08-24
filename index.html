@@ -19,20 +19,42 @@
     <div class="pageBox" id="exptPage">
         <div id="exptBox">
             <div class="column gridContainer"></div>
-            <!--<img class="column grid" id="exptImg" src="trial/expt_t0.png" alt="An error occurred when loading the picture.">-->
             <div class="column text">
-                <p>Your total score is: </p>
-                <p>Your goal for this round is to get to: purple circle</p>
-                <p>Please choose one of the following actions to take: </p>
-                <button class="butExpt" id="butOption1">Go by myself</button>
-                <button class="butExpt"id="butOption1">Send this signal to robot: Red</button>
-                <button class="butExpt"id="butOption2">Send this signal to robot: Square</button>
-                <button class="butExpt"id="butOption3">Send this signal to robot: Triangle</button>
-                <button class="butExpt"id="butOption4">Send this signal to robot: Purple</button>
-                <button class="butExpt"id="butOption5">Send this signal to robot: Circle</button>
-                <button class="butExpt"id="butOption6">Send this signal to robot: Green</button>
+                <div id="recordBox">
+                    <div class="column goal">
+                        <p>The true goal:</p>
+                        <img class="shape" id="goalShape" alt="An error occurred when loading the picture.">
+                    </div>
+                    <div class="column score">
+                        <p>Current score: </p>
+                        <p id="score"></p>
+                    </div>
+                </div>
+                <div id="exptInstr">
+                    <p>Choose one of the three options:</p>
+                    <div id="say">
+                        <p>Either say one of the following to <img class="shape" src="shape/receiver.png">:</p>
+                        <button class="butExpt" id="butOption1" onclick=RECEIVER_WALK()>Red</button> 
+                        <button class="butExpt" id="butOption2" onclick=RECEIVER_WALK()>Square</button>
+                        <button class="butExpt" id="butOption3" onclick=RECEIVER_WALK()>Triangle</button>
+                        <button class="butExpt" id="butOption4" onclick=RECEIVER_WALK()>Purple</button>
+                        <button class="butExpt" id="butOption5" onclick=RECEIVER_WALK()>Circle</button>
+                        <button class="butExpt" id="butOption6" onclick=RECEIVER_WALK()>Green</button>
+                    </div>
+                    <div id="do">
+                        <div class="inlineImg">Or use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</div>
+                    </div>
+                    <div id="quit">
+                        <p id="quitText">Or give up on this trial: </p>
+                        <button class="butExpt" id="quitBut" onclick="SHOW_QUIT_RESULT()">Quit</button>
+                    </div>
+                </div>
+                <p id="exptWaitText"></p>
+                <div class="pageBox" id="exptResultBox">
+                    <p id="exptResultText"></p>
+                    <button class="butNext" onclick="NEXT_TRIAL()">NEXT</button>
+                </div>
             </div>
-            
         </div>
     </div>
 </body>
