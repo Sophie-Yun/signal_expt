@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>Experiment</title>
+    <link rel="shortcut icon" href="ucla.png">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Work+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+    <script src="func.js"></script>
+    <script src="index.js"></script>
+</head>
+<body>
+    <!--==========INSTRUCTIONS==========-->
+    <div class="pageBox" id="instrPage">
+        <p id="instrText"></p>
+        <button class="butNext" onclick="instr.next()">NEXT</button>
+    </div>
+    <!--==========EXPERIMENT==========-->
+    <div class="pageBox" id="exptPage">
+        <div id="exptBox">
+            <div class="column gridContainer"></div>
+            <div class="column text">
+                <div id="recordBox">
+                    <div class="column goal">
+                        <p>The true goal:</p>
+                        <img class="shape" id="goalShape" alt="An error occurred when loading the picture.">
+                    </div>
+                    <div class="column score">
+                        <p>Current score: </p>
+                        <p id="score"></p>
+                    </div>
+                </div>
+                <div id="exptInstr">
+                    <p>Choose one of the three options:</p>
+                    <div id="say">
+                        <p>Either say one of the following to <img class="shape" src="shape/receiver.png">:</p>
+                        <button class="butExpt" id="butOption1" onclick=RECEIVER_WALK()>Red</button> 
+                        <button class="butExpt" id="butOption2" onclick=RECEIVER_WALK()>Square</button>
+                        <button class="butExpt" id="butOption3" onclick=RECEIVER_WALK()>Triangle</button>
+                        <button class="butExpt" id="butOption4" onclick=RECEIVER_WALK()>Purple</button>
+                        <button class="butExpt" id="butOption5" onclick=RECEIVER_WALK()>Circle</button>
+                        <button class="butExpt" id="butOption6" onclick=RECEIVER_WALK()>Green</button>
+                    </div>
+                    <div id="do">
+                        <div class="inlineImg">Or use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</div>
+                    </div>
+                    <div id="quit">
+                        <p id="quitText">Or give up on this trial: </p>
+                        <button class="butExpt" id="quitBut" onclick="SHOW_QUIT_RESULT()">Quit</button>
+                    </div>
+                </div>
+                <p id="exptWaitText"></p>
+                <div class="pageBox" id="exptResultBox">
+                    <p id="exptResultText"></p>
+                    <button class="butNext" onclick="NEXT_TRIAL()">NEXT</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+   
+    
+</body>

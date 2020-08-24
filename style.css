@@ -1,0 +1,170 @@
+body {
+    background-color: #f9f9f9;
+    font-family: "Open Sans", sans-serif;
+    font-family: "Work Sans", sans-serif;
+    font-size: 20px;
+    line-height: 30px;
+}
+
+.pageBox{
+    display: none;
+}
+
+#instrText {
+    display: block;
+    margin-bottom: 70px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 100px;
+    width: 50%;
+}
+
+#exptImg {
+    display: block;
+    width: 400px;
+    height: 400px;
+}
+
+#exptBox {
+    width: 1000px;
+    margin: 100px auto;
+}
+
+#exptInstr {
+    display: inline-block;
+}
+
+#exptResultBox, #exptWaitText {
+    text-align: center;
+    width: 100%;
+}
+
+.shape {
+    max-width: 40px;
+    height: 40px;
+    padding: 5px;
+    position: relative;
+    z-index: 0;
+}
+
+.people {
+    
+        max-width: 40px;
+        height: 40px;
+        padding: 5px;
+}
+
+.gridItem, .gridEmpty{
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.column {
+    float: left;
+}
+  
+/* Left and right column */
+.column.gridContainer {
+    position: relative;
+    background-color: #625757;
+    border: 2px solid #625757;
+    display: inline-grid;
+    grid-gap: 2px;
+    grid-template-columns: repeat(9, 50px);
+    grid-template-rows: repeat(10, 50px);
+}
+  
+/* Middle column */
+.column.text {
+    margin-left: 20px;
+    position: relative;
+    width: 50%;
+}
+
+.column.goal {
+    position: relative;
+    text-align: center;
+    width: 50%;
+}
+
+.column.score {
+    position: relative;
+    text-align: center;
+    width: 50%;
+}
+
+#score {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+#quitText, #quitBut {
+    display:inline-block;
+}
+
+.top {
+    max-width: 80px;
+    height: 40px;
+    padding: 5px;
+    position:relative;
+    z-index: 10;
+    top: -55px;
+}
+
+/*
+ ######  #     # ####### ####### ####### #     # 
+ #     # #     #    #       #    #     # ##    # 
+ #     # #     #    #       #    #     # # #   # 
+ ######  #     #    #       #    #     # #  #  # 
+ #     # #     #    #       #    #     # #   # # 
+ #     # #     #    #       #    #     # #    ## 
+ ######   #####     #       #    ####### #     # 
+                                                 
+*/
+
+.butNext, .butExpt {
+    background-color: #bcbab8;
+    border-color: #625757;
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100px;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.butNext {
+    display: block;
+    margin: auto;
+}
+
+.butExpt {
+    display: inline-block;
+    margin: 10px;
+}
+
+.butNext:hover {
+    background-color: #9d8f8f;
+}
+.butExpt {
+    background-color: #bcbab8;
+    border-color: #625757;
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 16px;
+    
+    width: 100px;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.butExpt:hover {
+    background-color: #9d8f8f;
+}
