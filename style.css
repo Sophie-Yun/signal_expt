@@ -10,13 +10,35 @@ body {
     display: none;
 }
 
-#instrText {
+#instrText, #thankText {
     display: block;
     margin-bottom: 70px;
     margin-left: auto;
     margin-right: auto;
     margin-top: 100px;
     width: 50%;
+}
+
+#consent {
+    display: none;
+    position: relative;
+    width: 70%;
+    height: 500px;
+    left: 50%;
+    transform: translate(-50%, 10px);
+}
+
+#examGrid {
+    display: none;
+    height: 300px;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 100px);
+    margin-bottom: 50px;
+}
+
+#bufferContainer {
+    display: none;
 }
 
 #exptImg {
@@ -111,6 +133,10 @@ body {
     top: -55px;
 }
 
+#instrQWarning {
+    margin: 50px;
+}
+
 /*
  ######  #     # ####### ####### ####### #     # 
  #     # #     #    #       #    #     # ##    # 
@@ -131,7 +157,7 @@ body {
     box-sizing: border-box;
     cursor: pointer;
     font-size: 16px;
-    width: 100px;
+    /*width: 100px;*/
     padding: 10px 20px;
     text-align: center;
 }
@@ -167,4 +193,67 @@ body {
 
 .butExpt:hover {
     background-color: #9d8f8f;
+}
+
+#instrQBut {
+    display: inline-block;
+    margin-left: 50%;
+    transform: translate(-50%, 0px);
+}
+
+#startExptBut {
+    display: none;
+    margin-left: 50%;
+    transform: translate(-50%, 0px);
+}
+/*
+                             
+ ######  ####  #####  #    # 
+ #      #    # #    # ##  ## 
+ #####  #    # #    # # ## # 
+ #      #    # #####  #    # 
+ #      #    # #   #  #    # 
+ #       ####  #    # #    # 
+                             
+*/
+#instrQBox {
+    position: relative;
+    width: 55%;
+    left: 50%;
+    transform: translate(-50%, 0px);
+}
+
+#quizBox {
+    /*background-color: aliceblue;*/
+    border-color: #625757;
+    border-style: solid;
+    border-width: 1px;
+    color: black;
+    margin: 0px auto 50px;
+    padding: 10px;
+}
+
+.option {
+    position: relative;
+    margin: auto;
+    padding: 10px;
+    /*text-align: justify;*/
+    border-radius: 8px;
+    cursor: pointer;
+}
+.option:hover {
+    background: gray;
+}
+.optionRadio {
+    position: absolute;
+    margin: 0;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+.optionText {
+    position: relative;
+    left: 40px;
+    width: calc(100% - 60px);
 }

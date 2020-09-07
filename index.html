@@ -12,8 +12,27 @@
 <body>
     <!--==========INSTRUCTIONS==========-->
     <div class="pageBox" id="instrPage">
+        <iframe id="consent" src="informedConsent.pdf">
+        </iframe>
+        <img id="examGrid" src="examGrid.jpeg" alt="An error occurred when loading the picture.">
         <p id="instrText"></p>
-        <button class="butNext" onclick="instr.next()">NEXT</button>
+        <button class="butNext" id="instrBut" onclick="instr.next()">NEXT</button>
+        <div id="bufferContainer">
+            <img id="buffer" alt="An error occurred when loading the picture.">
+        </div>
+        <!--=====INSTRUCTION QUIZ=====-->
+        <div class="pageBox" id="instrQBox">
+            <p id="instrQText">Which of the following is <b>not correct</b>?</p>
+            <div id="quizBox">
+            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="walk"><div class="optionText">You can achieve the goal by walking on your own.</div></div></label>
+            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="points"><div class="optionText">If either the robot or you achieve the goal, you get 20 points.</div></div></label>
+            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="costs"><div class="optionText">Each step taken by either the robot or you costs 1 point.</div></div></label>
+            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="several"><div class="optionText">You can achieve the goal by sending out several signals to the robot.</div></div></label>
+            </div>
+            <div class='warning' id='instrQWarning'></div>
+            <div class="butNext" id="instrQBut" onclick="SUBMIT_INSTR_Q()">SUBMIT</div>
+        </div>
+        <button class="butNext" id="startExptBut" onclick="START_EXPT()">NEXT</button>
     </div>
     <!--==========EXPERIMENT==========-->
     <div class="pageBox" id="exptPage">
@@ -34,12 +53,12 @@
                     <p>Choose one of the three options:</p>
                     <div id="say">
                         <p>Either say one of the following to <img class="shape" src="shape/receiver.png">:</p>
-                        <button class="butExpt" id="butOption1" onclick=RECEIVER_WALK()>Red</button> 
-                        <button class="butExpt" id="butOption2" onclick=RECEIVER_WALK()>Square</button>
-                        <button class="butExpt" id="butOption3" onclick=RECEIVER_WALK()>Triangle</button>
-                        <button class="butExpt" id="butOption4" onclick=RECEIVER_WALK()>Purple</button>
-                        <button class="butExpt" id="butOption5" onclick=RECEIVER_WALK()>Circle</button>
-                        <button class="butExpt" id="butOption6" onclick=RECEIVER_WALK()>Green</button>
+                        <button class="butExpt" id="butOption0" onclick=RECEIVER_WALK(this.id)></button> 
+                        <button class="butExpt" id="butOption1" onclick=RECEIVER_WALK(this.id)></button>
+                        <button class="butExpt" id="butOption2" onclick=RECEIVER_WALK(this.id)></button>
+                        <button class="butExpt" id="butOption3" onclick=RECEIVER_WALK(this.id)></button>
+                        <button class="butExpt" id="butOption4" onclick=RECEIVER_WALK(this.id)></button>
+                        <button class="butExpt" id="butOption5" onclick=RECEIVER_WALK(this.id)></button>
                     </div>
                     <div id="do">
                         <div class="inlineImg">Or use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</div>
@@ -57,7 +76,10 @@
             </div>
         </div>
     </div>
-    
+    <!--==========THANK YOU==========-->
+    <div class="pageBox" id="thankPage">
+        <p id="thankText">Thank you for completing this experiment!</p>
+    </div>
    
     
 </body>

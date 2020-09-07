@@ -1,3 +1,20 @@
+
+function SHUFFLE_ARRAY(array) {
+    var j, temp;
+    for (var i = array.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
+}
+
+function CREATE_RANDOM_REPEAT_BEGINNING_LIST(stim_list, repeat_trial_n) {
+    const REPEAT_LIST = SHUFFLE_ARRAY(stim_list.slice()).splice(0, repeat_trial_n);
+    return REPEAT_LIST.concat(stim_list);
+}
+
 function CREATE_GRID(trial, nrow, ncol) {
     var shapeId; 
     if (trialNum != 0){
@@ -24,7 +41,6 @@ function SETUP_RECORD_BOX(goal, score) {
     $("#score").html(score);
 }
 
-
 function REMOVE_PREVIOUS(actor) {
     if($("#shape"+ actor[0] + "v" + actor[1]).hasClass("gridEmpty"))
         $("#shape"+ actor[0] + "v" + actor[1] + " img").remove();
@@ -44,25 +60,24 @@ function NEW_POSITION(actor) {
 }
 
 function SUCCESS(){
-    alert("DATA saved!");
+    console.log("DATA saved!");
 }
 
 function ERROR(){
     alert("Error occurred!");
 }
 
-function POST_DATA(trial_num, decision_, decide_time, finish_time) {
-    var postData = "trialNum,decision,decideTime,finishTime\n";
-    postData += trial_num + "," + decision_ + "," + decide_time + "," + finish_time;
-    console.log(postData);
+function POST_DATA(trial_obj, success_func, error_func) {
+    trial_obj = (trial_obj === undefined) ? null : trial_obj;
+    success_func = (success_func === undefined) ? function() {return;} : success_func;
+    error_func = (error_func === undefined) ? function() {return;} : error_func;
     $.ajax({
         type: "POST",
         url: "data.php",
-        data: postData,
-        success: SUCCESS,
-        error: ERROR,
+        data: trial_obj,
+        success: success_func,
+        error: error_func
     });
 }
-
 
 
