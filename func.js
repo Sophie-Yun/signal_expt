@@ -1,3 +1,60 @@
+function TRIAL_SET_UP (num) {
+    trial = [
+        [,,,,,,,,],
+        [,,,,,,,,],
+        [,,,,,,,,],
+        [,,,,,,,,],
+        [,,,,,,,,],
+        [,,,,,,,,],
+        [,,,,,,,,],
+        [,,,,,,,,],
+        [,,,,,,,,],
+        [,,,,,,,,]
+    ];
+
+    if (!formal) {
+        signalSpace = PRAC_TRIAL_DICT["prac" + num][0];
+        gridString = PRAC_TRIAL_DICT["prac" + num][1];
+        $("#pracRound").html("Practice Round " + (trialNum + 1));
+    } else {
+        signalSpace = TRIAL_DICT[trialList[num]][0];
+        gridString = TRIAL_DICT[trialList[num]][1];
+        $("#pracRound").html("");
+    }
+
+    for (var i = 0; i < MAX_SAY_OPTION; i++){
+        if (i < signalSpace.length){
+            $("#butOption" + i).html(signalSpace[i]);
+            $("#butOption" + i).show();
+        } else {
+            $("#butOption" + i).hide();
+        }
+    }
+    
+    var coordinates = gridString.match(/\d+/g);
+    var shape = gridString.match(/\w+ +\w+/g);
+    
+    for (var i = 0; i < shape.length; i++) {
+        var col = 1 * coordinates[2 * i];
+        var row = GRID_NROW - coordinates[2 * i + 1] - 1;
+        trial[row][col] = PIC_DICT[shape[i]];
+        if(!formal) {
+            if (shape[i] == GOAL_DICT["expt" + num])
+                goal = [row, col];
+        } else {
+            if (shape[i] == GOAL_DICT[trialList[num]])
+                goal = [row, col];
+        }
+    }
+
+    receiver = [2, 4];//row, col
+    signaler = [9, 4];
+    trial[receiver[0]][receiver[1]] = SHAPE_DIR + "receiver.png";
+    trial[signaler[0]][signaler[1]] = SHAPE_DIR + "signaler.png";
+
+    signalerMoved = false;
+    receiverMoved = false;
+}
 
 function SHUFFLE_ARRAY(array) {
     var j, temp;
@@ -17,7 +74,7 @@ function CREATE_RANDOM_REPEAT_BEGINNING_LIST(stim_list, repeat_trial_n) {
 
 function CREATE_GRID(trial, nrow, ncol) {
     var shapeId; 
-    if (trialNum != 0){
+    if (formal || trialNum != 0){
         $(".gridItem").remove();
         $(".gridEmpty").remove();
     }

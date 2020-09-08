@@ -5,6 +5,9 @@ const RECEIVER_MOVE_SPEED = 0.5;
 const TRIAL_NUM = 10;
 const PRAC_TRIAL_NUM = 5;
 const MAX_SAY_OPTION = 6;
+const TRIAL_DICT = {};
+const PRAC_TRIAL_DICT = {};
+var qAttemptNum = 0;
 var trial;
 var score = 0;
 var signalerMoved;
@@ -15,6 +18,15 @@ var startTime;
 var decideTime;
 var finishTime;
 var recorded = false;
+var trialNum = 0;
+var formal = false;
+var trialObj = {};
+var receiver; //row, col
+var signaler;
+var goal;
+var signalSpace;
+var trialList;
+var gridString;
 /*
   #####  ####### ####### #     # ######  
  #     # #          #    #     # #     # 
@@ -25,12 +37,6 @@ var recorded = false;
   #####  #######    #     #####  #       
                                          
 */
-var receiver; //row, col
-var signaler;
-var goal;
-var signalSpace;
-var trialObj = {};
-
 const PIC_DICT = {
     "green circle": SHAPE_DIR + "greenCircle.png",
     "green square": SHAPE_DIR + "greenSquare.png",
@@ -90,8 +96,7 @@ const GOAL_DICT = {
     expt9: "green square",
 }
 
-const TRIAL_DICT = {};
-const PRAC_TRIAL_DICT = {};
+
 for (var i = 0; i < TRIAL_NUM; i++){
     TRIAL_DICT["expt" + i] = [SIGNAL_SPACE_DICT[i], TARGET_STRING_DICT[i]]
 }
@@ -99,64 +104,7 @@ for (var i = 0; i < PRAC_TRIAL_NUM; i++){
     PRAC_TRIAL_DICT["prac" + i] = [SIGNAL_SPACE_DICT[i],PRACTICE_STRING_DICT[i]]
 }
 
-var TRIAL_LIST = CREATE_RANDOM_REPEAT_BEGINNING_LIST(Object.keys(TRIAL_DICT), TRIAL_NUM).slice(0, TRIAL_NUM)
-console.log(TRIAL_LIST);
-var trialNum = 0;
-var formal = false;
-
-function TRIAL_SET_UP (num) {
-    if (!formal) {
-        signalSpace = PRAC_TRIAL_DICT["prac" + num][0];
-        var gridString = PRAC_TRIAL_DICT["prac" + num][1];
-    } else {
-        signalSpace = TRIAL_DICT[TRIAL_LIST[num]][0];
-        var gridString = TRIAL_DICT[TRIAL_LIST[num]][1];
-    }
-
-    for (var i = 0; i < MAX_SAY_OPTION; i++){
-        if (i < signalSpace.length){
-            $("#butOption" + i).html(signalSpace[i]);
-            $("#butOption" + i).show();
-        } else {
-            $("#butOption" + i).hide();
-        }
-    }
-    
-    var coordinates = gridString.match(/\d+/g);
-    var shape = gridString.match(/\w+ +\w+/g);
-    trial = [
-        [,,,,,,,,],
-        [,,,,,,,,],
-        [,,,,,,,,],
-        [,,,,,,,,],
-        [,,,,,,,,],
-        [,,,,,,,,],
-        [,,,,,,,,],
-        [,,,,,,,,],
-        [,,,,,,,,],
-        [,,,,,,,,]
-    ];
-    for (var i = 0; i < shape.length; i++) {
-        var col = 1 * coordinates[2 * i];
-        var row = GRID_NROW - coordinates[2 * i + 1] - 1;
-        trial[row][col] = PIC_DICT[shape[i]];
-        if(!formal) {
-            if (shape[i] == GOAL_DICT["expt" + num])
-            goal = [row, col];
-        } else {
-            if (shape[i] == GOAL_DICT[TRIAL_LIST[num]])
-            goal = [row, col];
-        }
-    }
-
-    receiver = [2, 4];//row, col
-    signaler = [9, 4];
-    trial[receiver[0]][receiver[1]] = SHAPE_DIR + "receiver.png";
-    trial[signaler[0]][signaler[1]] = SHAPE_DIR + "signaler.png";
-
-    signalerMoved = false;
-    receiverMoved = false;
-}
+trialList = CREATE_RANDOM_REPEAT_BEGINNING_LIST(Object.keys(TRIAL_DICT), TRIAL_NUM).slice(0, TRIAL_NUM)
 
 $(document).ready(function() {
     instr = new instrObject(instr_options);
@@ -175,10 +123,10 @@ var instr_text = new Array;
 instr_text[0] = "<strong>Welcome to this experiment!</strong><br><br>Please read through the information sheet on the next page."
 instr_text[1] = "By clicking on the CONTINUE button, I am acknowledged and hereby accept the terms."
 instr_text[2] = "Please carefully read the instructions on the next few pages. There will be a question that asks you about the instructions later and a couple of practice trials."
-instr_text[3] = "In each trial, you will see a grid with items in some of the locations. You are the agent in blue " + "<img class='shape' src='shape/signaler.png'/>" + " and your teammate is in white " + "<img class='shape' src='shape/receiver.png' />" + " . You are collaborating to reach one of the items, a target item, which you and your partner will receive points for reaching."
+instr_text[3] = "In each trial, you will see a grid with items in some of the locations. You are the agent in blue " + "<img class='inlineShape' src='shape/signaler.png'/>" + " and your teammate is in white " + "<img class='inlineShape' src='shape/receiver.png' />" + " . You are collaborating to reach one of the items, a target item, which you and your partner will receive points for reaching."
 instr_text[4] = "You and your partner will take turns, working together to reach this item. You will be given information on what the target item is for each round. Your partner does not have this information, it is only you who knows the target."
-instr_text[5] = "You have the option to 1. move to the target yourself, 2. send one of the given signals which can give partial information about the target, or 3. quit or give up on the current trial and move to the next one."
-instr_text[6] = "Once you choose an option, it is your partner’s turn. The trial ends after each agent has had a turn to act, someone has reached the true target, or the “Quit” option has been selected. If either person successfully reaches the goal, both collaborators receive +20 points, otherwise neither receives any points. Each step you or your partner takes costs -1 point. Signaling is free, but you are only allowed to choose one signal. Quitting also incurs no cost."
+instr_text[5] = "You have the option to <br>1. send one of the given signals which can give partial information about the target, <br>2. move to the target yourself, <br>or 3. quit or give up on the current trial and move to the next one."
+instr_text[6] = "Once you choose an option, it is your partner’s turn. <br><br>The trial ends after each agent has had a turn to act, someone has reached the true target, or the “Quit” option has been selected. <br><br>If either person successfully reaches the goal, both collaborators receive +20 points, otherwise neither receives any points. <br><br>Each step you or your partner takes costs -1 point. Signaling is free, but you are only allowed to choose one signal. Quitting also incurs no cost."
 instr_text[7] = "";
 
 const INSTR_FUNC_DICT = {
@@ -202,7 +150,7 @@ function HIDE_CONSENT() {
     $("#consent").hide();
     $("#instrBut").text("NEXT");
     $("#instrText").css("margin-top", "100px");
-    $("#instrText").css("margin-bottom", "70px");
+    $("#instrText").css("margin-bottom", "60px");
 }
 
 function SHOW_EXAMPLE_GRID() {
@@ -287,10 +235,12 @@ function SUBMIT_INSTR_Q() {
     if (typeof instrChoice === "undefined") {
         $("#instrQWarning").text("Please answer the question. Thank you!");
     } else if (instrChoice == "several") {
+        qAttemptNum++;
         $("#instrQWarning").text("Correct! Please click on NEXT to start the first round!");
         $("#instrQBut").hide();
         $("#startExptBut").show();
     } else {
+        qAttemptNum++;
         $("#instrQWarning").text("You have given an incorrect answer. Please try again.");
     }
 }
@@ -306,13 +256,14 @@ function SUBMIT_INSTR_Q() {
                             
 */
 function START_EXPT(){
-    MOVE();
     $("#instrPage").hide();
     formal = true;
     trialNum = 0;
+    score = 0;
     TRIAL_SET_UP(trialNum);
     CREATE_GRID(trial, GRID_NROW, GRID_NCOL);
     SETUP_RECORD_BOX(goal, score);
+    MOVE();
     startTime = Date.now();
     $("#exptInstr").show();
     $("#exptPage").show();
@@ -544,8 +495,8 @@ function NEXT_TRIAL() {
     var currentTime = Date.now();
     finishTime = (currentTime - startTime)/1000;
 
-    var postData = "trialNum,expt,decision,decideTime,finishTime\n";
-    postData += trialNum + "," + TRIAL_LIST[trialNum] + "," + decision + "," + decideTime + "," + finishTime;
+    var postData = "qAttemptNum,trialNum,expt,decision,decideTime,finishTime\n";
+    postData += qAttemptNum + "," + trialNum + "," + trialList[trialNum] + "," + decision + "," + decideTime + "," + finishTime;
     trialObj.postData = postData;
     if(formal) {
         POST_DATA(trialObj, SUCCESS, ERROR);
