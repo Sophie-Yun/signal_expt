@@ -1,3 +1,15 @@
+const FORMAL = false;
+const EXPERIMENT_NAME = "Signal";
+const SUBJ_NUM_FILE = "subjNum_" + EXPERIMENT_NAME + ".txt";
+//const TRIAL_FILE = "trial_" + EXPERIMENT_NAME + ".txt";
+const SUBJ_FILE = 'subj_' + EXPERIMENT_NAME + '.txt';
+const VISIT_FILE = "visit_" + EXPERIMENT_NAME + ".txt";
+const ATTRITION_FILE = 'attrition_' + EXPERIMENT_NAME + '.txt';
+const SAVING_DIR = FORMAL ? "data/formal":"data/testing";
+const SAVING_SCRIPT = 'save.php';
+const VIEWPORT_MIN_W = 1000; 
+const VIEWPORT_MIN_H = 600;
+
 const GRID_NROW = 10;
 const GRID_NCOL = 9;
 const SHAPE_DIR = "shape/";
@@ -7,6 +19,7 @@ const PRAC_TRIAL_NUM = 5;
 const MAX_SAY_OPTION = 6;
 const TRIAL_DICT = {};
 const PRAC_TRIAL_DICT = {};
+const REWARD = 8;
 var qAttemptNum = 0;
 var trial;
 var score = 0;
@@ -19,7 +32,7 @@ var decideTime;
 var finishTime;
 var recorded = false;
 var trialNum = 0;
-var formal = false;
+var isExptTrial = false;
 var trialObj = {};
 var receiver; //row, col
 var signaler;
@@ -27,6 +40,10 @@ var goal;
 var signalSpace;
 var trialList;
 var gridString;
+
+// object variables
+var instr, subj, trial;
+
 /*
   #####  ####### ####### #     # ######  
  #     # #          #    #     # #     # 
@@ -34,8 +51,7 @@ var gridString;
   #####  #####      #    #     # ######  
        # #          #    #     # #       
  #     # #          #    #     # #       
-  #####  #######    #     #####  #       
-                                         
+  #####  #######    #     #####  #                                      
 */
 const PIC_DICT = {
     "green circle": SHAPE_DIR + "greenCircle.png",
@@ -106,10 +122,96 @@ for (var i = 0; i < PRAC_TRIAL_NUM; i++){
 
 trialList = CREATE_RANDOM_REPEAT_BEGINNING_LIST(Object.keys(TRIAL_DICT), TRIAL_NUM).slice(0, TRIAL_NUM)
 
+/*
+ ######  #######    #    ######  #     # 
+ #     # #         # #   #     #  #   #  
+ #     # #        #   #  #     #   # #   
+ ######  #####   #     # #     #    #    
+ #   #   #       ####### #     #    #    
+ #    #  #       #     # #     #    #    
+ #     # ####### #     # ######     #    
+                                         
+*/
+
 $(document).ready(function() {
-    instr = new instrObject(instr_options);
-    instr.start();
+    subj = new subjObject(subj_options); // getting subject number
+    //subj.id = subj.getID("sonacode");
+    subj.saveVisit();
+    if (subj.phone) { // asking for subj.phone will detect phone
+        $("#instrText").html('It seems that you are using a touchscreen device or a phone. Please use a laptop or desktop instead.<br /><br />If you believe you have received this message in error, please contact the experimenter at experimenter@domain.edu<br /><br />Otherwise, please switch to a laptop or a desktop computer for this experiment.');
+        $("#instrBut").hide();
+        $("#instrPage").show();
+    //} else if (subj.id !== null){
+    } else {
+        instr = new instrObject(instr_options);
+        instr.start();
+        //trial_options["subj"] = subj;
+        //trial = new trialObject(trial_options);
+        //$('#captchaBox').show();
+    }
 });
+
+/*
+  #####  #     # ######        # #######  #####  ####### 
+ #     # #     # #     #       # #       #     #    #    
+ #       #     # #     #       # #       #          #    
+  #####  #     # ######        # #####   #          #    
+       # #     # #     # #     # #       #          #    
+ #     # #     # #     # #     # #       #     #    #    
+  #####   #####  ######   #####  #######  #####     #    
+                                                         
+*/
+
+const SUBJ_TITLES = ['num',
+                     'date',
+                     'startTime',
+                     //'id',
+                     'userAgent',
+                     'endTime',
+                     'duration',
+                     'instrQAttemptN',
+                     'instrReadingTimes',
+                     'quickReadingPageN',
+                     'hiddenCount',
+                     'hiddenDurations',
+                     'daily',
+                     'aqResponses',
+                     'aqRt',
+                     'serious',
+                     'problems',
+                     'gender',
+                     'age',
+                     'inView',
+                     'viewportW',
+                     'viewportH'
+                    ];
+
+function INVALID_ID_FUNC() {
+    $("#instrText").html("We can't identify a valid code from subject pool website. Please reopen the study from the subject pool website again. Thank you!");
+    $("#instrBut").hide();
+    $("#instrPage").show();
+}
+function HANDLE_VISIBILITY_CHANGE() {
+    if (document.hidden) {
+        subj.hiddenCount += 1;
+        subj.hiddenStartTime = Date.now();
+    } else  {
+        subj.hiddenDurations.push((Date.now() - subj.hiddenStartTime)/1000);
+    }
+}
+var subj_options = {
+    subjNumFile: SUBJ_NUM_FILE,
+    titles: SUBJ_TITLES,
+    invalidIDFunc: INVALID_ID_FUNC,
+    viewportMinW: VIEWPORT_MIN_W,
+    viewportMinH: VIEWPORT_MIN_H,
+    savingScript: SAVING_SCRIPT,
+    visitFile: VISIT_FILE,
+    attritionFile: ATTRITION_FILE,
+    subjFile: SUBJ_FILE,
+    savingDir: SAVING_DIR,
+    handleVisibilityChange: HANDLE_VISIBILITY_CHANGE
+};
 
 /*                              
  # #    #  ####  ##### #####  
@@ -120,22 +222,22 @@ $(document).ready(function() {
  # #    #  ####    #   #    # 
 */
 var instr_text = new Array;
-instr_text[0] = "<strong>Welcome to this experiment!</strong><br><br>Please read through the information sheet on the next page."
-instr_text[1] = "By clicking on the CONTINUE button, I am acknowledged and hereby accept the terms."
-instr_text[2] = "Please carefully read the instructions on the next few pages. There will be a question that asks you about the instructions later and a couple of practice trials."
-instr_text[3] = "In each trial, you will see a grid with items in some of the locations. You are the agent in blue " + "<img class='inlineShape' src='shape/signaler.png'/>" + " and your teammate is in white " + "<img class='inlineShape' src='shape/receiver.png' />" + " . You are collaborating to reach one of the items, a target item, which you and your partner will receive points for reaching."
-instr_text[4] = "You and your partner will take turns, working together to reach this item. You will be given information on what the target item is for each round. Your partner does not have this information, it is only you who knows the target."
-instr_text[5] = "You have the option to <br>1. send one of the given signals which can give partial information about the target, <br>2. move to the target yourself, <br>or 3. quit or give up on the current trial and move to the next one."
-instr_text[6] = "Once you choose an option, it is your partner’s turn. <br><br>The trial ends after each agent has had a turn to act, someone has reached the true target, or the “Quit” option has been selected. <br><br>If either person successfully reaches the goal, both collaborators receive +20 points, otherwise neither receives any points. <br><br>Each step you or your partner takes costs -1 point. Signaling is free, but you are only allowed to choose one signal. Quitting also incurs no cost."
+instr_text[0] = "<strong>Welcome to this experiment!</strong><br><br>This experiment studies human cooperation."
+instr_text[1] = "Please carefully read the instructions on the next few pages. There will be a question that asks you about the instructions later and a couple of practice trials."
+instr_text[2] = "In each trial, you will see a grid with items in some of the locations. You are the agent in blue " + "<img class='inlineShape' src='shape/signaler.png'/>" + " and your teammate is in white " + "<img class='inlineShape' src='shape/receiver.png' />" + " . You are collaborating to reach one of the items, a target item, which you and your partner will receive points for reaching."
+instr_text[3] = "You and your partner will take turns, working together to reach this item. You will be given information on what the target item is for each round. Your partner does not have this information, it is only you who knows the target."
+instr_text[4] = "You have the option to <br>1. send one of the given signals which can give partial information about the target, <br>2. move to the target yourself, <br>or 3. quit or give up on the current trial and move to the next one."
+instr_text[5] = "Once you choose an option, it is your partner’s turn. <br><br>The trial ends after each agent has had a turn to act, someone has reached the true target, or the “Quit” option has been selected. <br><br>If either person successfully reaches the goal, both collaborators receive +8 points, otherwise neither receives any points. <br><br>Each step you or your partner takes costs -1 point. Signaling is free, but you are only allowed to choose one signal. Quitting also incurs no cost."
+instr_text[6] = "By clicking on the CONTINUE button, I am acknowledged and hereby accept the terms."
 instr_text[7] = "";
 
+
 const INSTR_FUNC_DICT = {
-    1: SHOW_CONSENT,
-    2: HIDE_CONSENT,
-    3: SHOW_EXAMPLE_GRID,
-    4: SHOW_EXAMPLE_GOAL,
-    5: SHOW_EXAMPLE_ACTION,
-    6: HIDE_EXAMPLE,
+    2: SHOW_EXAMPLE_GRID,
+    3: SHOW_EXAMPLE_GOAL,
+    4: SHOW_EXAMPLE_ACTION,
+    5: HIDE_EXAMPLE, 
+    6: SHOW_CONSENT,
     7: START_PRACTICE_TRIAL,
 };
 
@@ -158,11 +260,11 @@ function SHOW_EXAMPLE_GRID() {
 }
 
 function SHOW_EXAMPLE_GOAL() {
-    $("#examGrid").attr("src", "examGoal.jpeg");
+    $("#examGrid").attr("src", "examplePic/examGoal.png");
 }
 
 function SHOW_EXAMPLE_ACTION() {
-    $("#examGrid").attr("src", "examAction.jpeg");
+    $("#examGrid").attr("src", "examplePic/examAction.png");
 }
 
 function HIDE_EXAMPLE() {
@@ -181,47 +283,8 @@ function START_PRACTICE_TRIAL() {
 var instr_options = {
     text: instr_text,
     funcDict: INSTR_FUNC_DICT,
+    qConditions: ['onlyQ'],
 };
-
-class instrObject {
-    constructor(options = {}) {
-        Object.assign(this, {
-            text: [],
-            funcDict: {},
-        }, options);
-        this.index = 0;
-        this.instrKeys = Object.keys(this.funcDict).map(Number);
-    }
-
-    start(textBox = $("#instrPage"), textElement = $("#instrText")) {
-        textElement.html(this.text[0]);
-        if (this.instrKeys.includes(this.index)) {
-            this.funcDict[this.index]();
-        }
-        textBox.show();
-        for (var i in PIC_DICT){
-            $("#buffer").attr("src", PIC_DICT[i]);
-        }
-    }
-
-    next(textElement = $("#instrText")) {
-        this.index += 1;
-        MOVE();
-       // if (this.index < this.text.length) {
-            textElement.html(this.text[this.index]);
-            if (this.instrKeys.includes(this.index)) {
-                this.funcDict[this.index]();
-            }
-        /*} else {
-            $("#instrPage").hide();
-            TRIAL_SET_UP(trialNum);
-            CREATE_GRID(trial, GRID_NROW, GRID_NCOL);
-            SETUP_RECORD_BOX(goal, score);
-            startTime = Date.now();
-            $("#exptPage").show();
-        }*/
-    }
-}
 
 function SHOW_INSTR_QUESTION() {
     $("#exptPage").hide();
@@ -244,7 +307,87 @@ function SUBMIT_INSTR_Q() {
         $("#instrQWarning").text("You have given an incorrect answer. Please try again.");
     }
 }
+/*
+ ####### ######  ###    #    #       
+    #    #     #  #    # #   #       
+    #    #     #  #   #   #  #       
+    #    ######   #  #     # #       
+    #    #   #    #  ####### #       
+    #    #    #   #  #     # #       
+    #    #     # ### #     # ####### 
+                                     
+*/
+const TRIAL_TITLES = [
+    "num",
+    "date",
+    "subjStartTime",
+    "trialNum",
+    "expt",
+    "decision",
+    "decideTime",
+    "finishTime",
+    "inView",
+    "rt"];
 
+function SHOW_BLOCK() {
+    $("#instrPage").hide();
+    $("#expBut").hide();
+    $("#trialPage").show();
+    subj.detectVisibilityStart();
+    trial.run();
+}
+
+function TRIAL_UPDATE(last, this_trial, next_trial, path) {
+    trial.stimName = EXPT_TRIAL[this_trial][2][0];
+    trial.facingDir = EXPT_TRIAL[this_trial][2][1];
+    trial.background = EXPT_TRIAL[this_trial][3];
+    
+    $("#testFrame").css("background-image", "url(" + path + EXPT_TRIAL[this_trial][1]+")");
+    $("#testImg").attr("src", path + EXPT_TRIAL[this_trial][0]);
+    $("#testImg").css("left", STIM_LEFT + "px");
+    if (!last) {
+        $("#bufferImg").attr("src", path + EXPT_TRIAL[next_trial][0]);
+        $("#bufferFrame").css("background-image", "url("+path + EXPT_TRIAL[next_trial][1]+")");
+    }
+}
+
+function TRIAL() {
+    $("#testFrame").show();
+    trial.inView = CHECK_FULLY_IN_VIEW($("#testImg"));
+}
+
+function END_TRIAL() {
+    $("#testFrame").hide();
+    $("#expBut").hide();
+    trial.end();
+}
+
+function END_EXPT() {
+    $("#trialPage").hide();
+    trial.save();
+    $("#aqBox").css("display", "block");
+    $(document).keyup(function(e) {
+        if (e.which == 32) { // the 'space' key
+            $(document).off("keyup");
+            START_AQ();
+        }
+    });
+}
+
+var trial_options = {
+    subj: 'pre-define', // assign after subj is created
+    trialN: TRIAL_N,
+    titles: TRIAL_TITLES,
+    stimPath: STIM_PATH,
+    dataFile: TRIAL_FILE,
+    savingScript: SAVING_SCRIPT,
+    savingDir: SAVING_DIR,
+    trialList: TRIAL_LIST,
+    intertrialInterval: INTERTRIAL_INTERVAL,
+    updateFunc: TRIAL_UPDATE,
+    trialFunc: TRIAL,
+    endExptFunc: END_EXPT
+}
 /*
                             
  ###### #    # #####  ##### 
@@ -257,7 +400,7 @@ function SUBMIT_INSTR_Q() {
 */
 function START_EXPT(){
     $("#instrPage").hide();
-    formal = true;
+    isExptTrial = true;
     trialNum = 0;
     score = 0;
     TRIAL_SET_UP(trialNum);
@@ -358,10 +501,10 @@ function MOVE() {
             case 13: //ENTER
                 if (arrowClicked){
                     if(signaler[0] == goal[0] && signaler[1] == goal[1]){
-                        score = score + 20;
+                        score = score + REWARD;
                         $("#score").html(score);
                         $("#exptWaitText").hide();
-                        $("#exptResultText").html("Congratulations!<br><br>You reached the goal and received 20 points!<br><br>You walked " + step + " steps.");
+                        $("#exptResultText").html("Congratulations!<br><br>You reached the goal and received +8 points!<br><br>You walked " + step + " steps.");
                         step = 0;
                         $("#exptResultBox").css("display", "inline-block");
                     } else if ($("#shape"+ signaler[0] + "v" + signaler[1]).hasClass("gridEmpty") || (signaler[0] == receiver[0] && signaler[1] == receiver[1])) {
@@ -475,10 +618,10 @@ function RECEIVER_WALK(option) {
     }
     
     if(receiver[0] == goal[0] && receiver[1] == goal[1]) {
-        score = score + 20;
+        score = score + REWARD;
         $("#score").html(score);
         $("#exptWaitText").hide();
-        $("#exptResultText").html("Congratulations!<br><br>You reached the goal and received 20 points!<br><br>" + "<img class='shape' src='shape/receiver.png' />" + " walked " + step + " steps.");
+        $("#exptResultText").html("Congratulations!<br><br>You reached the goal and received +8 points!<br><br>" + "<img class='shape' src='shape/receiver.png' />" + " walked " + step + " steps.");
         step = 0;
         $("#exptResultBox").show();
     } else if ($("#shape"+ receiver[0] + "v" + receiver[1]).hasClass("gridItem") && (signaler[0] != receiver[0] || signaler[1] != receiver[1])) {
@@ -496,18 +639,18 @@ function NEXT_TRIAL() {
     finishTime = (currentTime - startTime)/1000;
 
     var postData = "qAttemptNum,trialNum,expt,decision,decideTime,finishTime\n";
-    postData += qAttemptNum + "," + trialNum + "," + trialList[trialNum] + "," + decision + "," + decideTime + "," + finishTime;
+    postData += qAttemptNum + "," + trialNum + "," + trialList[trialNum] + "," + decision + "," + decideTime + "," + finishTime + "\n";
     trialObj.postData = postData;
-    if(formal) {
+    if(isExptTrial) {
         POST_DATA(trialObj, SUCCESS, ERROR);
         console.log(postData);
     }
         
 
     trialNum++;
-    if(!formal && trialNum == PRAC_TRIAL_NUM) {
+    if(!isExptTrial && trialNum == PRAC_TRIAL_NUM) {
         SHOW_INSTR_QUESTION();
-    } else if (formal && trialNum == TRIAL_NUM){
+    } else if (isExptTrial && trialNum == TRIAL_NUM){
         $("#exptPage").hide();
         $("#thankPage").show();
     } else {

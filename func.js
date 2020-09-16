@@ -1,3 +1,55 @@
+
+function LIST_TO_FORMATTED_STRING(data_list, divider) {
+    divider = (divider === undefined) ? '\t' : divider;
+    var string = '';
+    for (var i = 0; i < data_list.length - 1; i++) {
+        string += data_list[i] + divider;
+    }
+    string += data_list[data_list.length - 1] + '\n';
+    return string;
+}
+
+function FORMAT_DATE(date_obj, time_zone, divider, padded) {
+    date_obj = (date_obj === undefined) ? new Date() : date_obj;
+    time_zone = (time_zone === undefined) ? 'UTC' : time_zone;
+    divider = (divider === undefined) ? '.' : divider;
+    padded = (padded === undefined) ? true : padded;
+    const NOW_YEAR = (time_zone == 'UTC') ? date_obj.getUTCFullYear() : date_obj.getFullYear();
+    var now_month = (time_zone == 'UTC') ? date_obj.getUTCMonth()+1 : date_obj.getMonth()+1;
+    var now_date = (time_zone == 'UTC') ? date_obj.getUTCDate() : date_obj.getDate();
+    if (padded) {
+        now_month = ('0' + now_month).slice(-2);
+        now_date = ('0' + now_date).slice(-2);
+    }
+    var now_full_date = NOW_YEAR + divider + now_month + divider + now_date;
+    return now_full_date;
+}
+
+function FORMAT_TIME(date_obj, time_zone, divider, padded) {
+    date_obj = (date_obj === undefined) ? new Date() : date_obj;
+    time_zone = (time_zone === undefined) ? 'UTC' : time_zone;
+    divider = (divider === undefined) ? ':' : divider;
+    padded = (padded === undefined) ? true : padded;
+    var now_hours = (time_zone == 'UTC') ? date_obj.getUTCHours() : date_obj.getHours();
+    var now_minutes = (time_zone == 'UTC') ? date_obj.getUTCMinutes() : date_obj.getMinutes();
+    var now_seconds = (time_zone == 'UTC') ? date_obj.getUTCSeconds() : date_obj.getSeconds();
+    if (padded) {
+        now_hours = ('0' + now_hours).slice(-2);
+        now_minutes = ('0' + now_minutes).slice(-2);
+        now_seconds = ('0' + now_seconds).slice(-2);
+    }
+    var now_full_time = now_hours + divider + now_minutes + divider + now_seconds;
+    return now_full_time;
+}
+
+function LIST_FROM_ATTRIBUTE_NAMES(obj, string_list) {
+    var list = []
+    for (var i = 0; i < string_list.length; i++) {
+        list.push(obj[string_list[i]]);
+    }
+    return list;
+}
+
 function TRIAL_SET_UP (num) {
     trial = [
         [,,,,,,,,],
@@ -12,7 +64,7 @@ function TRIAL_SET_UP (num) {
         [,,,,,,,,]
     ];
 
-    if (!formal) {
+    if (!isExptTrial) {
         signalSpace = PRAC_TRIAL_DICT["prac" + num][0];
         gridString = PRAC_TRIAL_DICT["prac" + num][1];
         $("#pracRound").html("Practice Round " + (trialNum + 1));
@@ -38,7 +90,7 @@ function TRIAL_SET_UP (num) {
         var col = 1 * coordinates[2 * i];
         var row = GRID_NROW - coordinates[2 * i + 1] - 1;
         trial[row][col] = PIC_DICT[shape[i]];
-        if(!formal) {
+        if(!isExptTrial) {
             if (shape[i] == GOAL_DICT["expt" + num])
                 goal = [row, col];
         } else {
@@ -74,7 +126,7 @@ function CREATE_RANDOM_REPEAT_BEGINNING_LIST(stim_list, repeat_trial_n) {
 
 function CREATE_GRID(trial, nrow, ncol) {
     var shapeId; 
-    if (formal || trialNum != 0){
+    if (isExptTrial || trialNum != 0){
         $(".gridItem").remove();
         $(".gridEmpty").remove();
     }
@@ -130,7 +182,7 @@ function POST_DATA(trial_obj, success_func, error_func) {
     error_func = (error_func === undefined) ? function() {return;} : error_func;
     $.ajax({
         type: "POST",
-        url: "data.php",
+        url: "save.php",
         data: trial_obj,
         success: success_func,
         error: error_func

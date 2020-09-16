@@ -6,7 +6,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Work+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.3/mobile-detect.min.js'></script>
     <script src="func.js"></script>
+    <script src="expt.js"></script>
     <script src="index.js"></script>
 </head>
 <body>
@@ -14,7 +16,7 @@
     <div class="pageBox" id="instrPage">
         <iframe id="consent" src="informedConsent.pdf">
         </iframe>
-        <img id="examGrid" src="examGrid.jpeg" alt="An error occurred when loading the picture.">
+        <img id="examGrid" src="examplePic/examGrid.png" alt="An error occurred when loading the picture.">
         <p id="instrText"></p>
         <button class="butNext" id="instrBut" onclick="instr.next()">NEXT</button>
         <div id="bufferContainer">
@@ -25,7 +27,7 @@
             <p id="instrQText">Which of the following is <b>not correct</b>?</p>
             <div id="quizBox">
             <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="walk"><div class="optionText">You can achieve the goal by walking on your own.</div></div></label>
-            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="points"><div class="optionText">If either the robot or you achieve the goal, you get 20 points.</div></div></label>
+            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="points"><div class="optionText">If either the robot or you achieve the goal, you get 8 points.</div></div></label>
             <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="costs"><div class="optionText">Each step taken by either the robot or you costs 1 point.</div></div></label>
             <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="several"><div class="optionText">You can achieve the goal by sending out several signals to the robot.</div></div></label>
             </div>
@@ -42,7 +44,7 @@
             <div class="column text">
                 <div id="recordBox">
                     <div class="column goal">
-                        <p>The true goal:</p>
+                        <p>The goal:</p>
                         <img class="shape" id="goalShape" alt="An error occurred when loading the picture.">
                     </div>
                     <div class="column score">
