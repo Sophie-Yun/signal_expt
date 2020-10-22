@@ -16,9 +16,12 @@
     <div class="pageBox" id="instrPage">
         <iframe id="consent" src="informedConsent.pdf">
         </iframe>
-        <img id="examGrid" src="examplePic/examGrid.png" alt="An error occurred when loading the picture.">
+        <div id="instrBox">
         <p id="instrText"></p>
-        <button class="butNext" id="instrBut" onclick="instr.next()">NEXT</button>
+        <img id="examGrid" src="examplePic/exampleGrid.png" alt="An error occurred when loading the picture.">
+        <button class="butNext" id="instrNextBut" onclick="instr.next()">NEXT</button>
+        <button class="butNext" id="instrBackBut" onclick="instr.back()">BACK</button>
+    </div>
         <div id="bufferContainer">
             <img id="buffer" alt="An error occurred when loading the picture.">
         </div>
@@ -38,44 +41,77 @@
     </div>
     <!--==========EXPERIMENT==========-->
     <div class="pageBox" id="exptPage">
-        <p id="pracRound"></p>
         <div id="exptBox">
-            <div class="column gridContainer"></div>
-            <div class="column text">
-                <div id="recordBox">
-                    <div class="column goal">
-                        <p>The goal:</p>
+            <div id="scoreBoard">
+                    <div class="info">
+                        <p style="opacity: 0">Practice: </p>
+                        <p id="round" style="opacity: 0"></p>
+                    </div>
+                    <div class="info">
+                        <p style="top: -5px;">Target: </p>
                         <img class="shape" id="goalShape" alt="An error occurred when loading the picture.">
                     </div>
-                    <div class="column score">
-                        <p>Current score: </p>
+                    <div class="info">
+                        <p>Total Score: </p>
                         <p id="score"></p>
                     </div>
-                </div>
+                    <div class="info">
+                        <p>Steps Taken: </p>
+                        <p class="step"></p>
+                    </div>                
+            </div>
+            <div class="column" id="verticalAxis">9 8 7 6 5 4 3 2 1 0</div>
+            <div class="column gridContainer"></div>
+            <div id="horizontalAxis">0 1 2 3 4 5 6 7 8</div>
+            <div class="column text">
                 <div id="exptInstr">
-                    <p>Choose one of the three options:</p>
-                    <div id="say">
-                        <p>Either say one of the following to <img class="shape" src="shape/receiver.png">:</p>
-                        <button class="butExpt" id="butOption0" onclick=RECEIVER_WALK(this.id)></button> 
-                        <button class="butExpt" id="butOption1" onclick=RECEIVER_WALK(this.id)></button>
-                        <button class="butExpt" id="butOption2" onclick=RECEIVER_WALK(this.id)></button>
-                        <button class="butExpt" id="butOption3" onclick=RECEIVER_WALK(this.id)></button>
-                        <button class="butExpt" id="butOption4" onclick=RECEIVER_WALK(this.id)></button>
-                        <button class="butExpt" id="butOption5" onclick=RECEIVER_WALK(this.id)></button>
+                    <div id="exptFade">
+                        <div id="say">
+                            <p>Send one signal to <img class="shape" src="shape/receiver.png">:</p>
+                            <button class="butExpt" id="butOption0">red</button> 
+                            <button class="butExpt" id="butOption1">green</button>
+                            <button class="butExpt" id="butOption2">purple</button>
+                            <button class="butExpt" id="butOption3">circle</button>
+                            <button class="butExpt" id="butOption4">square</button>
+                            <button class="butExpt" id="butOption5">triangle</button>
+
+                            <!--<button class="butExpt" id="butOption0" onclick=RECEIVER_WALK(this.id)>red</button> 
+                            <button class="butExpt" id="butOption1" onclick=RECEIVER_WALK(this.id)>green</button>
+                            <button class="butExpt" id="butOption2" onclick=RECEIVER_WALK(this.id)>purple</button>
+                            <button class="butExpt" id="butOption3" onclick=RECEIVER_WALK(this.id)>circle</button>
+                            <button class="butExpt" id="butOption4" onclick=RECEIVER_WALK(this.id)>square</button>
+                            <button class="butExpt" id="butOption5" onclick=RECEIVER_WALK(this.id)>triangle</button>-->
+                        </div>
+                        <div id="do">
+                            <p class="inlineImg">Use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</p>
+                        </div>
+                        <div id="quit">
+                            <p id="quitText">Give up on this trial: </p>
+                            <button class="butExpt" id="quitBut" onclick="SHOW_QUIT_RESULT()">Quit</button>
+                        </div>
                     </div>
-                    <div id="do">
-                        <div class="inlineImg">Or use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</div>
-                    </div>
-                    <div id="quit">
-                        <p id="quitText">Or give up on this trial: </p>
-                        <button class="butExpt" id="quitBut" onclick="SHOW_QUIT_RESULT()">Quit</button>
-                    </div>
+                    <div id="decision"></div>
                 </div>
-                <p id="exptWaitText"></p>
-                <div class="pageBox" id="exptResultBox">
-                    <p id="exptResultText"></p>
-                    <button class="butNext" onclick="NEXT_TRIAL()">NEXT</button>
+            </div>
+            <div id="result">
+                <p id="resultText"></p>
+                <div class="resultInfo">
+                    <p class="title">Steps: </p>
+                    <p class="data step"></p>
                 </div>
+                <div class="resultInfo">
+                    <p class="title">Reward: </p>
+                    <p class="data" id="reward"></p>
+                </div>
+                <div id="scoreThisRoundBox">
+                    <p class="title">Score this round:</p>
+                    <p class="data" id="scoreThisRound"></p>
+                </div>
+                <div id="totalScoreBox">
+                    <p class="title">New Total Score: </p>
+                    <p class="data" id="totalAfter"></p>
+                </div>
+                <button class="butNext" onclick="NEXT_TRIAL()">NEXT</button>
             </div>
         </div>
     </div>

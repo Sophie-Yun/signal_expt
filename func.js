@@ -67,13 +67,25 @@ function TRIAL_SET_UP (num) {
     if (!isExptTrial) {
         signalSpace = PRAC_TRIAL_DICT["prac" + num][0];
         gridString = PRAC_TRIAL_DICT["prac" + num][1];
-        $("#pracRound").html("Practice Round " + (trialNum + 1));
     } else {
         signalSpace = TRIAL_DICT[trialList[num]][0];
         gridString = TRIAL_DICT[trialList[num]][1];
         $("#pracRound").html("");
     }
-
+    
+    for (var i = 0; i < signalSpace.length; i++) {
+        var j = 0;
+        while (signalSpace[i] != $("#butOption" + j).html()) {
+            j++;
+        }
+        $("#butOption" + j).css({"border": "2px solid #625757", 
+                                "background": "#9D8F8F", 
+                                "box-shadow": "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                                "pointer-events": "auto",
+                                "cursor": "pointer"
+                                });
+    }
+/*
     for (var i = 0; i < MAX_SAY_OPTION; i++){
         if (i < signalSpace.length){
             $("#butOption" + i).html(signalSpace[i]);
@@ -82,7 +94,7 @@ function TRIAL_SET_UP (num) {
             $("#butOption" + i).hide();
         }
     }
-    
+ */   
     var coordinates = gridString.match(/\d+/g);
     var shape = gridString.match(/\w+ +\w+/g);
     
@@ -190,3 +202,265 @@ function POST_DATA(trial_obj, success_func, error_func) {
 }
 
 
+function MOVE(obj) {
+    var arrowClicked = false; //to prevent clicking on ENTER before arrow keys
+    if(allowMove) {
+        document.onkeydown = function(e) {
+            switch (e.keyCode) {
+                case 37: //left
+                    if(!recorded){
+                        decision = "do";
+                        var currentTime = Date.now();
+                        decideTime = (currentTime - startTime)/1000;
+                        recorded = true;
+                    }
+                    EXPT_INSTR_FADE();
+                    arrowClicked = true;
+                    obj.step++;
+                    $("#decision").html("Please hit ENTER when you land on the item.");
+                    $(".step").html(obj.step);
+                    if(signaler[1]-1 >= 0){
+                        if(!signalerMoved ){
+                            signalerMoved = true;
+                            $("#shape"+ signaler[0] + "v" + signaler[1] + " img").remove();
+                            $("#shape"+ signaler[0] + "v" + signaler[1]).attr("class", "gridEmpty");
+                        }
+                        REMOVE_PREVIOUS(signaler);
+                        signaler = [signaler[0], (signaler[1]-1)];
+                        NEW_POSITION(signaler);
+                    }
+                    break;
+                case 38: //up
+                    if(!recorded){
+                        decision = "do";
+                        var currentTime = Date.now();
+                        decideTime = (currentTime - startTime)/1000;
+                        recorded = true;
+                    }
+                    EXPT_INSTR_FADE();
+                    arrowClicked = true;
+                    obj.step++;
+                    $("#decision").html("Please hit ENTER when you land on the item.");
+                    $(".step").html(obj.step);
+                    if(signaler[0]-1  >= 0){
+                        if(!signalerMoved ){
+                            signalerMoved = true;
+                            $("#shape"+ signaler[0] + "v" + signaler[1] + " img").remove();
+                            $("#shape"+ signaler[0] + "v" + signaler[1]).attr("class", "gridEmpty");
+                        }
+                        REMOVE_PREVIOUS(signaler);
+                        signaler = [(signaler[0]-1), signaler[1]];
+                        NEW_POSITION(signaler);
+                    }
+                    break;
+                case 39: //right
+                    if(!recorded){
+                        decision = "do";
+                        var currentTime = Date.now();
+                        decideTime = (currentTime - startTime)/1000;
+                        recorded = true;
+                    }
+                    EXPT_INSTR_FADE();
+                    arrowClicked = true;
+                    obj.step++;
+                    $("#decision").html("Please hit ENTER when you land on the item.");
+                    $(".step").html(obj.step);
+                    if(signaler[1]+1 < GRID_NCOL){
+                        if(!signalerMoved ){
+                            signalerMoved = true;
+                            $("#shape"+ signaler[0] + "v" + signaler[1] + " img").remove();
+                            $("#shape"+ signaler[0] + "v" + signaler[1]).attr("class", "gridEmpty");
+                        }
+                        REMOVE_PREVIOUS(signaler);
+                        signaler = [signaler[0], (signaler[1]+1)];
+                        NEW_POSITION(signaler);
+                    }
+                    break;
+                case 40: //down
+                    if(!recorded){
+                        decision = "do";
+                        var currentTime = Date.now();
+                        decideTime = (currentTime - startTime)/1000;
+                        recorded = true;
+                    }
+                    EXPT_INSTR_FADE();
+                    arrowClicked = true;
+                    obj.step++;
+                    $("#decision").html("Please hit ENTER when you land on the item.");
+                    $(".step").html(obj.step);
+                    if((signaler[0]+1) < GRID_NROW){
+                        if(!signalerMoved ){
+                            signalerMoved = true;
+                            $("#shape"+ signaler[0] + "v" + signaler[1] + " img").remove();
+                            $("#shape"+ signaler[0] + "v" + signaler[1]).attr("class", "gridEmpty");
+                        }
+                        REMOVE_PREVIOUS(signaler);
+                        signaler = [(signaler[0]+1), signaler[1]];
+                        NEW_POSITION(signaler);
+                    }
+                    break;
+                case 13: //ENTER
+                    if (arrowClicked){
+                        if(signaler[0] == goal[0] && signaler[1] == goal[1]){
+                            allowMove = false;
+                            obj.totalScore = obj.totalScore - obj.step + REWARD;
+                            reward = REWARD;
+                            $("#result .step").html("-" + obj.step);
+                            $("#resultText").html("Congratulations!<br><br>You reached the target!");
+                            $("#reward").html(reward);
+                            $("#scoreThisRound").html(reward - obj.step);
+                            $("#totalAfter").html(obj.totalScore);
+                            $("#result").show();
+                            obj.step = 0;
+                        } else if ($("#shape"+ signaler[0] + "v" + signaler[1]).hasClass("gridEmpty") || (signaler[0] == receiver[0] && signaler[1] == receiver[1])) {
+                            alert("You cannot stop on an empty square or the receiver's position! Please move to an item on the grid.")
+                        } else {
+                            allowMove = false;
+                            obj.totalScore = obj.totalScore - obj.step;
+                            reward = 0;
+                            $("#result .step").html("-" + obj.step);
+                            $("#resultText").html("Sorry, you did not reach the target.<br><br>Good luck on your next round!");
+                            $("#reward").html(reward);
+                            $("#scoreThisRound").html(reward - obj.step);
+                            $("#totalAfter").html(obj.totalScore);
+                            $("#result").show();
+                            obj.step = 0;
+                        }
+                    } else {
+                        alert("Please use arrow keys on your keyboard to move.");
+                    }
+                    break;
+                default:
+                    alert("Please use arrow keys on your keyboard to move.");
+                    break;
+                    
+            }
+        }
+    }
+};
+
+
+
+function CREATE_SAY_OPTIONS(obj) {
+    $("#butOption0").click(RECEIVER_WALK(tryTrial));
+    $("#butOption1").click(RECEIVER_WALK(tryTrial));
+    $("#butOption2").click(RECEIVER_WALK(tryTrial));
+}
+
+
+function RECEIVER_WALK(obj) {
+    if(!recorded){
+        decision = $("#" + option).text();
+        var currentTime = Date.now();
+        decideTime = (currentTime - startTime)/1000;
+        recorded = true;
+    }
+    EXPT_INSTR_FADE();
+    $("#decision").html("<img class='shape' src='shape/receiver.png' />" + " is responding to your signal.");
+    if(instrTry){
+        /*
+        if(option == "butOption0" || option == "butOption3")
+           path  = [2,2,2,3];
+        else if (option == "butOption1")
+            path = [2,3,3,3,3,3,3];
+        var randDir = path[pathNum];
+        pathNum++;*/
+        var path = obj.receiverPath;
+        var randDir = path.shift();
+        obj.receiverPath = path;
+        //obj.receiverPathNum++;
+    }
+    else {
+        var randDir = Math.floor(Math.random() * 4);
+    }
+
+    switch (randDir) {
+        case 0: //left
+            obj.step++;
+            $(".step").html(obj.step++);
+            if(receiver[1]-1 >= 0){
+                if(!receiverMoved ){
+                    receiverMoved = true;
+                    $("#shape"+ receiver[0] + "v" + receiver[1] + " img").remove();
+                    $("#shape"+ receiver[0] + "v" + receiver[1]).attr("class", "gridEmpty");
+                }
+                REMOVE_PREVIOUS(receiver);
+                receiver = [receiver[0], (receiver[1]-1)];
+                NEW_POSITION(receiver);
+            }
+            break;
+        case 1: //up
+            obj.step++;
+            $(".step").html(obj.step);
+            if(receiver[0]-1 >= 0){
+                if(!receiverMoved ){
+                    receiverMoved = true;
+                    $("#shape"+ receiver[0] + "v" + receiver[1] + " img").remove();
+                    $("#shape"+ receiver[0] + "v" + receiver[1]).attr("class", "gridEmpty");
+                }
+                REMOVE_PREVIOUS(receiver);                    
+                receiver = [(receiver[0]-1), (receiver[1])];
+                NEW_POSITION(receiver);
+            }
+            break;
+        case 2: //right
+            obj.step++;
+            $(".step").html(obj.step);
+            if(receiver[1]+1 < GRID_NCOL){
+                if(!receiverMoved ){
+                    receiverMoved = true;
+                    $("#shape"+ receiver[0] + "v" + receiver[1] + " img").remove();
+                    $("#shape"+ receiver[0] + "v" + receiver[1]).attr("class", "gridEmpty");
+                }
+                REMOVE_PREVIOUS(receiver);
+                receiver = [receiver[0], (receiver[1]+1)];                    
+                NEW_POSITION(receiver);
+            }
+            break;
+        case 3: //down
+            obj.step++;
+            $(".step").html(obj.step);
+            if(receiver[0]+1 < GRID_NROW){
+                if(!receiverMoved ){
+                    receiverMoved = true;
+                    $("#shape"+ receiver[0] + "v" + receiver[1] + " img").remove();
+                    $("#shape"+ receiver[0] + "v" + receiver[1]).attr("class", "gridEmpty");
+                }
+                REMOVE_PREVIOUS(receiver);
+                receiver = [(receiver[0]+1), receiver[1]];
+                NEW_POSITION(receiver);
+            }
+            break;
+    }
+    
+    console.log(obj.receiverPath.length);
+    console.log(obj.receiverPathNum);
+    //if(receiver[0] == goal[0] && receiver[1] == goal[1]) {
+    if(path.length == 0) {
+        obj.totalScore = obj.totalScore - obj.step + REWARD;
+        reward = REWARD;
+        $("#result .step").html("-" + obj.step);
+        var landedItem = $('#shape'+ receiver[0] + 'v' + receiver[1] + ' .shape').attr('src');
+        $("#resultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
+        $("#reward").html(reward);
+        $("#scoreThisRound").html(reward - obj.step);
+        $("#totalAfter").html(obj.totalScore);
+        $("#result").show();
+        obj.step = 0;
+    } else {
+        setTimeout(RECEIVER_WALK, RECEIVER_MOVE_SPEED * 1000, obj);
+    }/*else if ($("#shape"+ receiver[0] + "v" + receiver[1]).hasClass("gridItem") && (signaler[0] != receiver[0] || signaler[1] != receiver[1])) {
+        obj.totalScore = obj.totalScore - obj.step;
+        reward = 0;
+        $("#result .step").html("-" + obj.step);
+        var landedItem = $('#shape'+ receiver[0] + 'v' + receiver[1] + ' .shape').attr('src');
+        $("#resultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target.<br>Good luck on your next round!");
+        $("#reward").html(reward);
+        $("#scoreThisRound").html(reward - obj.step);
+        $("#totalAfter").html(obj.totalScore);
+        $("#result").show();
+        obj.step = 0;
+                        
+    } */
+        
+}

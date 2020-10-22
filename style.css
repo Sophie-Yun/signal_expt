@@ -10,13 +10,40 @@ body {
     display: none;
 }
 
+/*
+ ### #     #  #####  ####### ######  
+  #  ##    # #     #    #    #     # 
+  #  # #   # #          #    #     # 
+  #  #  #  #  #####     #    ######  
+  #  #   # #       #    #    #   #   
+  #  #    ## #     #    #    #    #  
+ ### #     #  #####     #    #     # 
+                                     
+*/
+#instrBox {
+    position: relative;
+    width: 50%;
+    left: 50%;
+    transform: translate(-50%, 100px);
+}
+
 #instrText, #thankText {
     display: block;
+    position: relative;
     margin-bottom: 60px;
+    /*
     margin-left: auto;
     margin-right: auto;
     margin-top: 100px;
-    width: 50%;
+    width: 50%;*/
+}
+
+#examGrid {
+    display: none;
+    margin: auto;
+    margin-bottom: 60px; 
+    width: 200px; 
+    height: auto;
 }
 
 #consent {
@@ -28,13 +55,57 @@ body {
     transform: translate(-50%, 10px);
 }
 
-#examGrid {
-    display: none;
-    height: 300px;
-    position: relative;
+/*
+ ####### #     # ######  ####### 
+ #        #   #  #     #    #    
+ #         # #   #     #    #    
+ #####      #    ######     #    
+ #         # #   #          #    
+ #        #   #  #          #    
+ ####### #     # #          #    
+                                 
+*/
+
+#exptBox {
+    position: absolute;
+    width: 1000px;
     left: 50%;
-    transform: translate(-50%, 100px);
-    margin-bottom: 50px;
+    transform: translate(-50%, 0px);
+    top: 50px;
+}
+
+#scoreBoard {
+    display: flex;
+    justify-content: space-around;
+    background: linear-gradient(180deg, #F9F9F9 0%, rgba(255, 255, 255, 0.5) 100%), #BCBAB8;
+    border: 2px solid rgb(98, 87, 87, 0.5);
+    box-sizing: border-box;
+    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+#scoreBoard .info {
+    display: inline-block;
+}
+
+#scoreBoard p {
+    position: relative;
+    display: inline;
+    top: 8px;
+}
+
+#scoreBoard img {
+    display: inline-block;
+    top: 10px;
+    padding: 0px;
+}
+
+#verticalAxis {
+    position: relative;
+    display: inline-block;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    top: 45px;
+    letter-spacing: 2px;
 }
 
 #bufferContainer {
@@ -45,14 +116,6 @@ body {
     display: block;
     width: 400px;
     height: 400px;
-}
-
-#exptBox {
-    position: absolute;
-    width: 1000px;
-    left: 50%;
-    transform: translate(-50%, 0px);
-    top: 100px;
 }
 
 #exptInstr {
@@ -90,6 +153,14 @@ body {
 
 .column {
     float: left;
+    top: 30px;
+}
+
+#horizontalAxis {
+    position: absolute;
+    left: 6%;
+    top: 610px;
+    letter-spacing: 17px;
 }
   
 /* Left and right column */
@@ -101,34 +172,98 @@ body {
     grid-gap: 2px;
     grid-template-columns: repeat(9, 50px);
     grid-template-rows: repeat(10, 50px);
-}
-  
+} 
 /* Middle column */
 .column.text {
     margin-left: 20px;
     position: relative;
-    width: 50%;
+    width: 47%;
 }
 
-.column.goal {
-    position: relative;
-    text-align: center;
-    width: 50%;
-}
-
-.column.score {
-    position: relative;
-    text-align: center;
-    width: 50%;
+#decision {
+    padding-top: 20px;
+    border-top: 2px solid;
 }
 
 #score {
-    font-size: 25px;
-    font-weight: bold;
+    display: inline-block;
+    margin: 0px;
+}
+
+#say {
+    position: absolute;
+    top: 0px;
+}
+
+#do {
+    position: absolute;
+    top: 200px;
+}
+
+#quit {
+    position: absolute;
+    top: 280px;
+}
+
+#decision {
+    position: absolute;
+    top: 350px;
+    width: 450px;
 }
 
 #quitText, #quitBut {
     display:inline-block;
+}
+
+#result {
+    display: none;
+    position: absolute;
+    padding: 20px;
+    background: rgba(98, 87, 87, 0.95);
+    top: 80px;
+    width: 40%;
+    height: 530px;
+    left: 50%;
+    transform: translate(-50%, 0px);
+    color: #F9F9F9;
+}
+
+#resultText {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+#result .title {
+    float: left;
+    width: 50%;
+    position: relative;
+    display: inline-block;
+    left: 20px;
+    margin: 0px;
+}
+
+#result .data {
+    float: left;
+    width: 50%;
+    position: relative;
+    display: inline-block;
+    text-align: right;
+    right: 20px;
+    margin: 0px;
+}
+
+#result #scoreThisRoundBox .title {
+    border-top: 1px solid;
+    margin: 10px 0px;
+}
+
+#result #scoreThisRoundBox .data {
+    border-top: 1px solid;
+    margin: 10px 0px;
+}
+
+#result #totalScoreBox .title, #result #totalScoreBox .data {
+    margin: 20px 0px 90px;
 }
 
 .top {
@@ -136,7 +271,6 @@ body {
     height: 40px;
     padding: 5px;
     position:relative;
-    z-index: 10;
     top: -55px;
 }
 
@@ -165,9 +299,8 @@ body {
 
 .butNext, .butExpt {
     background-color: #bcbab8;
-    border-color: #625757;
     border-radius: 4px;
-    border-style: solid;
+    border-style: hidden;
     border-width: 1px;
     box-sizing: border-box;
     cursor: pointer;
@@ -182,32 +315,63 @@ body {
     margin: auto;
 }
 
+
+#instrNextBut {
+    position: absolute;
+    display: inline-block;
+    right: 0px;
+    top: 600px;
+}
+
+#instrBackBut {
+    position: absolute;
+    display: inline-block;
+    left: 0px;
+    top: 600px;
+}
+
+
 .butExpt {
     display: inline-block;
     margin: 10px;
 }
 
+#quitBut:visited {
+    border-radius: 4px;
+}
 .butNext:hover {
     background-color: #9d8f8f;
 }
+
 .butExpt {
-    background-color: #bcbab8;
-    border-color: #625757;
-    border-radius: 4px;
-    border-style: solid;
-    border-width: 1px;
+    border: 2px solid #625757;
+    background: #9D8F8F;
+    border-radius: 10px;
     box-sizing: border-box;
-    cursor: pointer;
     display: inline-block;
     font-size: 16px;
-    
     width: 100px;
     padding: 10px 20px;
     text-align: center;
+    mix-blend-mode: normal;
+    cursor: pointer;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    /*
+    border: 2px solid #f9f9f9;
+    */
 }
 
 .butExpt:hover {
-    background-color: #9d8f8f;
+    background-color: #625757;
+    color: #f9f9f9;
+}
+
+#say .butExpt {
+    pointer-events: none;
+    border: 2px solid #f9f9f9;
+    background: #BCBAB8;
+    cursor: default;
+    box-shadow: none;
 }
 
 #instrQBut {

@@ -20,12 +20,20 @@ const MAX_SAY_OPTION = 6;
 const TRIAL_DICT = {};
 const PRAC_TRIAL_DICT = {};
 const REWARD = 8;
+
+var instrTry;
+//var tryScore = 0;
+var chooseSay = false;
+var allowMove = false;
+var allowWalk = false;
+
 var qAttemptNum = 0;
 var trial;
 var score = 0;
+var reward;
+//var step = 0;
 var signalerMoved;
 var receiverMoved;
-var step = 0;
 var decision;
 var startTime;
 var decideTime;
@@ -34,15 +42,17 @@ var recorded = false;
 var trialNum = 0;
 var isExptTrial = false;
 var trialObj = {};
-var receiver; //row, col
-var signaler;
+var receiver = [2, 4]; //row, col
+var signaler = [9, 4];
 var goal;
 var signalSpace;
 var trialList;
 var gridString;
+var pathNum = 0;
+var path;
 
 // object variables
-var instr, subj, trial;
+var instr, subj, trial, tryTrial;
 
 /*
   #####  ####### ####### #     # ######  
@@ -144,6 +154,7 @@ $(document).ready(function() {
     //} else if (subj.id !== null){
     } else {
         instr = new instrObject(instr_options);
+        tryTrial = new trialObject(trial_options);
         instr.start();
         //trial_options["subj"] = subj;
         //trial = new trialObject(trial_options);
@@ -222,24 +233,177 @@ var subj_options = {
  # #    #  ####    #   #    # 
 */
 var instr_text = new Array;
-instr_text[0] = "<strong>Welcome to this experiment!</strong><br><br>This experiment studies human cooperation."
+instr_text[0] = "<strong>Welcome to this experiment!</strong><br><br>In this experiment, you will play a game that involves cooperation with one other agent. The goal is for you to reach a target item. <br><br>Hope you enjoy it!"
 instr_text[1] = "Please carefully read the instructions on the next few pages. There will be a question that asks you about the instructions later and a couple of practice trials."
-instr_text[2] = "In each trial, you will see a grid with items in some of the locations. You are the agent in blue " + "<img class='inlineShape' src='shape/signaler.png'/>" + " and your teammate is in white " + "<img class='inlineShape' src='shape/receiver.png' />" + " . You are collaborating to reach one of the items, a target item, which you and your partner will receive points for reaching."
-instr_text[3] = "You and your partner will take turns, working together to reach this item. You will be given information on what the target item is for each round. Your partner does not have this information, it is only you who knows the target."
-instr_text[4] = "You have the option to <br>1. send one of the given signals which can give partial information about the target, <br>2. move to the target yourself, <br>or 3. quit or give up on the current trial and move to the next one."
-instr_text[5] = "Once you choose an option, it is your partner’s turn. <br><br>The trial ends after each agent has had a turn to act, someone has reached the true target, or the “Quit” option has been selected. <br><br>If either person successfully reaches the goal, both collaborators receive +8 points, otherwise neither receives any points. <br><br>Each step you or your partner takes costs -1 point. Signaling is free, but you are only allowed to choose one signal. Quitting also incurs no cost."
-instr_text[6] = "By clicking on the CONTINUE button, I am acknowledged and hereby accept the terms."
-instr_text[7] = "";
+instr_text[2] = "In this experiment, you are the agent in blue " + "<img class='inlineShape' src='shape/signaler.png'/>" + " and your partner is in white " + "<img class='inlineShape' src='shape/receiver.png' />" + " ."
+instr_text[3] = "At the beginning of each round, you and your partner will stand at different positions in a game board. <br><br>You will also see items in some of the grids."
+instr_text[4] = "Besides the game board, you will also see the target for this round. For example, \"Target: <img class='inlineShape' src='shape/redCircle.png'/> \". The target will be different for each round. <br><br>If either you or your partner successfully reach the target at the end of one round, both of you will receive 8 points as reward."
+instr_text[5] = "To reach the target, you can choose to move by yourself. <br><br>You can move from grid to grid by taking steps to your left, right, top, or bottom. Each step will cost you one point. You cannot move diagonally. You cannot move outside the grid. <br><br>You can try to move by yourself on the next page."
+instr_text[6] = "";
+instr_text[7] = "Good job! Now that you know how to move by yourself!<br><br>If you don't want to move, you can ask your partner to move. <br><br>However, you are the only person that knows the target for each round. Your partner does not know the target. <br><br>You have the option to send one of the given signals to your partner. The signal can give partial information about the target."
+instr_text[8] = "After you send the signal, your partner will try its best to reach the target given the information you provided. <br><br>Each step that your partner takes will also cost one point. <br><br>You can try to send a signal on the next page."
+instr_text[9] = "";
+instr_text[10] = "Nice! Now that you know how to send a signal to your partner.<br><br>If you decide that it is too costly for either of you to move towards the target. You have the option to QUIT this round. Neither of you will lose or receive point if you choose to quit. ";
+//instr_text[9] = "There will be one question on the next page to make sure you understand the task.";
 
+instr_text[11] = "By clicking on the CONTINUE button, I am acknowledged and hereby accept the terms.<br><br>The practice rounds will start on the next page.";
+instr_text[12] = "";
+instr_text[13] = "";
 
 const INSTR_FUNC_DICT = {
+    0: HIDE_BACK_BUTTON,
+    1: SHOW_BACK_BUTTON,
+    2: HIDE_EXAMPLE_GRID,
+    3: SHOW_EXAMPLE_GRID,
+    4: HIDE_EXAMPLE_GRID,
+    5: SHOW_INSTR, 
+    6: TRY_MOVE,
+    7: SHOW_INSTR,
+    9: TRY_SAY,
+    11: SHOW_CONSENT,
+    12: SHOW_INSTR_QUESTION,
+    13: START_PRACTICE_TRIAL,
+
+    /*
     2: SHOW_EXAMPLE_GRID,
     3: SHOW_EXAMPLE_GOAL,
     4: SHOW_EXAMPLE_ACTION,
     5: HIDE_EXAMPLE, 
     6: SHOW_CONSENT,
-    7: START_PRACTICE_TRIAL,
+    7: START_PRACTICE_TRIAL,*/
 };
+
+function HIDE_BACK_BUTTON(){
+    $("#instrBackBut").hide();
+}
+
+function SHOW_BACK_BUTTON(){
+    $("#instrBackBut").show();
+}
+
+function SHOW_EXAMPLE_GRID() {
+    $("#examGrid").css("display", "block");
+}
+
+function HIDE_EXAMPLE_GRID() {
+    $("#examGrid").hide();
+}
+
+function SHOW_INSTR() {
+    $("#instrText").show();
+    $("#instrNextBut").show();
+    $("#instrBackBut").css("position", "absolute");
+    $("#exptPage").hide();
+
+    //reset TRY_MOVE()
+    if(signaler[0] != 9 || signaler[1] != 4){
+        REMOVE_PREVIOUS(signaler);
+        signaler = [9, 4];//row, col
+        NEW_POSITION(signaler);
+    }
+    tryTrial.step = 0;
+    EXPT_INSTR_APPEAR();
+    $("#decision").html("");
+    $("#result").hide();
+}
+
+function TRY_MOVE() {
+    instrTry = true;
+    //$("#instrText").hide();
+    if(!tryTrial.reached)
+        $("#instrNextBut").hide();
+    //$("#instrBackBut").css({"position": "absolute", "top": "600px"});
+    if(!tryTrial.gridCreated) {
+        tryTrial.grid = [
+            [,,,,,,,,],
+            [,,,,,,,,],
+            [,,,,,,,,],
+            [,,,,,,,PIC_DICT["red circle"],],
+            [,,,,,,,,],
+            [,,,,,,,,],
+            [,,,,,,,,],
+            [,,,,,,,,],
+            [,,,,,,,,],
+            [,,,,,,,,]
+        ];
+        tryTrial.grid[receiver[0]][receiver[1]] = SHAPE_DIR + "receiver.png";
+        tryTrial.grid[signaler[0]][signaler[1]] = SHAPE_DIR + "signaler.png";
+        goal=[3,7];
+        CREATE_GRID(tryTrial.grid, GRID_NROW, GRID_NCOL);
+        tryTrial.gridCreated = true;
+    }
+
+    $(".step").html(tryTrial.step);
+    $("#goalShape").attr("src", PIC_DICT["red circle"]);
+    $("#score").html(tryTrial.totalScore);
+    allowMove = true;
+    tryTrial.move();
+    $("#say").hide();
+    $("#quit").hide();
+    $("#exptPage").show();
+}
+
+
+function TRY_SAY(){
+    instrTry = true;
+    //$("#instrText").hide();
+    //if(!tryTrial.reached)
+        $("#instrNextBut").hide();
+    //$("#instrBackBut").css({"position": "absolute", "top": "600px"});
+
+    CREATE_SAY_OPTIONS(tryTrial);
+    var trySayOption = ["red", "circle", "green"];
+    for (var i = 0; i < 6; i++) {
+        $("#butOption" + i).css({"border": "1px solid", 
+            "background": "#bcbab8", 
+            "cursor": "auto",
+            "box-shadow": "none"
+            });
+        
+        for (var j = 0; j < trySayOption.length; j++) {
+            if (trySayOption[j] == $("#butOption" + i).html()) {
+                $("#butOption" + i).css({"border": "2px solid #625757", 
+                                "background": "#9D8F8F", 
+                                "box-shadow": "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                                "pointer-events": "auto",
+                                "cursor": "pointer"
+                                });
+            }
+        }
+    }
+
+    if(!tryTrial.gridSayCreated) {
+        $(".gridItem").remove();
+        $(".gridEmpty").remove();
+        tryTrial.grid = [
+            [,,,,,,,,],
+            [,,,,,,,,],
+            [,,,,,,,,],
+            [,,,,,,,PIC_DICT["red circle"],],
+            [,,,,,,,,],
+            [,,,,,,,,],
+            [,,,,,,,,],
+            [,,,,,,,,],
+            [,,,,,PIC_DICT["green circle"],,,],
+            [,,,,,,,,]
+        ];
+        tryTrial.grid[receiver[0]][receiver[1]] = SHAPE_DIR + "receiver.png";
+        tryTrial.grid[signaler[0]][signaler[1]] = SHAPE_DIR + "signaler.png";
+        goal=[3,7];
+        CREATE_GRID(tryTrial.grid, GRID_NROW, GRID_NCOL);
+        tryTrial.gridSayCreated = true;
+    }
+
+    $(".step").html(tryTrial.step);
+    $("#goalShape").attr("src", PIC_DICT["red circle"]);
+    $("#score").html(tryTrial.totalScore);
+    allowMove = false;
+    $("#say").show();
+    $("#do").hide();
+    $("#quit").hide();
+    $("#exptPage").show();
+}
+
 
 function SHOW_CONSENT() {
     $("#consent").show();
@@ -255,20 +419,14 @@ function HIDE_CONSENT() {
     $("#instrText").css("margin-bottom", "60px");
 }
 
-function SHOW_EXAMPLE_GRID() {
+function SHOW_EXAMPLE_SIGNAL() {
     $("#examGrid").show();
-}
-
-function SHOW_EXAMPLE_GOAL() {
-    $("#examGrid").attr("src", "examplePic/examGoal.png");
+    $("#examGrid").attr("src", "examplePic/exampleSignal.jpg");
 }
 
 function SHOW_EXAMPLE_ACTION() {
+    
     $("#examGrid").attr("src", "examplePic/examAction.png");
-}
-
-function HIDE_EXAMPLE() {
-    $("#examGrid").hide();
 }
 
 function START_PRACTICE_TRIAL() {
@@ -277,7 +435,7 @@ function START_PRACTICE_TRIAL() {
     CREATE_GRID(trial, GRID_NROW, GRID_NCOL);
     SETUP_RECORD_BOX(goal, score);
     $("#exptPage").show();
-    MOVE();
+    //MOVE();
 }
 
 var instr_options = {
@@ -287,8 +445,6 @@ var instr_options = {
 };
 
 function SHOW_INSTR_QUESTION() {
-    $("#exptPage").hide();
-    $("#instrBut").hide();
     $("#instrQBox").show();
     $("#instrPage").show();
 }
@@ -299,9 +455,9 @@ function SUBMIT_INSTR_Q() {
         $("#instrQWarning").text("Please answer the question. Thank you!");
     } else if (instrChoice == "several") {
         qAttemptNum++;
-        $("#instrQWarning").text("Correct! Please click on NEXT to start the first round!");
-        $("#instrQBut").hide();
-        $("#startExptBut").show();
+        $("#instrQWarning").text("Correct! Please click on NEXT to start the practice trial!");
+        $("#instrQBox").hide();
+        $("#consent").show();
     } else {
         qAttemptNum++;
         $("#instrQWarning").text("You have given an incorrect answer. Please try again.");
@@ -376,14 +532,14 @@ function END_EXPT() {
 
 var trial_options = {
     subj: 'pre-define', // assign after subj is created
-    trialN: TRIAL_N,
+    //trialN: TRIAL_N,
     titles: TRIAL_TITLES,
-    stimPath: STIM_PATH,
-    dataFile: TRIAL_FILE,
+    //stimPath: STIM_PATH,
+    //dataFile: TRIAL_FILE,
     savingScript: SAVING_SCRIPT,
     savingDir: SAVING_DIR,
-    trialList: TRIAL_LIST,
-    intertrialInterval: INTERTRIAL_INTERVAL,
+    //trialList: TRIAL_LIST,
+    //intertrialInterval: INTERTRIAL_INTERVAL,
     updateFunc: TRIAL_UPDATE,
     trialFunc: TRIAL,
     endExptFunc: END_EXPT
@@ -398,243 +554,65 @@ var trial_options = {
  ###### #    # #        #   
                             
 */
+
 function START_EXPT(){
-    $("#instrPage").hide();
     isExptTrial = true;
     trialNum = 0;
     score = 0;
+    step = 0;
+    $("#round").html(trialNum+1);
+    $(".step").html(step);
     TRIAL_SET_UP(trialNum);
     CREATE_GRID(trial, GRID_NROW, GRID_NCOL);
     SETUP_RECORD_BOX(goal, score);
-    MOVE();
+    //MOVE();
     startTime = Date.now();
     $("#exptInstr").show();
     $("#exptPage").show();
 }
 
-function MOVE() {
-    var arrowClicked = false; //to prevent clicking on ENTER before arrow keys
-    document.onkeydown = function(e) {
-        if(!recorded){
-            decision = "do";
-            var currentTime = Date.now();
-            decideTime = (currentTime - startTime)/1000;
-            recorded = true;
-        }
-        switch (e.keyCode) {
-            case 37: //left
-                arrowClicked = true;
-                score--;
-                step++;
-                $("#exptInstr").hide();
-                $("#exptWaitText").html("Press ENTER when you reach the item.");
-                $("#exptWaitText").show();
-                $("#score").html(score);
-                if(signaler[1]-1 >= 0){
-                    if(!signalerMoved ){
-                        signalerMoved = true;
-                        $("#shape"+ signaler[0] + "v" + signaler[1] + " img").remove();
-                        $("#shape"+ signaler[0] + "v" + signaler[1]).attr("class", "gridEmpty");
-                    }
-                    REMOVE_PREVIOUS(signaler);
-                    signaler = [signaler[0], (signaler[1]-1)];
-                    NEW_POSITION(signaler);
-                }
-                break;
-            case 38: //up
-                arrowClicked = true;
-                score--;
-                step++;
-                $("#exptInstr").hide();
-                $("#exptWaitText").html("Press ENTER when you reach the item.");
-                $("#exptWaitText").show();
-                $("#score").html(score);
-                if(signaler[0]-1  >= 0){
-                    if(!signalerMoved ){
-                        signalerMoved = true;
-                        $("#shape"+ signaler[0] + "v" + signaler[1] + " img").remove();
-                        $("#shape"+ signaler[0] + "v" + signaler[1]).attr("class", "gridEmpty");
-                    }
-                    REMOVE_PREVIOUS(signaler);
-                    signaler = [(signaler[0]-1), signaler[1]];
-                    NEW_POSITION(signaler);
-                }
-                break;
-            case 39: //right
-                arrowClicked = true;
-                score--;
-                step++;
-                $("#exptInstr").hide();
-                $("#exptWaitText").html("Press ENTER when you reach the item.");
-                $("#exptWaitText").show();
-                $("#score").html(score);
-                if(signaler[1]+1 < GRID_NCOL){
-                    if(!signalerMoved ){
-                        signalerMoved = true;
-                        $("#shape"+ signaler[0] + "v" + signaler[1] + " img").remove();
-                        $("#shape"+ signaler[0] + "v" + signaler[1]).attr("class", "gridEmpty");
-                    }
-                    REMOVE_PREVIOUS(signaler);
-                    signaler = [signaler[0], (signaler[1]+1)];
-                    NEW_POSITION(signaler);
-                }
-                break;
-            case 40: //down
-                arrowClicked = true;
-                score--;
-                step++;
-                $("#exptInstr").hide();
-                $("#exptWaitText").html("Press ENTER when you reach the item.");
-                $("#exptWaitText").show();
-                $("#score").html(score);
-                if((signaler[0]+1) < GRID_NROW){
-                    if(!signalerMoved ){
-                        signalerMoved = true;
-                        $("#shape"+ signaler[0] + "v" + signaler[1] + " img").remove();
-                        $("#shape"+ signaler[0] + "v" + signaler[1]).attr("class", "gridEmpty");
-                    }
-                    REMOVE_PREVIOUS(signaler);
-                    signaler = [(signaler[0]+1), signaler[1]];
-                    NEW_POSITION(signaler);
-                }
-                break;
-            case 13: //ENTER
-                if (arrowClicked){
-                    if(signaler[0] == goal[0] && signaler[1] == goal[1]){
-                        score = score + REWARD;
-                        $("#score").html(score);
-                        $("#exptWaitText").hide();
-                        $("#exptResultText").html("Congratulations!<br><br>You reached the goal and received +8 points!<br><br>You walked " + step + " steps.");
-                        step = 0;
-                        $("#exptResultBox").css("display", "inline-block");
-                    } else if ($("#shape"+ signaler[0] + "v" + signaler[1]).hasClass("gridEmpty") || (signaler[0] == receiver[0] && signaler[1] == receiver[1])) {
-                        alert("You cannot stop on an empty square or the receiver's position! Please move to an item on the grid.")
-                    } else {
-                        $("#exptWaitText").hide();
-                        $("#exptResultText").html("Sorry, you didn't reach the goal.<br><br>You walked " + step + " steps.<br><br>Good luck on your next trial!");
-                        step = 0;
-                        $("#exptResultBox").css("display", "inline-block");
-                    }
-                }
-                break;
-        }
-    }
-};
+function EXPT_INSTR_FADE() {
+    $("#exptFade").fadeTo(200, 0.4);
+    $(".butExpt").css("box-shadow", "none");
+    $(".butExpt").css("cursor", "default");
+    $('.butExpt').prop('disabled', true);
+}
+
+function EXPT_INSTR_APPEAR() {
+    $("#exptFade").css("opacity", 1);
+    $(".butExpt").css("box-shadow", "0px 4px 4px rgba(0, 0, 0, 0.25)");
+    $(".butExpt").css("cursor", "pointer");
+    $('.butExpt').prop('disabled', false);
+}
 
 function SHOW_QUIT_RESULT() {
     if(!recorded){
+        EXPT_INSTR_FADE();
         decision = "quit";
         var currentTime = Date.now();
         decideTime = (currentTime - startTime)/1000;
         recorded = true;
     }
-    $("#exptInstr").hide();
-    $("#exptResultText").html("No worries! Good luck on your next trial!");
-    $("#exptResultBox").css("display", "inline-block");
+    reward = 0;
+    $("#resultText").html("Don't worry!<br>Good luck on your next round!");
+    $("#reward").html(reward);
+    $("#scoreThisRound").html(reward - step);
+    $("#totalAfter").html(score);
+    $("#result").show();
 };
 
-function RECEIVER_WALK(option) {
-    if(!recorded){
-        console.log(option);
-        decision = $("#" + option).text();
-        var currentTime = Date.now();
-        decideTime = (currentTime - startTime)/1000;
-        recorded = true;
-    }
-    var randDir = Math.floor(Math.random() * 4);
-    switch (randDir) {
-        case 0: //left
-            score--;
-            step++;
-            $("#score").html(score);
-            $("#exptInstr").hide();
-            $("#exptWaitText").html("Please watch " + "<img class='shape' src='shape/receiver.png' />" + " walking.");
-            $("#exptWaitText").show();
-            if(receiver[1]-1 >= 0){
-                if(!receiverMoved ){
-                    receiverMoved = true;
-                    $("#shape"+ receiver[0] + "v" + receiver[1] + " img").remove();
-                    $("#shape"+ receiver[0] + "v" + receiver[1]).attr("class", "gridEmpty");
-                }
-                REMOVE_PREVIOUS(receiver);
-                receiver = [receiver[0], (receiver[1]-1)];
-                NEW_POSITION(receiver);
-            }
-            break;
-        case 1: //up
-            score--;
-            step++;
-            $("#score").html(score);
-            $("#exptInstr").hide();
-            $("#exptWaitText").html("Please watch " + "<img class='shape' src='shape/receiver.png' />" + " walking.");
-            $("#exptWaitText").show();
-            if(receiver[0]-1 >= 0){
-                if(!receiverMoved ){
-                    receiverMoved = true;
-                    $("#shape"+ receiver[0] + "v" + receiver[1] + " img").remove();
-                    $("#shape"+ receiver[0] + "v" + receiver[1]).attr("class", "gridEmpty");
-                }
-                REMOVE_PREVIOUS(receiver);                    
-                receiver = [(receiver[0]-1), (receiver[1])];
-                NEW_POSITION(receiver);
-            }
-            break;
-        case 2: //right
-            score--;
-            step++;
-            $("#score").html(score);
-            $("#exptInstr").hide();
-            $("#exptWaitText").html("Please watch " + "<img class='shape' src='shape/receiver.png' />" + " walking.");
-            $("#exptWaitText").show();
-            if(receiver[1]+1 < GRID_NCOL){
-                if(!receiverMoved ){
-                    receiverMoved = true;
-                    $("#shape"+ receiver[0] + "v" + receiver[1] + " img").remove();
-                    $("#shape"+ receiver[0] + "v" + receiver[1]).attr("class", "gridEmpty");
-                }
-                REMOVE_PREVIOUS(receiver);
-                receiver = [receiver[0], (receiver[1]+1)];                    
-                NEW_POSITION(receiver);
-            }
-            break;
-        case 3: //down
-            score--;
-            step++;
-            $("#score").html(score);
-            $("#exptInstr").hide();
-            $("#exptWaitText").html("Please watch " + "<img class='shape' src='shape/receiver.png' />" + " walking.");
-            $("#exptWaitText").show();
-            if(receiver[0]+1 < GRID_NROW){
-                if(!receiverMoved ){
-                    receiverMoved = true;
-                    $("#shape"+ receiver[0] + "v" + receiver[1] + " img").remove();
-                    $("#shape"+ receiver[0] + "v" + receiver[1]).attr("class", "gridEmpty");
-                }
-                REMOVE_PREVIOUS(receiver);
-                receiver = [(receiver[0]+1), receiver[1]];
-                NEW_POSITION(receiver);
-            }
-            break;
-    }
-    
-    if(receiver[0] == goal[0] && receiver[1] == goal[1]) {
-        score = score + REWARD;
-        $("#score").html(score);
-        $("#exptWaitText").hide();
-        $("#exptResultText").html("Congratulations!<br><br>You reached the goal and received +8 points!<br><br>" + "<img class='shape' src='shape/receiver.png' />" + " walked " + step + " steps.");
-        step = 0;
-        $("#exptResultBox").show();
-    } else if ($("#shape"+ receiver[0] + "v" + receiver[1]).hasClass("gridItem") && (signaler[0] != receiver[0] || signaler[1] != receiver[1])) {
-        $("#exptWaitText").hide();
-        $("#exptResultText").html("Sorry, you didn't reach the goal.<br><br>" + "<img class='shape' src='shape/receiver.png' />" + " walked " + step + " steps.<br><br>Good luck on your next trial!");
-        step = 0;
-        $("#exptResultBox").show();
-    } else 
-        setTimeout(RECEIVER_WALK, RECEIVER_MOVE_SPEED * 1000);
-}
-
 function NEXT_TRIAL() {
-    $("#exptResultBox").hide();
+    if(instrTry){
+        $("#exptPage").hide();
+        tryTrial.reached = true;
+        instr.next();
+        $("#instrText").show();
+        $("#instrNextBut").show();
+        $("#instrBackBut").css("position", "absolute");
+    } else {
+    $("#decision").html('');
+    $("#result").hide();
+    EXPT_INSTR_APPEAR();
     var currentTime = Date.now();
     finishTime = (currentTime - startTime)/1000;
 
@@ -645,9 +623,10 @@ function NEXT_TRIAL() {
         POST_DATA(trialObj, SUCCESS, ERROR);
         console.log(postData);
     }
-        
-
     trialNum++;
+    step = 0;
+    $("#round").html(trialNum+1);
+    $(".step").html(step);
     if(!isExptTrial && trialNum == PRAC_TRIAL_NUM) {
         SHOW_INSTR_QUESTION();
     } else if (isExptTrial && trialNum == TRIAL_NUM){
@@ -660,7 +639,8 @@ function NEXT_TRIAL() {
         SETUP_RECORD_BOX(goal, score);
         $("#exptInstr").show();
         startTime = Date.now();
-        MOVE();
+        //MOVE();
+    }
     }
    
 }

@@ -207,8 +207,23 @@ class instrObject {
     next(textElement = $("#instrText")) {
         this.readingTimes.push((Date.now() - this.startTime)/1000);
         this.index += 1;
-        MOVE();
+        //MOVE();
         if (this.index < this.text.length) {
+            textElement.html(this.text[this.index]);
+            if (this.instrKeys.includes(this.index)) {
+                this.funcDict[this.index]();
+            }
+            this.startTime = Date.now();
+        } else {
+            //this.startExptFunc();
+        }
+    }
+
+    back(textElement = $("#instrText")) {
+        this.readingTimes.push((Date.now() - this.startTime)/1000);
+        this.index -= 1;
+        //MOVE();
+        if (this.index >= 0) {
             textElement.html(this.text[this.index]);
             if (this.instrKeys.includes(this.index)) {
                 this.funcDict[this.index]();
@@ -234,6 +249,12 @@ class trialObject {
     constructor(options = {}) {
         Object.assign(this, {
             subj: false,
+            step: 0,
+            totalScore: 0,
+            gridCreated: false,
+            gridSayCreated: false,
+            reached: false,
+            
             trialN: 0,
             titles: '',
             stimPath: 'Stimuli/',
@@ -247,14 +268,13 @@ class trialObject {
             endExptFunc: false
         }, options);
         this.num = this.subj.num;
-        console.log(this.num);
-        console.log(this.subj.num);
-        console.log(this.subj);
         this.date = this.subj.date;
         this.subjStartTime = this.subj.startTime;
         this.trialNum = 0;
         this.allData = LIST_TO_FORMATTED_STRING(this.titles);
         this.complete = false;
+        this.receiverPath = [2,2,2,3];
+        this.receiverPathNum = 0;
     }
 
     run() {
@@ -279,7 +299,7 @@ class trialObject {
             that.startTime = Date.now();
         };
 
-        setTimeout(START_STIM, this.intertrialInterval * 1000);
+        //setTimeout(START_STIM, this.intertrialInterval * 1000);
     }
 
     end() {
@@ -295,6 +315,10 @@ class trialObject {
             this.complete = true;
             this.endExptFunc();
         }
+    }
+    
+    move() {
+        MOVE(this);
     }
 
     save() {
