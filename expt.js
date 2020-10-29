@@ -207,7 +207,6 @@ class instrObject {
     next(textElement = $("#instrText")) {
         this.readingTimes.push((Date.now() - this.startTime)/1000);
         this.index += 1;
-        //MOVE();
         if (this.index < this.text.length) {
             textElement.html(this.text[this.index]);
             if (this.instrKeys.includes(this.index)) {
@@ -222,7 +221,6 @@ class instrObject {
     back(textElement = $("#instrText")) {
         this.readingTimes.push((Date.now() - this.startTime)/1000);
         this.index -= 1;
-        //MOVE();
         if (this.index >= 0) {
             textElement.html(this.text[this.index]);
             if (this.instrKeys.includes(this.index)) {
@@ -254,6 +252,7 @@ class trialObject {
             gridCreated: false,
             gridSayCreated: false,
             reached: false,
+            allowMove: false,
             
             trialN: 0,
             titles: '',
@@ -273,10 +272,11 @@ class trialObject {
         this.trialNum = 0;
         this.allData = LIST_TO_FORMATTED_STRING(this.titles);
         this.complete = false;
-        this.receiverPath = [2,2,2,3];
+        this.receiverPath = [2,2,3,2];
         this.receiverPathNum = 0;
     }
-
+    
+    /*
     run() {
         var that = this;
         this.trialNum++;
@@ -301,7 +301,7 @@ class trialObject {
 
         //setTimeout(START_STIM, this.intertrialInterval * 1000);
     }
-
+    
     end() {
         var currentTime = Date.now();
         this.rt = (currentTime - this.startTime) / 1000; // in second
@@ -316,8 +316,9 @@ class trialObject {
             this.endExptFunc();
         }
     }
-    
+    */
     move() {
+        this.allowMove = true;
         MOVE(this);
     }
 

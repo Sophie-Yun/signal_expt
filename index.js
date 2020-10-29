@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const FORMAL = false;
 const EXPERIMENT_NAME = "Signal";
 const SUBJ_NUM_FILE = "subjNum_" + EXPERIMENT_NAME + ".txt";
@@ -23,16 +22,13 @@ const PRAC_TRIAL_DICT = {};
 const REWARD = 8;
 
 var instrTry;
-//var tryScore = 0;
 var chooseSay = false;
-var allowMove = false;
 var allowWalk = false;
 
 var qAttemptNum = 0;
 var trial;
 var score = 0;
 var reward;
-//var step = 0;
 var signalerMoved;
 var receiverMoved;
 var decision;
@@ -157,6 +153,10 @@ $(document).ready(function() {
         instr = new instrObject(instr_options);
         tryTrial = new trialObject(trial_options);
         instr.start();
+        document.onkeydown = function(e) {
+            if(e.keyCode == 13 || e.keyCode == 32)
+                e.preventDefault();
+        }
         //trial_options["subj"] = subj;
         //trial = new trialObject(trial_options);
         //$('#captchaBox').show();
@@ -225,31 +225,6 @@ var subj_options = {
     handleVisibilityChange: HANDLE_VISIBILITY_CHANGE
 };
 
-=======
-const GRID_NROW = 10;
-const GRID_NCOL = 9;
-var trial = [
-    [,,,,,,,,],
-    [,,,,,,,,],
-    [,,,,,,,,],
-    [,,,,,,,,],
-    [,,,,,,,,],
-    [,,,,,,,,],
-    [,,,,,,,,],
-    [,,,,,,,,],
-    [,,,,,,,,],
-    [,,,,,,,,]
-];
-
-trial[1][3] = "shape/greenCircle.png";
-trial[1][7] = "shape/purpleTriangle.png";
-
-$(document).ready(function() {
-    instr = new instrObject(instr_options);
-    instr.start();
-});
-
->>>>>>> 89e24f9a5e8df31a2f138d490a881cf86ecacc53
 /*                              
  # #    #  ####  ##### #####  
  # ##   # #        #   #    # 
@@ -259,7 +234,6 @@ $(document).ready(function() {
  # #    #  ####    #   #    # 
 */
 var instr_text = new Array;
-<<<<<<< HEAD
 instr_text[0] = "<strong>Welcome to this experiment!</strong><br><br>In this experiment, you will play a game that involves cooperation with one other agent. The goal is for you to reach a target item. <br><br>Hope you enjoy it!"
 instr_text[1] = "Please carefully read the instructions on the next few pages. There will be a question that asks you about the instructions later and a couple of practice trials."
 instr_text[2] = "In this experiment, you are the agent in blue " + "<img class='inlineShape' src='shape/signaler.png'/>" + " and your partner is in white " + "<img class='inlineShape' src='shape/receiver.png' />" + " ."
@@ -271,11 +245,10 @@ instr_text[7] = "Good job! Now that you know how to move by yourself!<br><br>If 
 instr_text[8] = "After you send the signal, your partner will try its best to reach the target given the information you provided. <br><br>Each step that your partner takes will also cost one point. <br><br>You can try to send a signal on the next page."
 instr_text[9] = "";
 instr_text[10] = "Nice! Now that you know how to send a signal to your partner.<br><br>If you decide that it is too costly for either of you to move towards the target. You have the option to QUIT this round. Neither of you will lose or receive point if you choose to quit. ";
-//instr_text[9] = "There will be one question on the next page to make sure you understand the task.";
-
-instr_text[11] = "By clicking on the CONTINUE button, I am acknowledged and hereby accept the terms.<br><br>The practice rounds will start on the next page.";
+instr_text[11] = "By clicking on the NEXT button, I am acknowledged and hereby accept the terms. I understand the task in this experiment.";
 instr_text[12] = "";
-instr_text[13] = "";
+instr_text[13] = "Which of the following is <b>not correct<b>?";
+instr_text[14] = "Please start the practice trial on the next page."
 
 const INSTR_FUNC_DICT = {
     0: HIDE_BACK_BUTTON,
@@ -286,17 +259,12 @@ const INSTR_FUNC_DICT = {
     5: SHOW_INSTR, 
     6: TRY_MOVE,
     7: SHOW_INSTR,
+    8: SHOW_INSTR,
     9: TRY_SAY,
+    10: SHOW_INSTR,
     11: SHOW_CONSENT,
     12: SHOW_INSTR_QUESTION,
     13: START_PRACTICE_TRIAL,
-    /*
-    2: SHOW_EXAMPLE_GRID,
-    3: SHOW_EXAMPLE_GOAL,
-    4: SHOW_EXAMPLE_ACTION,
-    5: HIDE_EXAMPLE, 
-    6: SHOW_CONSENT,
-    7: START_PRACTICE_TRIAL,*/
 };
 
 function HIDE_BACK_BUTTON(){
@@ -316,6 +284,7 @@ function HIDE_EXAMPLE_GRID() {
 }
 
 function SHOW_INSTR() {
+    HIDE_CONSENT();
     $("#instrText").show();
     $("#instrNextBut").show();
     $("#instrBackBut").css("position", "absolute");
@@ -327,7 +296,11 @@ function SHOW_INSTR() {
         signaler = [9, 4];//row, col
         NEW_POSITION(signaler);
     }
-    tryTrial.step = 0;
+    if(receiver[0] != 2 || receiver[1] != 4){
+        REMOVE_PREVIOUS(receiver);
+        receiver = [2, 4];//row, col
+        NEW_POSITION(receiver);
+    }
     EXPT_INSTR_APPEAR();
     $("#decision").html("");
     $("#result").hide();
@@ -335,10 +308,8 @@ function SHOW_INSTR() {
 
 function TRY_MOVE() {
     instrTry = true;
-    //$("#instrText").hide();
     if(!tryTrial.reached)
         $("#instrNextBut").hide();
-    //$("#instrBackBut").css({"position": "absolute", "top": "600px"});
     if(!tryTrial.gridCreated) {
         tryTrial.grid = [
             [,,,,,,,,],
@@ -362,43 +333,41 @@ function TRY_MOVE() {
     $(".step").html(tryTrial.step);
     $("#goalShape").attr("src", PIC_DICT["red circle"]);
     $("#score").html(tryTrial.totalScore);
-    allowMove = true;
-    tryTrial.move();
     $("#say").hide();
     $("#quit").hide();
     $("#exptPage").show();
+    tryTrial.move();
 }
 
 
 function TRY_SAY(){
     instrTry = true;
-    //$("#instrText").hide();
     //if(!tryTrial.reached)
         $("#instrNextBut").hide();
-    //$("#instrBackBut").css({"position": "absolute", "top": "600px"});
-
-    CREATE_SAY_OPTIONS(tryTrial);
-    var trySayOption = ["red", "circle", "green"];
-    for (var i = 0; i < 6; i++) {
-        $("#butOption" + i).css({"border": "1px solid", 
-            "background": "#bcbab8", 
-            "cursor": "auto",
-            "box-shadow": "none"
-            });
-        
-        for (var j = 0; j < trySayOption.length; j++) {
-            if (trySayOption[j] == $("#butOption" + i).html()) {
-                $("#butOption" + i).css({"border": "2px solid #625757", 
-                                "background": "#9D8F8F", 
-                                "box-shadow": "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                                "pointer-events": "auto",
-                                "cursor": "pointer"
-                                });
-            }
-        }
-    }
 
     if(!tryTrial.gridSayCreated) {
+        var trySayOption = ["red", "circle", "green"];
+        for (var i = 0; i < 6; i++) {
+            $("#butOption" + i).css({"border": "1px solid", 
+                "background": "#bcbab8", 
+                "cursor": "auto",
+                "box-shadow": "none"
+                });
+            
+            for (var j = 0; j < trySayOption.length; j++) {
+                if (trySayOption[j] == $("#butOption" + i).html()) {
+                    $("#butOption" + i).css({"border": "2px solid #625757", 
+                                    "background": "#9D8F8F", 
+                                    "box-shadow": "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                                    "pointer-events": "auto",
+                                    "cursor": "pointer"
+                                    });
+                    $("#butOption" + i).click(function(){RECEIVER_WALK(tryTrial)});
+                }
+            }
+        }
+
+
         $(".gridItem").remove();
         $(".gridEmpty").remove();
         tryTrial.grid = [
@@ -420,10 +389,12 @@ function TRY_SAY(){
         tryTrial.gridSayCreated = true;
     }
 
+    document.onkeydown = function (e) {
+        alert("Please click on one of the buttons to send the signal.");
+    }
     $(".step").html(tryTrial.step);
     $("#goalShape").attr("src", PIC_DICT["red circle"]);
     $("#score").html(tryTrial.totalScore);
-    allowMove = false;
     $("#say").show();
     $("#do").hide();
     $("#quit").hide();
@@ -433,16 +404,17 @@ function TRY_SAY(){
 
 function SHOW_CONSENT() {
     $("#consent").show();
-    $("#instrBut").text("CONTINUE");
-    $("#instrText").css("margin-top", "50px");
-    $("#instrText").css("margin-bottom", "50px");
+    $("#instrQBox").hide();
 }
 
 function HIDE_CONSENT() {
     $("#consent").hide();
-    $("#instrBut").text("NEXT");
-    $("#instrText").css("margin-top", "100px");
-    $("#instrText").css("margin-bottom", "60px");
+}
+
+function SHOW_INSTR_QUESTION() {
+    HIDE_CONSENT();
+    $("#instrQBox").show();
+    $("#instrNextBut").hide();
 }
 
 function SHOW_EXAMPLE_SIGNAL() {
@@ -470,10 +442,7 @@ var instr_options = {
     qConditions: ['onlyQ'],
 };
 
-function SHOW_INSTR_QUESTION() {
-    $("#instrQBox").show();
-    $("#instrPage").show();
-}
+
 
 function SUBMIT_INSTR_Q() {
     var instrChoice = $("input[name='instrQ']:checked").val();
@@ -482,8 +451,8 @@ function SUBMIT_INSTR_Q() {
     } else if (instrChoice == "several") {
         qAttemptNum++;
         $("#instrQWarning").text("Correct! Please click on NEXT to start the practice trial!");
-        $("#instrQBox").hide();
-        $("#consent").show();
+        //$("#instrQBox").hide();
+        instr.next();
     } else {
         qAttemptNum++;
         $("#instrQWarning").text("You have given an incorrect answer. Please try again.");
@@ -543,7 +512,7 @@ function END_TRIAL() {
     $("#expBut").hide();
     trial.end();
 }
-
+/*
 function END_EXPT() {
     $("#trialPage").hide();
     trial.save();
@@ -554,7 +523,7 @@ function END_EXPT() {
             START_AQ();
         }
     });
-}
+}*/
 
 var trial_options = {
     subj: 'pre-define', // assign after subj is created
@@ -568,69 +537,8 @@ var trial_options = {
     //intertrialInterval: INTERTRIAL_INTERVAL,
     updateFunc: TRIAL_UPDATE,
     trialFunc: TRIAL,
-    endExptFunc: END_EXPT
+    //endExptFunc: END_EXPT
 }
-=======
-instr_text[0] = "<strong>Welcome to this experiment!</strong><br><br>This experiment tests on how people communicate when they collaborate to achieve a goal."
-instr_text[1] = "Your contribution would greatly help us identify communication patterns in human cooperation. The results of the study might also be applied to building artificial intelligence.<br><br>Please carefully read the instructions on the next few pages. There will be a question that asks you about the instructions later."
-instr_text[2] = "This study takes about 10 minutes.<br><br>On each page, you will see a grid with figures in different shapes and different colors at random positions. The letter \"S\" indicates where you stand. The letter \"R\" indicates where a robot stands. The robot is your teammate for this task.<br><br>You will also see a message that tells you what is your target figure for this round. You are the only one who can see the message, while the robot cannot see the message. Your task is to reach the target figure through either walking to the target figure by yourself, or sending only one of the given signals to the robot to let it reach the target figure. <br><br>If either of you successfully reaches the goal, you both get rewards of 20 points. Otherwise, you do not get points. However, each step taken by either of you will result in a penalty of 1 point."
-instr_text[3] = "Here is one example of one round. (Will come up later.)"
-instr_text[4] = "Which of the following is <b>not correct?</b> <br><br>You can achieve the goal by walking on your own.<br>If either the robot or you achieve the goal, you get 20 points.<br>Each step taken by either the robot or you costs 1 point.<br>You can achieve the goal by sending out several signals to the robot."
-instr_text[5] = "Correct! Please click on NEXT to start the first round!"
-
-
-//const INSTR_FUNC_DICT = {
-//};
-
-var instr_options = {
-    text: instr_text,
-    //funcDict: INSTR_FUNC_DICT,
-};
-
-class instrObject {
-    constructor(options = {}) {
-        Object.assign(this, {
-            text: [],
-            //funcDict: {},
-            //qConditions: [],
-        }, options);
-        this.index = 0;
-        //this.instrKeys = Object.keys(this.funcDict).map(Number);
-        //this.qAttemptN = {};
-       //for (var i=0;i<this.qConditions.length;i++){
-         //   this.qAttemptN[this.qConditions[i]] = 1;
-        //}
-        //this.readingTimes = [];
-    }
-
-    start(textBox = $("#instrPage"), textElement = $("#instrText")) {
-        textElement.html(this.text[0]);
-        //if (this.instrKeys.includes(this.index)) {
-          //  this.funcDict[this.index]();
-        //}
-        textBox.show();
-    }
-
-    next(textElement = $("#instrText")) {
-        //this.readingTimes.push((Date.now() - this.startTime)/1000);
-        this.index += 1;
-        $("#instrPage").hide();
-        CREATE_GRID(trial, GRID_NROW, GRID_NCOL);
-        $("#exptPage").show();/*
-        if (this.index < this.text.length) {
-            textElement.html(this.text[this.index]);
-            //if (this.instrKeys.includes(this.index)) {
-              //  this.funcDict[this.index]();
-            //}
-            //this.startTime = Date.now();
-        } else {
-            $("#instrPage").hide();
-            $("#exptPage").show();
-        }*/
-    }
-}
-
->>>>>>> 89e24f9a5e8df31a2f138d490a881cf86ecacc53
 /*
                             
  ###### #    # #####  ##### 
@@ -642,7 +550,6 @@ class instrObject {
                             
 */
 
-<<<<<<< HEAD
 function START_EXPT(){
     isExptTrial = true;
     trialNum = 0;
@@ -657,20 +564,6 @@ function START_EXPT(){
     startTime = Date.now();
     $("#exptInstr").show();
     $("#exptPage").show();
-}
-
-function EXPT_INSTR_FADE() {
-    $("#exptFade").fadeTo(200, 0.4);
-    $(".butExpt").css("box-shadow", "none");
-    $(".butExpt").css("cursor", "default");
-    $('.butExpt').prop('disabled', true);
-}
-
-function EXPT_INSTR_APPEAR() {
-    $("#exptFade").css("opacity", 1);
-    $(".butExpt").css("box-shadow", "0px 4px 4px rgba(0, 0, 0, 0.25)");
-    $(".butExpt").css("cursor", "pointer");
-    $('.butExpt').prop('disabled', false);
 }
 
 function SHOW_QUIT_RESULT() {
@@ -689,48 +582,45 @@ function SHOW_QUIT_RESULT() {
     $("#result").show();
 };
 
+
 function NEXT_TRIAL() {
     if(instrTry){
-        $("#exptPage").hide();
-        tryTrial.reached = true;
         instr.next();
         $("#instrText").show();
         $("#instrNextBut").show();
         $("#instrBackBut").css("position", "absolute");
     } else {
-    $("#decision").html('');
-    $("#result").hide();
-    EXPT_INSTR_APPEAR();
-    var currentTime = Date.now();
-    finishTime = (currentTime - startTime)/1000;
+        $("#decision").html('');
+        $("#result").hide();
+        EXPT_INSTR_APPEAR();
+        var currentTime = Date.now();
+        finishTime = (currentTime - startTime)/1000;
 
-    var postData = "qAttemptNum,trialNum,expt,decision,decideTime,finishTime\n";
-    postData += qAttemptNum + "," + trialNum + "," + trialList[trialNum] + "," + decision + "," + decideTime + "," + finishTime + "\n";
-    trialObj.postData = postData;
-    if(isExptTrial) {
-        POST_DATA(trialObj, SUCCESS, ERROR);
-        console.log(postData);
-    }
-    trialNum++;
-    step = 0;
-    $("#round").html(trialNum+1);
-    $(".step").html(step);
-    if(!isExptTrial && trialNum == PRAC_TRIAL_NUM) {
-        SHOW_INSTR_QUESTION();
-    } else if (isExptTrial && trialNum == TRIAL_NUM){
-        $("#exptPage").hide();
-        $("#thankPage").show();
-    } else {
-        recorded = false;
-        TRIAL_SET_UP(trialNum);
-        CREATE_GRID(trial, GRID_NROW, GRID_NCOL);
-        SETUP_RECORD_BOX(goal, score);
-        $("#exptInstr").show();
-        startTime = Date.now();
-        //MOVE();
-    }
+        var postData = "qAttemptNum,trialNum,expt,decision,decideTime,finishTime\n";
+        postData += qAttemptNum + "," + trialNum + "," + trialList[trialNum] + "," + decision + "," + decideTime + "," + finishTime + "\n";
+        trialObj.postData = postData;
+        if(isExptTrial) {
+            POST_DATA(trialObj, SUCCESS, ERROR);
+            console.log(postData);
+        }
+        trialNum++;
+        step = 0;
+        $("#round").html(trialNum+1);
+        $(".step").html(step);
+        if(!isExptTrial && trialNum == PRAC_TRIAL_NUM) {
+            SHOW_INSTR_QUESTION();
+        } else if (isExptTrial && trialNum == TRIAL_NUM){
+            $("#exptPage").hide();
+            $("#thankPage").show();
+        } else {
+            recorded = false;
+            TRIAL_SET_UP(trialNum);
+            CREATE_GRID(trial, GRID_NROW, GRID_NCOL);
+            SETUP_RECORD_BOX(goal, score);
+            $("#exptInstr").show();
+            startTime = Date.now();
+            //MOVE();
+        }
     }
    
 }
-=======
->>>>>>> 89e24f9a5e8df31a2f138d490a881cf86ecacc53

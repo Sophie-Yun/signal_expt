@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 function LIST_TO_FORMATTED_STRING(data_list, divider) {
     divider = (divider === undefined) ? '\t' : divider;
@@ -202,11 +201,35 @@ function POST_DATA(trial_obj, success_func, error_func) {
     });
 }
 
+/*
+ ####### #     # ######  ####### 
+ #        #   #  #     #    #    
+ #         # #   #     #    #    
+ #####      #    ######     #    
+ #         # #   #          #    
+ #        #   #  #          #    
+ ####### #     # #          #    
+                                 
+*/
+
+function EXPT_INSTR_FADE() {
+    $("#exptFade").fadeTo(200, 0.4);
+    $(".butExpt").css("box-shadow", "none");
+    $(".butExpt").css("cursor", "default");
+    $('.butExpt').prop('disabled', true);
+}
+
+function EXPT_INSTR_APPEAR() {
+    $("#exptFade").css("opacity", 1);
+    $(".butExpt").css("box-shadow", "0px 4px 4px rgba(0, 0, 0, 0.25)");
+    $(".butExpt").css("cursor", "pointer");
+    $('.butExpt').prop('disabled', false);
+}
 
 function MOVE(obj) {
-    var arrowClicked = false; //to prevent clicking on ENTER before arrow keys
-    if(allowMove) {
-        document.onkeydown = function(e) {
+    obj.arrowClicked = false; //to prevent clicking on ENTER before arrow keys
+    document.onkeydown = function(e) {
+        if(obj.allowMove) {
             switch (e.keyCode) {
                 case 37: //left
                     if(!recorded){
@@ -216,7 +239,7 @@ function MOVE(obj) {
                         recorded = true;
                     }
                     EXPT_INSTR_FADE();
-                    arrowClicked = true;
+                    obj.arrowClicked = true;
                     obj.step++;
                     $("#decision").html("Please hit ENTER when you land on the item.");
                     $(".step").html(obj.step);
@@ -239,7 +262,7 @@ function MOVE(obj) {
                         recorded = true;
                     }
                     EXPT_INSTR_FADE();
-                    arrowClicked = true;
+                    obj.arrowClicked = true;
                     obj.step++;
                     $("#decision").html("Please hit ENTER when you land on the item.");
                     $(".step").html(obj.step);
@@ -262,7 +285,7 @@ function MOVE(obj) {
                         recorded = true;
                     }
                     EXPT_INSTR_FADE();
-                    arrowClicked = true;
+                    obj.arrowClicked = true;
                     obj.step++;
                     $("#decision").html("Please hit ENTER when you land on the item.");
                     $(".step").html(obj.step);
@@ -285,7 +308,7 @@ function MOVE(obj) {
                         recorded = true;
                     }
                     EXPT_INSTR_FADE();
-                    arrowClicked = true;
+                    obj.arrowClicked = true;
                     obj.step++;
                     $("#decision").html("Please hit ENTER when you land on the item.");
                     $(".step").html(obj.step);
@@ -301,10 +324,12 @@ function MOVE(obj) {
                     }
                     break;
                 case 13: //ENTER
-                    if (arrowClicked){
+                    e.preventDefault();
+                    if (obj.arrowClicked){
                         if(signaler[0] == goal[0] && signaler[1] == goal[1]){
-                            allowMove = false;
+                            obj.allowMove = false;
                             obj.totalScore = obj.totalScore - obj.step + REWARD;
+                            obj.reached = true;
                             reward = REWARD;
                             $("#result .step").html("-" + obj.step);
                             $("#resultText").html("Congratulations!<br><br>You reached the target!");
@@ -316,8 +341,10 @@ function MOVE(obj) {
                         } else if ($("#shape"+ signaler[0] + "v" + signaler[1]).hasClass("gridEmpty") || (signaler[0] == receiver[0] && signaler[1] == receiver[1])) {
                             alert("You cannot stop on an empty square or the receiver's position! Please move to an item on the grid.")
                         } else {
-                            allowMove = false;
+                            
+                            obj.allowMove = false;
                             obj.totalScore = obj.totalScore - obj.step;
+                            obj.reached = false;
                             reward = 0;
                             $("#result .step").html("-" + obj.step);
                             $("#resultText").html("Sorry, you did not reach the target.<br><br>Good luck on your next round!");
@@ -328,7 +355,7 @@ function MOVE(obj) {
                             obj.step = 0;
                         }
                     } else {
-                        alert("Please use arrow keys on your keyboard to move.");
+                       alert("Please use arrow keys on your keyboard to move.");
                     }
                     break;
                 default:
@@ -341,14 +368,6 @@ function MOVE(obj) {
 };
 
 
-
-function CREATE_SAY_OPTIONS(obj) {
-    $("#butOption0").click(RECEIVER_WALK(tryTrial));
-    $("#butOption1").click(RECEIVER_WALK(tryTrial));
-    $("#butOption2").click(RECEIVER_WALK(tryTrial));
-}
-
-
 function RECEIVER_WALK(obj) {
     if(!recorded){
         decision = $("#" + option).text();
@@ -359,17 +378,9 @@ function RECEIVER_WALK(obj) {
     EXPT_INSTR_FADE();
     $("#decision").html("<img class='shape' src='shape/receiver.png' />" + " is responding to your signal.");
     if(instrTry){
-        /*
-        if(option == "butOption0" || option == "butOption3")
-           path  = [2,2,2,3];
-        else if (option == "butOption1")
-            path = [2,3,3,3,3,3,3];
-        var randDir = path[pathNum];
-        pathNum++;*/
         var path = obj.receiverPath;
         var randDir = path.shift();
         obj.receiverPath = path;
-        //obj.receiverPathNum++;
     }
     else {
         var randDir = Math.floor(Math.random() * 4);
@@ -433,24 +444,21 @@ function RECEIVER_WALK(obj) {
             }
             break;
     }
-    
-    console.log(obj.receiverPath.length);
-    console.log(obj.receiverPathNum);
-    //if(receiver[0] == goal[0] && receiver[1] == goal[1]) {
-    if(path.length == 0) {
-        obj.totalScore = obj.totalScore - obj.step + REWARD;
-        reward = REWARD;
-        $("#result .step").html("-" + obj.step);
-        var landedItem = $('#shape'+ receiver[0] + 'v' + receiver[1] + ' .shape').attr('src');
-        $("#resultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
-        $("#reward").html(reward);
-        $("#scoreThisRound").html(reward - obj.step);
-        $("#totalAfter").html(obj.totalScore);
-        $("#result").show();
-        obj.step = 0;
-    } else {
-        setTimeout(RECEIVER_WALK, RECEIVER_MOVE_SPEED * 1000, obj);
-    }/*else if ($("#shape"+ receiver[0] + "v" + receiver[1]).hasClass("gridItem") && (signaler[0] != receiver[0] || signaler[1] != receiver[1])) {
+
+        if(path.length == 0) {
+            obj.totalScore = obj.totalScore - obj.step + REWARD;
+            reward = REWARD;
+            $("#result .step").html("-" + obj.step);
+            var landedItem = $('#shape'+ receiver[0] + 'v' + receiver[1] + ' .shape').attr('src');
+            $("#resultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
+            $("#reward").html(reward);
+            $("#scoreThisRound").html(reward - obj.step);
+            $("#totalAfter").html(obj.totalScore);
+            $("#result").show();
+            obj.step = 0;
+        } else 
+            setTimeout(RECEIVER_WALK, RECEIVER_MOVE_SPEED * 1000, obj);
+    /*} else if ($("#shape"+ receiver[0] + "v" + receiver[1]).hasClass("gridItem") && (signaler[0] != receiver[0] || signaler[1] != receiver[1])) {
         obj.totalScore = obj.totalScore - obj.step;
         reward = 0;
         $("#result .step").html("-" + obj.step);
@@ -460,23 +468,6 @@ function RECEIVER_WALK(obj) {
         $("#scoreThisRound").html(reward - obj.step);
         $("#totalAfter").html(obj.totalScore);
         $("#result").show();
-        obj.step = 0;
-                        
+        obj.step = 0;               
     } */
-        
 }
-=======
-function CREATE_GRID(trial, nrow, ncol) {
-    for (var row = 0; row < nrow; row++) {
-        for (var col = 0; col < ncol; col++) {
-            //$(".gridContainer").append("<div class='gridItem'></div>");
-            if (trial[row][col]!= null){
-                //$(".gridContainer").append("<div class='gridEmpty'></div>");
-                $(".gridContainer").append($("<img>",{class: "gridItem shape", src: trial[row][col]}));
-            }
-            else
-                $(".gridContainer").append("<div class='gridEmpty'></div>");
-        };
-    };
-};
->>>>>>> 89e24f9a5e8df31a2f138d490a881cf86ecacc53

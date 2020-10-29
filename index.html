@@ -6,52 +6,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Work+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
-<<<<<<< HEAD
     <script src='https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.3/mobile-detect.min.js'></script>
     <script src="func.js"></script>
     <script src="expt.js"></script>
-=======
-    <script src="func.js"></script>
->>>>>>> 89e24f9a5e8df31a2f138d490a881cf86ecacc53
     <script src="index.js"></script>
 </head>
 <body>
     <!--==========INSTRUCTIONS==========-->
     <div class="pageBox" id="instrPage">
-<<<<<<< HEAD
-        <iframe id="consent" src="informedConsent.pdf">
-        </iframe>
         <div id="instrBox">
-        <p id="instrText"></p>
-        <img id="examGrid" src="examplePic/exampleGrid.png" alt="An error occurred when loading the picture.">
-        <button class="butNext" id="instrNextBut" onclick="instr.next()">NEXT</button>
-        <button class="butNext" id="instrBackBut" onclick="instr.back()">BACK</button>
-    </div>
+            <iframe id="consent" src="informedConsent.pdf"></iframe>
+            <p id="instrText"></p>
+            <img id="examGrid" src="exampleGrid.png" alt="An error occurred when loading the picture.">
+            <div class="pageBox" id="instrQBox">
+                <p id="instrQText">Which of the following is <b>not correct</b>?</p>
+                <div id="quizBox">
+                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="walk"><div class="optionText">You can achieve the goal by walking on your own.</div></div></label>
+                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="points"><div class="optionText">If either the robot or you achieve the goal, you get 8 points.</div></div></label>
+                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="costs"><div class="optionText">Each step taken by either the robot or you costs 1 point.</div></div></label>
+                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="several"><div class="optionText">You can achieve the goal by sending out several signals to the robot.</div></div></label>
+                </div>
+                <div class='warning' id='instrQWarning'></div>
+                <div class="butNext" id="instrQBut" onclick="SUBMIT_INSTR_Q()">SUBMIT</div>
+            </div>
+            <button class="butNext" id="instrNextBut" onclick="instr.next()">NEXT</button>
+            <button class="butNext" id="instrBackBut" onclick="instr.back()">BACK</button>
+        </div>
+        
         <div id="bufferContainer">
             <img id="buffer" alt="An error occurred when loading the picture.">
         </div>
         <!--=====INSTRUCTION QUIZ=====-->
-        <div class="pageBox" id="instrQBox">
-            <p id="instrQText">Which of the following is <b>not correct</b>?</p>
-            <div id="quizBox">
-            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="walk"><div class="optionText">You can achieve the goal by walking on your own.</div></div></label>
-            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="points"><div class="optionText">If either the robot or you achieve the goal, you get 8 points.</div></div></label>
-            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="costs"><div class="optionText">Each step taken by either the robot or you costs 1 point.</div></div></label>
-            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="several"><div class="optionText">You can achieve the goal by sending out several signals to the robot.</div></div></label>
-            </div>
-            <div class='warning' id='instrQWarning'></div>
-            <div class="butNext" id="instrQBut" onclick="SUBMIT_INSTR_Q()">SUBMIT</div>
-        </div>
         <button class="butNext" id="startExptBut" onclick="START_EXPT()">NEXT</button>
-=======
-        <p id="instrText"></p>
-        <button class="butNext" onclick="instr.next()">NEXT</button>
->>>>>>> 89e24f9a5e8df31a2f138d490a881cf86ecacc53
     </div>
     <!--==========EXPERIMENT==========-->
     <div class="pageBox" id="exptPage">
         <div id="exptBox">
-<<<<<<< HEAD
             <div id="scoreBoard">
                     <div class="info">
                         <p style="opacity: 0">Practice: </p>
@@ -84,13 +74,6 @@
                             <button class="butExpt" id="butOption3">circle</button>
                             <button class="butExpt" id="butOption4">square</button>
                             <button class="butExpt" id="butOption5">triangle</button>
-
-                            <!--<button class="butExpt" id="butOption0" onclick=RECEIVER_WALK(this.id)>red</button> 
-                            <button class="butExpt" id="butOption1" onclick=RECEIVER_WALK(this.id)>green</button>
-                            <button class="butExpt" id="butOption2" onclick=RECEIVER_WALK(this.id)>purple</button>
-                            <button class="butExpt" id="butOption3" onclick=RECEIVER_WALK(this.id)>circle</button>
-                            <button class="butExpt" id="butOption4" onclick=RECEIVER_WALK(this.id)>square</button>
-                            <button class="butExpt" id="butOption5" onclick=RECEIVER_WALK(this.id)>triangle</button>-->
                         </div>
                         <div id="do">
                             <p class="inlineImg">Use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</p>
@@ -121,7 +104,7 @@
                     <p class="title">New Total Score: </p>
                     <p class="data" id="totalAfter"></p>
                 </div>
-                <button class="butNext" onclick="NEXT_TRIAL()">NEXT</button>
+                <button class="butNext" id="resultBut" onclick="NEXT_TRIAL()">NEXT</button>
             </div>
         </div>
     </div>
@@ -132,45 +115,3 @@
    
     
 </body>
-=======
-            <div class="column gridContainer"></div>
-            <div class="column text">
-                <div id="recordBox">
-                    <div class="column goal">
-                        <p>The true goal:</p>
-                        <img class="shape" id="goalShape" alt="An error occurred when loading the picture.">
-                    </div>
-                    <div class="column score">
-                        <p>Current score: </p>
-                        <p id="score"></p>
-                    </div>
-                </div>
-                <div id="exptInstr">
-                    <p>Choose one of the three options:</p>
-                    <div id="say">
-                        <p>Either say one of the following to <img class="shape" src="shape/receiver.png">:</p>
-                        <button class="butExpt" id="butOption1" onclick=RECEIVER_WALK()>Red</button> 
-                        <button class="butExpt" id="butOption2" onclick=RECEIVER_WALK()>Square</button>
-                        <button class="butExpt" id="butOption3" onclick=RECEIVER_WALK()>Triangle</button>
-                        <button class="butExpt" id="butOption4" onclick=RECEIVER_WALK()>Purple</button>
-                        <button class="butExpt" id="butOption5" onclick=RECEIVER_WALK()>Circle</button>
-                        <button class="butExpt" id="butOption6" onclick=RECEIVER_WALK()>Green</button>
-                    </div>
-                    <div id="do">
-                        <div class="inlineImg">Or use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</div>
-                    </div>
-                    <div id="quit">
-                        <p id="quitText">Or give up on this trial: </p>
-                        <button class="butExpt" id="quitBut" onclick="SHOW_QUIT_RESULT()">Quit</button>
-                    </div>
-                </div>
-                <p id="exptWaitText"></p>
-                <div class="pageBox" id="exptResultBox">
-                    <p id="exptResultText"></p>
-                    <button class="butNext" onclick="NEXT_TRIAL()">NEXT</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
->>>>>>> 89e24f9a5e8df31a2f138d490a881cf86ecacc53
