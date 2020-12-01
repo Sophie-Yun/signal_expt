@@ -122,6 +122,70 @@ class trialObject {
     }
 }
 
+function TRIAL_SET_UP (obj) {
+    $(".gridItem").remove();
+    $(".gridEmpty").remove();
+
+    obj.gridArray = [
+        [,,,,,,,,],
+        [,,,,,,,,],
+        [,,,,,,,,],
+        [,,,,,,,,],
+        [,,,,,,,,],
+        [,,,,,,,,],
+        [,,,,,,,,],
+        [,,,,,,,,],
+        [,,,,,,,,],
+        [,,,,,,,,]
+    ];
+    receiver = [2, 4];//row, col
+    signaler = [9, 4];
+    obj.gridArray[receiver[0]][receiver[1]] = SHAPE_DIR + "receiver.png";
+    obj.gridArray[signaler[0]][signaler[1]] = SHAPE_DIR + "signaler.png";
+
+    if (!obj.isExptTrial) {
+        obj.signalSpace = PRAC_TRIAL_DICT["prac" + obj.trialIndex][0];
+        obj.gridString = PRAC_TRIAL_DICT["prac" + obj.trialIndex][1];
+    } else {
+        obj.signalSpace = TRIAL_DICT[trialList[num]][0];
+        obj.gridString = TRIAL_DICT[trialList[num]][1];
+        $("#pracRound").html("");
+    }
+    /*
+    for (var i = 0; i < signalSpace.length; i++) {
+        var j = 0;
+        while (signalSpace[i] != $("#butOption" + j).html()) {
+            j++;
+        }
+        $("#butOption" + j).css({"border": "2px solid #625757", 
+                                "background": "#9D8F8F", 
+                                "box-shadow": "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                                "pointer-events": "auto",
+                                "cursor": "pointer"
+                                });
+    }*/
+
+    var coordinates = obj.gridString.match(/\d+/g);
+    var shape = obj.gridString.match(/\w+ +\w+/g);
+    
+    for (var i = 0; i < shape.length; i++) {
+        var col = coordinates[2 * i];
+        var row = GRID_NROW - coordinates[2 * i + 1] - 1;
+        obj.gridArray[row][col] = PIC_DICT[shape[i]];
+        if(!obj.isExptTrial) {
+            if (shape[i] == GOAL_DICT["expt" + obj.trialIndex])
+                obj.goalCoord = [row, col];
+        } else {
+            if (shape[i] == GOAL_DICT[trialList[obj.trialIndex]])
+                obj.goalCoord = [row, col];
+        }
+    }
+
+    //obj.receiverPath
+    //signalerMoved = false;
+    //receiverMoved = false;
+}
+
 function RECORD_DECISION_TIME(obj, result) {
     if(!obj.resultRecorded){
         obj.result = result;
