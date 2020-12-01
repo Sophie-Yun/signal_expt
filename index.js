@@ -27,17 +27,16 @@ var allowWalk = false;
 
 var qAttemptNum = 0;
 var trial;
-var score = 0;
+//var score = 0;
 var reward;
-var signalerMoved;
-var receiverMoved;
+//var signalerMoved;
+//var receiverMoved;
 var decision;
 var startTime;
 var decideTime;
 var finishTime;
 var recorded = false;
 var trialNum = 0;
-var isExptTrial = false;
 var trialObj = {};
 var receiver = [2, 4]; //row, col
 var signaler = [9, 4];
@@ -49,7 +48,7 @@ var pathNum = 0;
 var path;
 
 // object variables
-var instr, subj, trial, tryTrial;
+var instr, subj, trial, tryMove, trySay;
 
 /*
   #####  ####### ####### #     # ######  
@@ -145,319 +144,22 @@ $(document).ready(function() {
     //subj.id = subj.getID("sonacode");
     subj.saveVisit();
     if (subj.phone) { // asking for subj.phone will detect phone
-        $("#instrText").html('It seems that you are using a touchscreen device or a phone. Please use a laptop or desktop instead.<br /><br />If you believe you have received this message in error, please contact the experimenter at experimenter@domain.edu<br /><br />Otherwise, please switch to a laptop or a desktop computer for this experiment.');
-        $("#instrBut").hide();
-        $("#instrPage").show();
+        BLOCK_MOBILE();
     //} else if (subj.id !== null){
     } else {
         instr = new instrObject(instr_options);
-        tryTrial = new trialObject(trial_options);
+        tryMove = new trialObject(trial_options);
+        trySay = new trialObject(trial_options);
+        practice = new trialObject(trial_options);
         instr.start();
-        document.onkeydown = function(e) {
-            if(e.keyCode == 13 || e.keyCode == 32)
-                e.preventDefault();
-        }
+        DISABLE_DEFAULT_KEYS();
         //trial_options["subj"] = subj;
         //trial = new trialObject(trial_options);
         //$('#captchaBox').show();
     }
 });
 
-/*
-  #####  #     # ######        # #######  #####  ####### 
- #     # #     # #     #       # #       #     #    #    
- #       #     # #     #       # #       #          #    
-  #####  #     # ######        # #####   #          #    
-       # #     # #     # #     # #       #          #    
- #     # #     # #     # #     # #       #     #    #    
-  #####   #####  ######   #####  #######  #####     #    
-                                                         
-*/
 
-const SUBJ_TITLES = ['num',
-                     'date',
-                     'startTime',
-                     //'id',
-                     'userAgent',
-                     'endTime',
-                     'duration',
-                     'instrQAttemptN',
-                     'instrReadingTimes',
-                     'quickReadingPageN',
-                     'hiddenCount',
-                     'hiddenDurations',
-                     'daily',
-                     'aqResponses',
-                     'aqRt',
-                     'serious',
-                     'problems',
-                     'gender',
-                     'age',
-                     'inView',
-                     'viewportW',
-                     'viewportH'
-                    ];
-
-function INVALID_ID_FUNC() {
-    $("#instrText").html("We can't identify a valid code from subject pool website. Please reopen the study from the subject pool website again. Thank you!");
-    $("#instrBut").hide();
-    $("#instrPage").show();
-}
-function HANDLE_VISIBILITY_CHANGE() {
-    if (document.hidden) {
-        subj.hiddenCount += 1;
-        subj.hiddenStartTime = Date.now();
-    } else  {
-        subj.hiddenDurations.push((Date.now() - subj.hiddenStartTime)/1000);
-    }
-}
-var subj_options = {
-    subjNumFile: SUBJ_NUM_FILE,
-    titles: SUBJ_TITLES,
-    invalidIDFunc: INVALID_ID_FUNC,
-    viewportMinW: VIEWPORT_MIN_W,
-    viewportMinH: VIEWPORT_MIN_H,
-    savingScript: SAVING_SCRIPT,
-    visitFile: VISIT_FILE,
-    attritionFile: ATTRITION_FILE,
-    subjFile: SUBJ_FILE,
-    savingDir: SAVING_DIR,
-    handleVisibilityChange: HANDLE_VISIBILITY_CHANGE
-};
-
-/*                              
- # #    #  ####  ##### #####  
- # ##   # #        #   #    # 
- # # #  #  ####    #   #    # 
- # #  # #      #   #   #####  
- # #   ## #    #   #   #   #  
- # #    #  ####    #   #    # 
-*/
-var instr_text = new Array;
-instr_text[0] = "<strong>Welcome to this experiment!</strong><br><br>In this experiment, you will play a game that involves cooperation with one other agent. The goal is for you to reach a target item. <br><br>Hope you enjoy it!"
-instr_text[1] = "Please carefully read the instructions on the next few pages. There will be a question that asks you about the instructions later and a couple of practice trials."
-instr_text[2] = "In this experiment, you are the agent in blue " + "<img class='inlineShape' src='shape/signaler.png'/>" + " and your partner is in white " + "<img class='inlineShape' src='shape/receiver.png' />" + " ."
-instr_text[3] = "At the beginning of each round, you and your partner will stand at different positions in a game board. <br><br>You will also see items in some of the grids."
-instr_text[4] = "Besides the game board, you will also see the target for this round. For example, \"Target: <img class='inlineShape' src='shape/redCircle.png'/> \". The target will be different for each round. <br><br>If either you or your partner successfully reach the target at the end of one round, both of you will receive 8 points as reward."
-instr_text[5] = "To reach the target, you can choose to move by yourself. <br><br>You can move from grid to grid by taking steps to your left, right, top, or bottom. Each step will cost you one point. You cannot move diagonally. You cannot move outside the grid. <br><br>You can try to move by yourself on the next page."
-instr_text[6] = "";
-instr_text[7] = "Good job! Now that you know how to move by yourself!<br><br>If you don't want to move, you can ask your partner to move. <br><br>However, you are the only person that knows the target for each round. Your partner does not know the target. <br><br>You have the option to send one of the given signals to your partner. The signal can give partial information about the target."
-instr_text[8] = "After you send the signal, your partner will try its best to reach the target given the information you provided. <br><br>Each step that your partner takes will also cost one point. <br><br>You can try to send a signal on the next page."
-instr_text[9] = "";
-instr_text[10] = "Nice! Now that you know how to send a signal to your partner.<br><br>If you decide that it is too costly for either of you to move towards the target. You have the option to QUIT this round. Neither of you will lose or receive point if you choose to quit. ";
-instr_text[11] = "By clicking on the NEXT button, I am acknowledged and hereby accept the terms. I understand the task in this experiment.";
-instr_text[12] = "";
-instr_text[13] = "Which of the following is <b>not correct<b>?";
-instr_text[14] = "Please start the practice trial on the next page."
-
-const INSTR_FUNC_DICT = {
-    0: HIDE_BACK_BUTTON,
-    1: SHOW_BACK_BUTTON,
-    2: HIDE_EXAMPLE_GRID,
-    3: SHOW_EXAMPLE_GRID,
-    4: HIDE_EXAMPLE_GRID,
-    5: SHOW_INSTR, 
-    6: TRY_MOVE,
-    7: SHOW_INSTR,
-    8: SHOW_INSTR,
-    9: TRY_SAY,
-    10: SHOW_INSTR,
-    11: SHOW_CONSENT,
-    12: SHOW_INSTR_QUESTION,
-    13: START_PRACTICE_TRIAL,
-};
-
-function HIDE_BACK_BUTTON(){
-    $("#instrBackBut").hide();
-}
-
-function SHOW_BACK_BUTTON(){
-    $("#instrBackBut").show();
-}
-
-function SHOW_EXAMPLE_GRID() {
-    $("#examGrid").css("display", "block");
-}
-
-function HIDE_EXAMPLE_GRID() {
-    $("#examGrid").hide();
-}
-
-function SHOW_INSTR() {
-    HIDE_CONSENT();
-    $("#instrText").show();
-    $("#instrNextBut").show();
-    $("#instrBackBut").css("position", "absolute");
-    $("#exptPage").hide();
-
-    //reset TRY_MOVE()
-    if(signaler[0] != 9 || signaler[1] != 4){
-        REMOVE_PREVIOUS(signaler);
-        signaler = [9, 4];//row, col
-        NEW_POSITION(signaler);
-    }
-    if(receiver[0] != 2 || receiver[1] != 4){
-        REMOVE_PREVIOUS(receiver);
-        receiver = [2, 4];//row, col
-        NEW_POSITION(receiver);
-    }
-    EXPT_INSTR_APPEAR();
-    $("#decision").html("");
-    $("#result").hide();
-}
-
-function TRY_MOVE() {
-    instrTry = true;
-    if(!tryTrial.reached)
-        $("#instrNextBut").hide();
-    if(!tryTrial.gridCreated) {
-        tryTrial.grid = [
-            [,,,,,,,,],
-            [,,,,,,,,],
-            [,,,,,,,,],
-            [,,,,,,,PIC_DICT["red circle"],],
-            [,,,,,,,,],
-            [,,,,,,,,],
-            [,,,,,,,,],
-            [,,,,,,,,],
-            [,,,,,,,,],
-            [,,,,,,,,]
-        ];
-        tryTrial.grid[receiver[0]][receiver[1]] = SHAPE_DIR + "receiver.png";
-        tryTrial.grid[signaler[0]][signaler[1]] = SHAPE_DIR + "signaler.png";
-        goal=[3,7];
-        CREATE_GRID(tryTrial.grid, GRID_NROW, GRID_NCOL);
-        tryTrial.gridCreated = true;
-    }
-
-    $(".step").html(tryTrial.step);
-    $("#goalShape").attr("src", PIC_DICT["red circle"]);
-    $("#score").html(tryTrial.totalScore);
-    $("#say").hide();
-    $("#quit").hide();
-    $("#exptPage").show();
-    tryTrial.move();
-}
-
-
-function TRY_SAY(){
-    instrTry = true;
-    //if(!tryTrial.reached)
-        $("#instrNextBut").hide();
-
-    if(!tryTrial.gridSayCreated) {
-        var trySayOption = ["red", "circle", "green"];
-        for (var i = 0; i < 6; i++) {
-            $("#butOption" + i).css({"border": "1px solid", 
-                "background": "#bcbab8", 
-                "cursor": "auto",
-                "box-shadow": "none"
-                });
-            
-            for (var j = 0; j < trySayOption.length; j++) {
-                if (trySayOption[j] == $("#butOption" + i).html()) {
-                    $("#butOption" + i).css({"border": "2px solid #625757", 
-                                    "background": "#9D8F8F", 
-                                    "box-shadow": "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                                    "pointer-events": "auto",
-                                    "cursor": "pointer"
-                                    });
-                    $("#butOption" + i).click(function(){RECEIVER_WALK(tryTrial)});
-                }
-            }
-        }
-
-
-        $(".gridItem").remove();
-        $(".gridEmpty").remove();
-        tryTrial.grid = [
-            [,,,,,,,,],
-            [,,,,,,,,],
-            [,,,,,,,,],
-            [,,,,,,,PIC_DICT["red circle"],],
-            [,,,,,,,,],
-            [,,,,,,,,],
-            [,,,,,,,,],
-            [,,,,,,,,],
-            [,,,,,PIC_DICT["green circle"],,,],
-            [,,,,,,,,]
-        ];
-        tryTrial.grid[receiver[0]][receiver[1]] = SHAPE_DIR + "receiver.png";
-        tryTrial.grid[signaler[0]][signaler[1]] = SHAPE_DIR + "signaler.png";
-        goal=[3,7];
-        CREATE_GRID(tryTrial.grid, GRID_NROW, GRID_NCOL);
-        tryTrial.gridSayCreated = true;
-    }
-
-    document.onkeydown = function (e) {
-        alert("Please click on one of the buttons to send the signal.");
-    }
-    $(".step").html(tryTrial.step);
-    $("#goalShape").attr("src", PIC_DICT["red circle"]);
-    $("#score").html(tryTrial.totalScore);
-    $("#say").show();
-    $("#do").hide();
-    $("#quit").hide();
-    $("#exptPage").show();
-}
-
-
-function SHOW_CONSENT() {
-    $("#consent").show();
-    $("#instrQBox").hide();
-}
-
-function HIDE_CONSENT() {
-    $("#consent").hide();
-}
-
-function SHOW_INSTR_QUESTION() {
-    HIDE_CONSENT();
-    $("#instrQBox").show();
-    $("#instrNextBut").hide();
-}
-
-function SHOW_EXAMPLE_SIGNAL() {
-    $("#examGrid").show();
-    $("#examGrid").attr("src", "examplePic/exampleSignal.jpg");
-}
-
-function SHOW_EXAMPLE_ACTION() {
-    
-    $("#examGrid").attr("src", "examplePic/examAction.png");
-}
-
-function START_PRACTICE_TRIAL() {
-    $("#instrPage").hide();
-    TRIAL_SET_UP(trialNum);
-    CREATE_GRID(trial, GRID_NROW, GRID_NCOL);
-    SETUP_RECORD_BOX(goal, score);
-    $("#exptPage").show();
-    //MOVE();
-}
-
-var instr_options = {
-    text: instr_text,
-    funcDict: INSTR_FUNC_DICT,
-    qConditions: ['onlyQ'],
-};
-
-
-
-function SUBMIT_INSTR_Q() {
-    var instrChoice = $("input[name='instrQ']:checked").val();
-    if (typeof instrChoice === "undefined") {
-        $("#instrQWarning").text("Please answer the question. Thank you!");
-    } else if (instrChoice == "several") {
-        qAttemptNum++;
-        $("#instrQWarning").text("Correct! Please click on NEXT to start the practice trial!");
-        //$("#instrQBox").hide();
-        instr.next();
-    } else {
-        qAttemptNum++;
-        $("#instrQWarning").text("You have given an incorrect answer. Please try again.");
-    }
-}
 /*
  ####### ######  ###    #    #       
     #    #     #  #    # #   #       
@@ -485,9 +187,9 @@ function SHOW_BLOCK() {
     $("#expBut").hide();
     $("#trialPage").show();
     subj.detectVisibilityStart();
-    trial.run();
+    //trial.run();
 }
-
+/*
 function TRIAL_UPDATE(last, this_trial, next_trial, path) {
     trial.stimName = EXPT_TRIAL[this_trial][2][0];
     trial.facingDir = EXPT_TRIAL[this_trial][2][1];
@@ -501,7 +203,7 @@ function TRIAL_UPDATE(last, this_trial, next_trial, path) {
         $("#bufferFrame").css("background-image", "url("+path + EXPT_TRIAL[next_trial][1]+")");
     }
 }
-
+*/
 function TRIAL() {
     $("#testFrame").show();
     trial.inView = CHECK_FULLY_IN_VIEW($("#testImg"));
@@ -535,7 +237,7 @@ var trial_options = {
     savingDir: SAVING_DIR,
     //trialList: TRIAL_LIST,
     //intertrialInterval: INTERTRIAL_INTERVAL,
-    updateFunc: TRIAL_UPDATE,
+    //updateFunc: TRIAL_UPDATE,
     trialFunc: TRIAL,
     //endExptFunc: END_EXPT
 }
@@ -551,7 +253,7 @@ var trial_options = {
 */
 
 function START_EXPT(){
-    isExptTrial = true;
+    obj.isExptTrial = true;
     trialNum = 0;
     score = 0;
     step = 0;
@@ -566,61 +268,47 @@ function START_EXPT(){
     $("#exptPage").show();
 }
 
-function SHOW_QUIT_RESULT() {
-    if(!recorded){
-        EXPT_INSTR_FADE();
-        decision = "quit";
-        var currentTime = Date.now();
-        decideTime = (currentTime - startTime)/1000;
-        recorded = true;
-    }
-    reward = 0;
-    $("#resultText").html("Don't worry!<br>Good luck on your next round!");
-    $("#reward").html(reward);
-    $("#scoreThisRound").html(reward - step);
-    $("#totalAfter").html(score);
-    $("#result").show();
-};
 
-
-function NEXT_TRIAL() {
+function NEXT_TRIAL(obj) {
     if(instrTry){
         instr.next();
         $("#instrText").show();
         $("#instrNextBut").show();
         $("#instrBackBut").css("position", "absolute");
-    } else {
+    } else if(!obj.isExptTrial){
         $("#decision").html('');
         $("#result").hide();
         EXPT_INSTR_APPEAR();
+        practice.next();
+    }
+        /*
         var currentTime = Date.now();
         finishTime = (currentTime - startTime)/1000;
 
         var postData = "qAttemptNum,trialNum,expt,decision,decideTime,finishTime\n";
         postData += qAttemptNum + "," + trialNum + "," + trialList[trialNum] + "," + decision + "," + decideTime + "," + finishTime + "\n";
         trialObj.postData = postData;
-        if(isExptTrial) {
+        if(obj.isExptTrial) {
             POST_DATA(trialObj, SUCCESS, ERROR);
             console.log(postData);
         }
-        trialNum++;
-        step = 0;
         $("#round").html(trialNum+1);
-        $(".step").html(step);
-        if(!isExptTrial && trialNum == PRAC_TRIAL_NUM) {
+        //console.log(obj.step);
+        //$(".step").html(obj.step);
+        if(!obj.isExptTrial && trialNum == PRAC_TRIAL_NUM) {
             SHOW_INSTR_QUESTION();
-        } else if (isExptTrial && trialNum == TRIAL_NUM){
+        } else if (obj.isExptTrial && trialNum == TRIAL_NUM){
             $("#exptPage").hide();
             $("#thankPage").show();
         } else {
             recorded = false;
-            TRIAL_SET_UP(trialNum);
+            TRIAL_SET_UP(obj);
             CREATE_GRID(trial, GRID_NROW, GRID_NCOL);
             SETUP_RECORD_BOX(goal, score);
             $("#exptInstr").show();
             startTime = Date.now();
             //MOVE();
-        }
-    }
+        }*/
+    
    
 }

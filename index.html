@@ -7,8 +7,10 @@
     <link rel="stylesheet" href="style.css">
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.3/mobile-detect.min.js'></script>
-    <script src="func.js"></script>
-    <script src="expt.js"></script>
+    <script src="trialInterface.js"></script>
+    <script src="trial.js"></script>
+    <script src="instruction.js"></script>
+    <script src="subject.js"></script>
     <script src="index.js"></script>
 </head>
 <body>
@@ -80,7 +82,7 @@
                         </div>
                         <div id="quit">
                             <p id="quitText">Give up on this trial: </p>
-                            <button class="butExpt" id="quitBut" onclick="SHOW_QUIT_RESULT()">Quit</button>
+                            <button class="butExpt" id="quitBut">Quit</button>
                         </div>
                     </div>
                     <div id="decision"></div>
@@ -104,7 +106,7 @@
                     <p class="title">New Total Score: </p>
                     <p class="data" id="totalAfter"></p>
                 </div>
-                <button class="butNext" id="resultBut" onclick="NEXT_TRIAL()">NEXT</button>
+                <button class="butNext" id="resultBut">NEXT</button>
             </div>
         </div>
     </div>
