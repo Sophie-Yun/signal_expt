@@ -1,0 +1,11 @@
+subjId,trialIndex,exptId,decision,decideTime,endLocation,finishTime
+undefined,0,expt0,move,2.369,purple circle,4.844
+undefined,1,expt5,move,1.625,red circle,2.787
+undefined,2,expt3,move,4.95,purple square,7.262
+undefined,3,expt7,quit,1.338,noChange,2.096
+undefined,4,expt4,quit,1.674,noChange,2.489
+undefined,5,expt6,quit,0.803,noChange,1.561
+undefined,6,expt2,quit,1.156,noChange,1.978
+undefined,7,expt1,quit,0.881,noChange,1.627
+undefined,8,expt9,move,1.194,green square,3.675
+undefined,9,expt8,quit,1.004,noChange,1.737

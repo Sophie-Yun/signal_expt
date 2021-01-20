@@ -50,6 +50,7 @@ body {
     margin-bottom: 20px;
 }
 
+
 /*
  ####### #     # ######  ####### 
  #        #   #  #     #    #    
@@ -61,7 +62,7 @@ body {
                                  
 */
 
-#exptBox {
+#tryExptBox, #practiceExptBox, #exptBox {
     position: absolute;
     width: 1000px;
     left: 50%;
@@ -69,7 +70,7 @@ body {
     top: 50px;
 }
 
-#scoreBoard {
+#tryScoreBoard, #practiceScoreBoard, #scoreBoard {
     display: flex;
     justify-content: space-around;
     background: linear-gradient(180deg, #F9F9F9 0%, rgba(255, 255, 255, 0.5) 100%), #BCBAB8;
@@ -78,23 +79,23 @@ body {
     box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
-#scoreBoard .info {
+#tryScoreBoard .info, #practiceScoreBoard .info, #scoreBoard .info {
     display: inline-block;
 }
 
-#scoreBoard p {
+#tryScoreBoard p, #practiceScoreBoard p, #scoreBoard p {
     position: relative;
     display: inline;
     top: 8px;
 }
 
-#scoreBoard img {
+#tryScoreBoard img, #practiceScoreBoard img, #scoreBoard img {
     display: inline-block;
     top: 10px;
     padding: 0px;
 }
 
-#verticalAxis {
+#tryVerticalAxis, #practiceVerticalAxis, #verticalAxis {
     position: relative;
     display: inline-block;
     writing-mode: vertical-rl;
@@ -113,7 +114,7 @@ body {
     height: 400px;
 }
 
-#exptInstr {
+#tryExptInstr, #practiceExptInstr, #exptInstr {
     display: inline-block;
 }
 
@@ -146,20 +147,20 @@ body {
     text-align: center;
 }
 
-.column {
+.tryColumn, .column {
     float: left;
     top: 30px;
 }
 
-#horizontalAxis {
+#tryHorizontalAxis, #practiceHorizontalAxis, #horizontalAxis {
     position: absolute;
     left: 6%;
     top: 610px;
     letter-spacing: 17px;
 }
   
-/* Left and right column */
-.column.gridContainer {
+/* Left column */
+#tryGridContainer, #practiceGridContainer, #gridContainer {
     position: relative;
     background-color: #625757;
     border: 2px solid #625757;
@@ -168,49 +169,50 @@ body {
     grid-template-columns: repeat(9, 50px);
     grid-template-rows: repeat(10, 50px);
 } 
-/* Middle column */
-.column.text {
+/* Right column */
+.tryColumn.text, .column.text {
     margin-left: 20px;
     position: relative;
     width: 47%;
 }
-
-#decision {
-    padding-top: 20px;
-    border-top: 2px solid;
-}
-
+/*
 #score {
     display: inline-block;
     margin: 0px;
-}
+}*/
 
-#say {
+#trySay, #practiceSay, #say {
     position: absolute;
     top: 0px;
 }
 
-#do {
+#tryDo, #practiceDo, #do {
     position: absolute;
     top: 200px;
 }
 
-#quit {
+#practiceQuit, #quit {
     position: absolute;
     top: 280px;
 }
 
-#decision {
+#practiceQuitText, #practiceQuitBut, #quitText, #quitBut {
+    display:inline-block;
+}
+/*
+#practiceQuitBut:visited, #quitBut:visited {
+    border-radius: 4px;
+}
+*/
+#tryDecision, #practiceDecision, #decision {
+    padding-top: 20px;
+    border-top: 2px solid;
     position: absolute;
     top: 350px;
     width: 450px;
 }
 
-#quitText, #quitBut {
-    display:inline-block;
-}
-
-#result {
+#tryResult, #practiceResult, #result {
     display: none;
     position: absolute;
     padding: 20px;
@@ -223,12 +225,12 @@ body {
     color: #F9F9F9;
 }
 
-#resultText {
+#tryResultText, #practiceResultText, #resultText {
     text-align: center;
     margin-bottom: 50px;
 }
 
-#result .title {
+#tryResult .title, #practiceResult .title, #result .title {
     float: left;
     width: 50%;
     position: relative;
@@ -237,7 +239,7 @@ body {
     margin: 0px;
 }
 
-#result .data {
+#tryResult .data, #practiceResult .data, #result .data {
     float: left;
     width: 50%;
     position: relative;
@@ -247,17 +249,12 @@ body {
     margin: 0px;
 }
 
-#result #scoreThisRoundBox .title {
+#tryResult #tryScoreThisRoundBox .title, #tryResult #tryScoreThisRoundBox .data, #practiceResult #practiceScoreThisRoundBox .title, #practiceResult #practiceScoreThisRoundBox .data,#result #scoreThisRoundBox .title, #result #scoreThisRoundBox .data {
     border-top: 1px solid;
     margin: 10px 0px;
 }
 
-#result #scoreThisRoundBox .data {
-    border-top: 1px solid;
-    margin: 10px 0px;
-}
-
-#result #totalScoreBox .title, #result #totalScoreBox .data {
+#tryResult #tryTotalScoreBox .title, #tryResult #tryTotalScoreBox .data, #practiceResult #practiceTotalScoreBox .title, #practiceResult #practiceTotalScoreBox .data, #result #totalScoreBox .title, #result #totalScoreBox .data {
     margin: 20px 0px 90px;
 }
 
@@ -293,23 +290,30 @@ body {
 */
 
 .butNext, .butExpt {
-    background-color: #bcbab8;
+    background-color: #9D8F8F;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
     border-radius: 4px;
-    border-style: hidden;
-    border-width: 1px;
-    box-sizing: border-box;
+    outline: none;
     cursor: pointer;
     font-size: 16px;
-    /*width: 100px;*/
     padding: 10px 20px;
-    text-align: center;
+    text-align: center;                             
+}
+
+.butNext:hover {
+    background: #625757;
+    color: #f9f9f9;
+}
+
+.butNext:active {
+    box-shadow: 0px 0px rgba(0, 0, 0, 0.25);
+    border: none;
 }
 
 .butNext {
     display: block;
     margin: auto;
 }
-
 
 #instrNextBut {
     position: absolute;
@@ -331,48 +335,20 @@ body {
     transform: translate(-50%, 0px);
 }
 
-
 .butExpt {
     display: inline-block;
     margin: 10px;
-}
-
-#quitBut:visited {
-    border-radius: 4px;
-}
-.butNext:hover {
-    background-color: #9d8f8f;
-}
-
-.butExpt {
-    border: 2px solid #625757;
-    background: #9D8F8F;
-    border-radius: 10px;
-    box-sizing: border-box;
-    display: inline-block;
-    font-size: 16px;
     width: 100px;
-    padding: 10px 20px;
-    text-align: center;
-    mix-blend-mode: normal;
-    cursor: pointer;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    /*
-    border: 2px solid #f9f9f9;
-    */
 }
 
 .butExpt:hover {
-    background-color: #625757;
+    background: #625757!important;
     color: #f9f9f9;
 }
 
-#say .butExpt {
-    pointer-events: none;
-    border: 2px solid #f9f9f9;
-    background: #BCBAB8;
-    cursor: default;
-    box-shadow: none;
+.butExpt:active {
+    box-shadow: 0px 0px rgba(0, 0, 0, 0.25);
+    border: none;
 }
 
 #startExptBut {

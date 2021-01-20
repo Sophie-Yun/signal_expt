@@ -88,13 +88,16 @@ instr_text[9] = "";
 instr_text[10] = "Nice! Now that you know how to send a signal to your partner.<br><br>If you decide that it is too costly for either of you to move towards the target. You have the option to QUIT this round. Neither of you will lose or receive point if you choose to quit. ";
 instr_text[11] = "";
 instr_text[12] = "By clicking on the NEXT button, I am acknowledged and hereby accept the terms. I understand the task in this experiment.";
-instr_text[13] = "Please start the practice trial on the next page."
-instr_text[14] = ""
+instr_text[13] = "Please start the practice rounds on the next page.";
+instr_text[14] = "haha";
+instr_text[15] = "You have finished all the practice rounds. You are now ready for the experiment. Good luck!";
+instr_text[16] = "";
+instr_text[17] = "Thank you for completing this experiment!";
+
 
 const INSTR_FUNC_DICT = {
-    1: START_PRACTICE_TRIAL,
     0: HIDE_BACK_BUTTON,
-    //1: SHOW_BACK_BUTTON,
+    1: SHOW_BACK_BUTTON,
     2: HIDE_EXAMPLE_GRID,
     3: SHOW_EXAMPLE_GRID,
     4: HIDE_EXAMPLE_GRID,
@@ -108,6 +111,9 @@ const INSTR_FUNC_DICT = {
     12: SHOW_CONSENT,
     13: SHOW_INSTR,
     14: START_PRACTICE_TRIAL,
+    15: SHOW_INSTR,
+    16: START_EXPT,
+    17: SHOW_INSTR
 };
 
 function HIDE_BACK_BUTTON(){
@@ -145,7 +151,7 @@ function HIDE_INSTR_Q() {
 function RESET_INSTR() {
     $("#instrText").show();
     $("#instrNextBut").show();
-    $("#exptPage").hide();
+    $("#tryExptPage").hide();
 }
 
 function SHOW_CONSENT() {

@@ -1,0 +1,2 @@
+subjNum	startDate	startTime	id	userAgent	inView	viewportW	viewportH
+pre-post	2021-01-04	20:34:35	undefined	Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36	true	1440	789

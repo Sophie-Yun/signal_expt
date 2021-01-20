@@ -7,20 +7,21 @@ class trialObject {
             gridCreated: false,
             reached: false,
             allowMove: false,
-            resultRecorded: false,
             pathIndex: 0,
             trialN: 0,
             titles: '',
             stimPath: 'Stimuli/',
-            dataFile: '',
+            dataFile: 'exptData.txt',
             savingScript: 'save.php',
             savingDir: 'data/testing',
-            trialList: [],
-            intertrialInterval: 0.5,
             updateFunc: false,
             trialFunc: false,
             endExptFunc: false,
+            isTryMove:false,
+            isTrySay: false,
+            isPracTrial: false,
             isExptTrial: false,
+            startTime: 0,
             gridArray: [
                 [,,,,,,,,],
                 [,,,,,,,,],
@@ -34,11 +35,11 @@ class trialObject {
                 [,,,,,,,,]
             ]
         }, options);
-        this.num = this.subj.num;
-        this.date = this.subj.date;
+        this.subjID = this.subj.num;
         this.subjStartTime = this.subj.startTime;
         this.trialIndex = 0;
-        this.allData = LIST_TO_FORMATTED_STRING(this.titles);
+        this.decisionRecorded = false;
+        this.exptDataToSave = LIST_TO_FORMATTED_STRING(this.titles);
         this.complete = false;
         this.receiverPath = { "red": ["right","right","right","down"],
                             "green": ["right","down","down","down","down","down","down"],
@@ -46,54 +47,72 @@ class trialObject {
         this.receiverPathNum = 0;
     }
     
-    /*
-    run() {
-        var that = this;
-        this.trialIndex++;
-        const LAST = (this.trialIndex == this.trialN);
-        this.thisTrial = this.trialList.pop();
-        
-        function findNextTrial(last) {
-            if (last){
-                return false
+    next(){
+        if(this.isTryMove || this.isTrySay) {
+            this.trialIndex++;
+            if(this.trialIndex >= this.trialN) {
+                this.end();
             } else {
-                return that.trialList[(that.trialList.length) - 1];
+                this.step = 0;
+                this.buttonsCreated = false;
+                $("#tryExptInstr").show();
+            }
+        } else if(this.isPracTrial) {
+            this.trialIndex++;
+            if(this.trialIndex >= this.trialN) {
+                this.end();
+            } else {
+                this.step = 0;
+                this.buttonsCreated = false;
+                TRIAL_SET_UP(this);
+                CREATE_GRID(this);
+                SETUP_SCOREBOARD(this);
+                CREATE_SIGNAL_BUTTONS(this, this.signalSpace);
+                $("#practiceExptInstr").show();
+                this.move();
+            }
+        } else if(this.isExptTrial) {
+            var currentTime = Date.now();
+            this.finishTime = (currentTime - this.startTime) / 1000; // in second
+            //this.exptId = randomizedTrialKeyList[this.trialIndex];
+            //this.exptId = randomizedTrialKeyList[this.trialIndex];
+            var dataList = [this.subjId, this.trialIndex, this.exptId, this.decision, this.decideTime, this.endLocation, this.finishTime];
+            this.exptDataToSave += LIST_TO_FORMATTED_STRING(dataList);
+            this.startTime = Date.now();
+            this.trialIndex++;
+            if(this.trialIndex >= this.trialN) {
+                this.end();
+            } else {
+                this.step = 0;
+                this.decisionRecorded = false;
+                this.buttonsCreated = false;
+                TRIAL_SET_UP(this);
+                CREATE_GRID(this);
+                SETUP_SCOREBOARD(this);
+                CREATE_SIGNAL_BUTTONS(this, this.signalSpace);
+                $("#exptInstr").show();
+                this.move();
             }
         }
-        const NEXT_TRIAL = findNextTrial(LAST);
-
-        this.updateFunc(LAST, this.thisTrial, NEXT_TRIAL, this.stimPath);
-
-        const START_STIM = function() {
-            that.trialFunc();
-            that.startTime = Date.now();
-        };
-
-        //setTimeout(START_STIM, this.intertrialInterval * 1000);
-    }*/
-    start(){
-        $("#quitBut").click(function(){SHOW_QUIT_RESULT(this)});
-        $("#resultBut").click(function(){NEXT_TRIAL(this)});
     }
-
-    next(){
-        this.trialIndex++;
-        this.step = 0;
-        recorded = false;
-        TRIAL_SET_UP(this);
-        CREATE_GRID(this.gridArray, GRID_NROW, GRID_NCOL);
-        SETUP_RECORD_BOX(this);
-        CREATE_SIGNAL_BUTTONS(this, this.signalSpace);
-        $("#exptInstr").show();
-        //startTime = Date.now();
+    end() {
+        if(this.isPracTrial) {
+            $("#practiceExptPage").hide();
+            NEXT_INSTR();
+            $("#instrBackBut").hide();
+            $("#instrPage").show();
+        } else if(this.isExptTrial) {
+            console.log(this.exptDataToSave);
+            this.saveExptData();
+        }
     }
     /*
     end() {
-        var currentTime = Date.now();
-        this.rt = (currentTime - this.startTime) / 1000; // in second
+        
+        
         if (this.trialNum > 0) {
             var dataList = LIST_FROM_ATTRIBUTE_NAMES(this, this.titles);
-            this.allData += LIST_TO_FORMATTED_STRING(dataList);
+            this.exptDataToSave += LIST_TO_FORMATTED_STRING(dataList);
         }
         if (this.trialNum < this.trialN) {
             this.run();
@@ -108,11 +127,11 @@ class trialObject {
         MOVE(this);
     }
 
-    save() {
+    saveExptData() {
         var postData = {
             'directory_path': this.savingDir,
             'file_name': this.dataFile,
-            'data': this.allData // data to save
+            'data': this.exptDataToSave // data to save
         };
         $.ajax({
             type: 'POST',
@@ -120,6 +139,12 @@ class trialObject {
             data: postData,
         });
     }
+}
+
+function CONVERT_CSV_COORD_TO_ARRAY_COORD(inputCol, inputRow) {
+    var colInArray = inputCol;
+    var rowInArray = GRID_NROW - inputRow - 1;
+    return [colInArray, rowInArray]
 }
 
 function TRIAL_SET_UP (obj) {
@@ -143,56 +168,48 @@ function TRIAL_SET_UP (obj) {
     obj.gridArray[receiver[0]][receiver[1]] = SHAPE_DIR + "receiver.png";
     obj.gridArray[signaler[0]][signaler[1]] = SHAPE_DIR + "signaler.png";
 
-    if (!obj.isExptTrial) {
-        obj.signalSpace = PRAC_TRIAL_DICT["prac" + obj.trialIndex][0];
-        obj.gridString = PRAC_TRIAL_DICT["prac" + obj.trialIndex][1];
-    } else {
-        obj.signalSpace = TRIAL_DICT[trialList[num]][0];
-        obj.gridString = TRIAL_DICT[trialList[num]][1];
-        $("#pracRound").html("");
-    }
-    /*
-    for (var i = 0; i < signalSpace.length; i++) {
-        var j = 0;
-        while (signalSpace[i] != $("#butOption" + j).html()) {
-            j++;
-        }
-        $("#butOption" + j).css({"border": "2px solid #625757", 
-                                "background": "#9D8F8F", 
-                                "box-shadow": "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                                "pointer-events": "auto",
-                                "cursor": "pointer"
-                                });
-    }*/
+    if (obj.isPracTrial) {
+        //obj.signalSpace = PRAC_TRIAL_DICT["prac" + obj.trialIndex][0];
+        //obj.gridString = PRAC_TRIAL_DICT["prac" + obj.trialIndex][1];
+        obj.signalSpace = obj.inputData[obj.trialIndex].targetDictionary;
+        //console.log(obj.inputData);
+        //console.log(obj.inputData[obj.trialIndex]);
+        obj.gridString = obj.inputData[obj.trialIndex].targetDictionary;
 
-    var coordinates = obj.gridString.match(/\d+/g);
-    var shape = obj.gridString.match(/\w+ +\w+/g);
-    
+        $("#round").html(obj.trialIndex + 1);
+    } else if (obj.isExptTrial) {
+        console.log(obj.inputData);
+        //obj.signalSpace = TRIAL_DICT[randomizedTrialKeyList[obj.trialIndex]][0];
+        obj.signalSpace = obj.inputData[obj.trialIndex].signalSpace;
+        //obj.gridString = TRIAL_DICT[randomizedTrialKeyList[obj.trialIndex]][1];
+        obj.gridString = obj.inputData[obj.trialIndex].targetDictionary;
+    }
+
+    var coordinates = Object.keys(obj.gridString);
+    var shape = Object.values(obj.gridString);
+   
     for (var i = 0; i < shape.length; i++) {
-        var col = coordinates[2 * i];
-        var row = GRID_NROW - coordinates[2 * i + 1] - 1;
+        var coordFromCSV = coordinates[i].split(",");
+        var coordInArray = CONVERT_CSV_COORD_TO_ARRAY_COORD(coordFromCSV[0], coordFromCSV[1])
+        var col = coordInArray[0];
+        var row = coordInArray[1];
         obj.gridArray[row][col] = PIC_DICT[shape[i]];
         if(!obj.isExptTrial) {
-            if (shape[i] == GOAL_DICT["expt" + obj.trialIndex])
+            //if (shape[i] == GOAL_DICT["expt" + obj.trialIndex])
+            if (shape[i] == obj.inputData[obj.trialIndex].intention)
                 obj.goalCoord = [row, col];
         } else {
-            if (shape[i] == GOAL_DICT[trialList[obj.trialIndex]])
+            //if (shape[i] == GOAL_DICT[randomizedTrialKeyList[obj.trialIndex]])
+            /*console.log(randomizedTrialKeyList[obj.trialIndex]);
+            console.log(obj.inputData[randomizedTrialKeyList[obj.trialIndex]]);
+            console.log(obj.inputData[randomizedTrialKeyList[obj.trialIndex]].intention)*/
+            if (shape[i] == obj.inputData[obj.trialIndex].intention)
                 obj.goalCoord = [row, col];
         }
     }
 
-    //obj.receiverPath
-    //signalerMoved = false;
-    //receiverMoved = false;
-}
-
-function RECORD_DECISION_TIME(obj, result) {
-    if(!obj.resultRecorded){
-        obj.result = result;
-        var currentTime = Date.now();
-        decideTime = (currentTime - startTime)/1000;
-        obj.resultRecorded = true;
-    }
+    signalerMoved = false;
+    receiverMoved = false;
 }
 
 function UPDATE_RESULT_IN_OBJ(obj,reward) {
@@ -206,8 +223,9 @@ function MOVE(obj) {
     document.onkeydown = function(e) {
         if(obj.allowMove) {
             if(e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40) {// arrow keys
+                if(!obj.decisionRecorded)
+                    RECORD_DECISION_DATA(obj, "move");
                 arrowClicked = true;
-                RECORD_DECISION_TIME(obj, "do");
                 CHANGE_IN_TRIAL_INSTR("do");
                 UPDATE_STEPS(obj);
                 UPDATE_GAME_BOARD(e.keyCode);
@@ -215,12 +233,24 @@ function MOVE(obj) {
                 e.preventDefault();
                 if(arrowClicked){
                     if(signaler[0] == obj.goalCoord[0] && signaler[1] == obj.goalCoord[1]){ //reached
+                        var endLocation = obj.gridArray[signaler[0]][signaler[1]];
+                        var pictKeyIndex = 0;
+                        while(PIC_DICT[Object.keys(PIC_DICT)[pictKeyIndex]] != endLocation ) {
+                           pictKeyIndex++;
+                        }
+                        RECORD_END_LOCATION(obj, Object.keys(PIC_DICT)[pictKeyIndex]);
                         UPDATE_RESULT_IN_OBJ(obj, REWARD);
                         SHOW_WIN_RESULT_BOX_FOR_MOVE(obj, true);
                         obj.step = 0;
                     } else if ($("#shape"+ signaler[0] + "v" + signaler[1]).hasClass("gridEmpty") || (signaler[0] == receiver[0] && signaler[1] == receiver[1])){
                         alert("You cannot stop on an empty square or the receiver's position! Please move to an item on the grid.")
                     } else {
+                        var endLocation = obj.gridArray[signaler[0]][signaler[1]];
+                        var pictKeyIndex = 0;
+                        while(PIC_DICT[Object.keys(PIC_DICT)[pictKeyIndex]] != endLocation ) {
+                            pictKeyIndex++;
+                         }
+                        RECORD_END_LOCATION(obj, Object.keys(PIC_DICT)[pictKeyIndex]);
                         UPDATE_RESULT_IN_OBJ(obj, 0);
                         SHOW_WIN_RESULT_BOX_FOR_MOVE(obj, false);
                         obj.step = 0;
@@ -230,15 +260,13 @@ function MOVE(obj) {
             } else
                 alert("Please use arrow keys on your keyboard to move.");
         } else {
-            alert("You are not allowed to move by yourself in this round. Please follow the instructions.")
+            alert("You are not allowed to move by yourself right now. Please follow the instructions.")
         }
     }
 };
 
 function RECEIVER_WALK(obj, signal) {
-    RECORD_DECISION_TIME(obj, signal);
-    EXPT_INSTR_FADE();
-
+    RECORD_DECISION_DATA(obj, signal);
     var path = obj.receiverPath[signal];
     var stepOnGrid = path[obj.pathIndex];
     CHANGE_IN_TRIAL_INSTR("do");
@@ -301,6 +329,30 @@ function POST_DATA(trial_obj, success_func, error_func) {
 }
 
 
+function NEXT_TRIAL(obj) {
+    if(obj.isTryMove){
+        instr.next();
+        $("#instrText").show();
+        $("#instrNextBut").show();
+        $("#instrBackBut").css("position", "absolute");
+    } else if (obj.isTrySay) {
+        //instr.next();
+        $("#instrText").show();
+        $("#instrNextBut").show();
+        $("#instrBackBut").css("position", "absolute");
+    } else if(obj.isPracTrial){
+        RESET_GAMEBOARD();
+        PRACTICE_EXPT_INSTR_APPEAR();
+        practice.next();
+    } else if(obj.isExptTrial){
+        RESET_GAMEBOARD();
+        EXPT_INSTR_APPEAR();
+        expt.next();
+    } 
+}
+
+
+
 /*
  ####### ######  #     # 
     #    #     #  #   #  
@@ -330,8 +382,14 @@ function RESET_RECEIVER() {
 }
 
 function RESET_GAMEBOARD() {
+    TRY_EXPT_INSTR_APPEAR();
+    PRACTICE_EXPT_INSTR_APPEAR();
     EXPT_INSTR_APPEAR();
+    $("#tryDecision").html("");
+    $("#practiceDecision").html("");
     $("#decision").html("");
+    $("#tryResult").hide();
+    $("#practiceResult").hide();
     $("#result").hide();
 }
 
@@ -340,38 +398,39 @@ function TRY_GRID_SETUP(obj) {
         $(".gridItem").remove();
         $(".gridEmpty").remove();
 
-        obj.grid[receiver[0]][receiver[1]] = SHAPE_DIR + "receiver.png";
-        obj.grid[signaler[0]][signaler[1]] = SHAPE_DIR + "signaler.png";
-        CREATE_GRID(obj.grid, GRID_NROW, GRID_NCOL);
+        obj.gridArray[receiver[0]][receiver[1]] = SHAPE_DIR + "receiver.png";
+        obj.gridArray[signaler[0]][signaler[1]] = SHAPE_DIR + "signaler.png";
+        CREATE_GRID(obj);
         obj.gridCreated = true;
     }
 }
 
 function TRY_SCOREBOARD_SETUP(obj) {
-    $(".step").html(obj.step);
-    $("#goalShape").attr("src", PIC_DICT["red circle"]);
-    $("#score").html(obj.totalScore);
+    $(".tryStep").html(obj.step);
+    $("#tryGoalShape").attr("src", PIC_DICT["red circle"]);
+    $("#tryScore").html(obj.totalScore);
 }
 
 function TRY_MOVE_GAMEBOARD_SETUP() {
-    $("#say").hide();
-    $("#do").show();
-    $("#quit").hide();
-    $("#exptPage").show();
+    $("#trySay").hide();
+    $("#tryDo").show();
+    $("#tryExptPage").show();
 }
 
 function TRY_SAY_GAMEBOARD_SETUP() {
-    $("#say").show();
-    $("#do").hide();
-    $("#quit").hide();
-    $("#exptPage").show();
+    $("#trySay").show();
+    $("#tryDo").hide();
+    $("#tryExptPage").show();
 }
 
 function TRY_MOVE() {
-    instrTry = true;
+    tryMove.isTryMove = true;
+    tryMove.step = 0;
     if(!tryMove.reached)
         $("#instrNextBut").hide();
-    tryMove.grid = [
+    CREATE_EXPT_BUTTONS(tryMove);
+    $("#tryPracticeInfo").css("opacity", 0);
+    tryMove.gridArray = [
             [,,,,,,,,],
             [,,,,,,,,],
             [,,,,,,,,],
@@ -392,13 +451,15 @@ function TRY_MOVE() {
 }
 
 function TRY_SAY(){
-    instrTry = true;
+    trySay.isTrySay = true;
     if (trySay.totalScore == 0)
         trySay.totalScore = tryMove.totalScore;
     if(!trySay.reached)
         $("#instrNextBut").hide();
+    CREATE_EXPT_BUTTONS(trySay);
+    $("#tryPracticeInfo").css("opacity", 0);
 
-    trySay.grid = [
+    trySay.gridArray = [
         [,,,,,,,,],
         [,,,,,,,,],
         [,,,,,,,,],
@@ -435,30 +496,75 @@ function TRY_SAY(){
                                                              
 */
 function PRACTICE_GAMEBOARD_SETUP() {
+    $("#practiceSay").show();
+    $("#practiceDo").show();
+    $("#practiceQuit").show();
+    $("#practiceExptPage").show();
+}
+
+function START_PRACTICE_TRIAL() {
+    $("#instrPage").hide();
+    $("#practiceInfo").css("opacity", 1);
+    practice.isPracTrial = true;
+    practice.trialN = PRAC_TRIAL_NUM;
+    TRIAL_SET_UP(practice);
+    CREATE_GRID(practice);
+    CREATE_SIGNAL_BUTTONS(practice, practice.signalSpace);
+    SETUP_SCOREBOARD(practice);
+    PRACTICE_GAMEBOARD_SETUP();
+    CREATE_EXPT_BUTTONS(practice);
+    practice.move();
+}
+
+function NEXT_INSTR() {
+    instr.next();
+    SHOW_INSTR();
+}
+
+/*                           
+ ####### #     # ######  #######    
+ #        #   #  #     #    #       
+ #         # #   #     #    #       
+ #####      #    ######     #       
+ #         # #   #          #       
+ #        #   #  #          #       
+ ####### #     # #          #       
+                                    
+*/
+
+function EXPT_GAMEBOARD_SETUP() {
     $("#say").show();
     $("#do").show();
     $("#quit").show();
     $("#exptPage").show();
 }
 
-function START_PRACTICE_TRIAL() {
+function START_EXPT(){
     $("#instrPage").hide();
-    TRIAL_SET_UP(practice);
-    CREATE_GRID(practice.gridArray, GRID_NROW, GRID_NCOL);
-    CREATE_SIGNAL_BUTTONS(practice, practice.signalSpace);
-    SETUP_RECORD_BOX(practice);
-    PRACTICE_GAMEBOARD_SETUP();
-    practice.start();
-    practice.move();
+    $("#exptPracticeInfo").css("opacity", 0);
+    expt.isExptTrial = true;
+    expt.trialN = TRIAL_NUM;
+    TRIAL_SET_UP(expt);
+    CREATE_GRID(expt);
+    CREATE_SIGNAL_BUTTONS(expt, expt.signalSpace);
+    SETUP_SCOREBOARD(expt);
+    EXPT_GAMEBOARD_SETUP();
+    CREATE_EXPT_BUTTONS(expt);
+    expt.move();
+
+    expt.startTime = Date.now();
+    $("#exptPage").show();
 }
 
+function RECORD_DECISION_DATA(obj, decision) {
+    if(!obj.decisionRecorded){
+        obj.decision = decision;
+        var currentTime = Date.now();
+        obj.decideTime = (currentTime - obj.startTime)/1000;
+        obj.decisionRecorded = true;
+    }
+}
 
-/*                           
- ##### #####  #   ##   #      
-   #   #    # #  #  #  #      
-   #   #    # # #    # #      
-   #   #####  # ###### #      
-   #   #   #  # #    # #      
-   #   #    # # #    # ###### 
-                              
-*/
+function RECORD_END_LOCATION(obj, location) {
+    obj.endLocation = location;
+}

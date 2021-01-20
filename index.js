@@ -1,3 +1,5 @@
+var textString;
+var lines, linesArray;
 const FORMAL = false;
 const EXPERIMENT_NAME = "Signal";
 const SUBJ_NUM_FILE = "subjNum_" + EXPERIMENT_NAME + ".txt";
@@ -9,7 +11,6 @@ const SAVING_DIR = FORMAL ? "data/formal":"data/testing";
 const SAVING_SCRIPT = 'save.php';
 const VIEWPORT_MIN_W = 1000; 
 const VIEWPORT_MIN_H = 600;
-
 const GRID_NROW = 10;
 const GRID_NCOL = 9;
 const SHAPE_DIR = "shape/";
@@ -21,34 +22,30 @@ const TRIAL_DICT = {};
 const PRAC_TRIAL_DICT = {};
 const REWARD = 8;
 
-var instrTry;
 var chooseSay = false;
 var allowWalk = false;
 
 var qAttemptNum = 0;
 var trial;
-//var score = 0;
 var reward;
-//var signalerMoved;
-//var receiverMoved;
+var signalerMoved;
+var receiverMoved;
 var decision;
 var startTime;
 var decideTime;
 var finishTime;
-var recorded = false;
 var trialNum = 0;
 var trialObj = {};
 var receiver = [2, 4]; //row, col
 var signaler = [9, 4];
 var goal;
 var signalSpace;
-var trialList;
-var gridString;
+var randomizedTrialKeyList;
 var pathNum = 0;
 var path;
 
 // object variables
-var instr, subj, trial, tryMove, trySay;
+var instr, subj, tryMove, trySay, practice, expt;
 
 /*
   #####  ####### ####### #     # ######  
@@ -59,6 +56,7 @@ var instr, subj, trial, tryMove, trySay;
  #     # #          #    #     # #       
   #####  #######    #     #####  #                                      
 */
+
 const PIC_DICT = {
     "green circle": SHAPE_DIR + "greenCircle.png",
     "green square": SHAPE_DIR + "greenSquare.png",
@@ -70,6 +68,20 @@ const PIC_DICT = {
     "red square": SHAPE_DIR + "redSquare.png",
     "red triangle": SHAPE_DIR + "redTriangle.png",
 }
+/*
+const SIGNAL_SPACE_DICT = {
+    0: ['red', 'square', 'triangle', 'purple', 'circle', 'green'],
+    1: ['circle', 'purple', 'triangle', 'green'],
+    2: ['triangle', 'red', 'circle', 'purple', 'green', 'square'],
+    3: ['square', 'purple', 'triangle', 'green'],
+    4: ['green', 'red', 'square', 'circle', 'purple', 'triangle'],
+    5: ['square', 'red', 'purple', 'green', 'triangle', 'circle'],
+    6: ['square', 'red', 'purple', 'triangle', 'green', 'circle'],
+    7: ['green', 'purple', 'triangle', 'circle', 'red'],
+    8: ['square', 'purple', 'triangle', 'circle', 'green', 'red'],
+    9: ['circle', 'purple', 'square', 'red', 'triangle', 'green'],
+}
+
 
 const PRACTICE_STRING_DICT = {
     0: "{(5, 1): 'green circle', (1, 3): 'purple circle', (7, 6): 'red circle'}",
@@ -92,19 +104,6 @@ const TARGET_STRING_DICT = {
     9: "{(8, 9): 'red square', (2, 3): 'green square', (4, 6): 'purple square', (2, 8): 'red triangle', (4, 4): 'green circle', (4, 1): 'red circle', (7, 7): 'green triangle', (2, 4): 'purple circle'}",
 }
 
-const SIGNAL_SPACE_DICT = {
-    0: ['red', 'square', 'triangle', 'purple', 'circle', 'green'],
-    1: ['circle', 'purple', 'triangle', 'green'],
-    2: ['triangle', 'red', 'circle', 'purple', 'green', 'square'],
-    3: ['square', 'purple', 'triangle', 'green'],
-    4: ['green', 'red', 'square', 'circle', 'purple', 'triangle'],
-    5: ['square', 'red', 'purple', 'green', 'triangle', 'circle'],
-    6: ['square', 'red', 'purple', 'triangle', 'green', 'circle'],
-    7: ['green', 'purple', 'triangle', 'circle', 'red'],
-    8: ['square', 'purple', 'triangle', 'circle', 'green', 'red'],
-    9: ['circle', 'purple', 'square', 'red', 'triangle', 'green'],
-}
-
 const GOAL_DICT = {
     expt0: "purple circle",
     expt1: "purple circle",
@@ -116,9 +115,56 @@ const GOAL_DICT = {
     expt7: "red triangle",
     expt8: "red triangle",
     expt9: "green square",
+}*/
+
+
+function PARSE_CSV(csvString) {
+    var lines = csvString.split(/\r?\n/)
+    var linesArray = [];
+
+    for (i = 1; i < lines.length - 1; i++) {
+        linesArray[i - 1] = {};
+
+        tmp = lines[i].match(/\(\d, \d\)/g)[0];
+        linesArray[i - 1]["signalerLocation"] = [parseInt(tmp.substring(1, 2)), parseInt(tmp.substring(4, 5))];
+
+        tmp = lines[i].match(/\(\d, \d\)/g)[1];
+        linesArray[i - 1]["receiverLocation"] = [parseInt(tmp.substring(1)), parseInt(tmp.substring(4))];
+
+        linesArray[i - 1]["intention"] = lines[i].match(/\w+ \w+/)[0];
+
+        linesArray[i - 1]["signalSpace"] = [];
+        signalSpaceEntireEntry = lines[i].match(/\[(.*?)\]/)[1];
+        tmp = signalSpaceEntireEntry.match(/'\w+'/g);
+        for (j = 0; j < tmp.length; j++) {
+            tmp[j] = tmp[j].substring(1, tmp[j].length - 1);
+            linesArray[i - 1]["signalSpace"][j] = tmp[j];
+        }
+
+        linesArray[i - 1]["targetDictionary"] = {};
+        tmp = lines[i].match(/\(\d, \d\): '\w+ \w+'/g);
+        for (j = 0; j < tmp.length; j++) {
+            tmpCoordinate = tmp[j].match(/\(\d, \d\)/)[0];
+            coordinate = [parseInt(tmpCoordinate.substring(1, 2)), parseInt(tmpCoordinate.substring(4, 5))];
+            item = tmp[j].match(/\w+ \w+/)[0];
+            linesArray[i - 1]["targetDictionary"][coordinate] = item;
+        }
+
+        linesArray[i - 1]["nTargets"] = parseInt(lines[i].match(/,\d,/)[0].substring(1, 2));
+
+        linesArray[i - 1]["receiverIntentionDict"] = {};
+        tmp = lines[i].match(/'\w+': '\w+ \w+'/g);
+        for (j = 0; j < tmp.length; j++) {
+            signal = tmp[j].match(/'\w+'/)[0];
+            intention = tmp[j].match(/'\w+ \w+'/)[0];
+            linesArray[i - 1]["receiverIntentionDict"][signal.substring(1, signal.length - 1)] = intention.substring(1, intention.length - 1);
+        }
+    }
+    return linesArray;
 }
 
 
+/*
 for (var i = 0; i < TRIAL_NUM; i++){
     TRIAL_DICT["expt" + i] = [SIGNAL_SPACE_DICT[i], TARGET_STRING_DICT[i]]
 }
@@ -126,7 +172,7 @@ for (var i = 0; i < PRAC_TRIAL_NUM; i++){
     PRAC_TRIAL_DICT["prac" + i] = [SIGNAL_SPACE_DICT[i],PRACTICE_STRING_DICT[i]]
 }
 
-trialList = CREATE_RANDOM_REPEAT_BEGINNING_LIST(Object.keys(TRIAL_DICT), TRIAL_NUM).slice(0, TRIAL_NUM)
+randomizedTrialKeyList = CREATE_RANDOM_REPEAT_BEGINNING_LIST(Object.keys(TRIAL_DICT), TRIAL_NUM).slice(0, TRIAL_NUM)*/
 
 /*
  ######  #######    #    ######  #     # 
@@ -138,6 +184,11 @@ trialList = CREATE_RANDOM_REPEAT_BEGINNING_LIST(Object.keys(TRIAL_DICT), TRIAL_N
  #     # ####### #     # ######     #    
                                          
 */
+function add(x) {
+    var y;
+    y = "haha";
+    return y;
+}
 
 $(document).ready(function() {
     subj = new subjObject(subj_options); // getting subject number
@@ -147,12 +198,22 @@ $(document).ready(function() {
         BLOCK_MOBILE();
     //} else if (subj.id !== null){
     } else {
-        instr = new instrObject(instr_options);
-        tryMove = new trialObject(trial_options);
-        trySay = new trialObject(trial_options);
-        practice = new trialObject(trial_options);
-        instr.start();
-        DISABLE_DEFAULT_KEYS();
+        //fetches CSV from file into a string
+        fetch("exampleTrials_withReceiverIntentionDict.csv")
+            .then(response => response.text())
+            .then(textString => {
+                PRACTICE_INPUT_DATA = PARSE_CSV(textString)
+            })
+            .then( () => {
+            instr = new instrObject(instr_options);
+            tryMove = new trialObject(trial_options);
+            trySay = new trialObject(trial_options);
+            practice = new trialObject(practice_trial_options);
+            expt = new trialObject(trial_options);
+            practice.inputData = PRACTICE_INPUT_DATA,
+            expt.inputData = PRACTICE_INPUT_DATA,
+            instr.start();
+            DISABLE_DEFAULT_KEYS();});
         //trial_options["subj"] = subj;
         //trial = new trialObject(trial_options);
         //$('#captchaBox').show();
@@ -171,16 +232,39 @@ $(document).ready(function() {
                                      
 */
 const TRIAL_TITLES = [
-    "num",
-    "date",
-    "subjStartTime",
-    "trialNum",
-    "expt",
+    "subjId",
+    "trialIndex",
+    "exptId",
     "decision",
     "decideTime",
-    "finishTime",
-    "inView",
-    "rt"];
+    "endLocation",
+    "finishTime"];
+    
+var practice_trial_options = {
+    subj: 'pre-define', // assign after subj is created
+    //trialN: TRIAL_N,
+    titles: TRIAL_TITLES,
+    //stimPath: STIM_PATH,
+    //dataFile: TRIAL_FILE,
+    savingScript: SAVING_SCRIPT,
+    savingDir: SAVING_DIR,
+    //updateFunc: TRIAL_UPDATE,
+    //trialFunc: TRIAL,
+    //endExptFunc: END_EXPT
+}
+var trial_options = {
+    subj: 'pre-define', // assign after subj is created
+    //trialN: TRIAL_N,
+    titles: TRIAL_TITLES,
+    //stimPath: STIM_PATH,
+    //dataFile: TRIAL_FILE,
+    savingScript: SAVING_SCRIPT,
+    savingDir: SAVING_DIR,
+    //updateFunc: TRIAL_UPDATE,
+    //trialFunc: TRIAL,
+    //endExptFunc: END_EXPT
+}
+
 
 function SHOW_BLOCK() {
     $("#instrPage").hide();
@@ -203,7 +287,7 @@ function TRIAL_UPDATE(last, this_trial, next_trial, path) {
         $("#bufferFrame").css("background-image", "url("+path + EXPT_TRIAL[next_trial][1]+")");
     }
 }
-*/
+
 function TRIAL() {
     $("#testFrame").show();
     trial.inView = CHECK_FULLY_IN_VIEW($("#testImg"));
@@ -213,7 +297,7 @@ function END_TRIAL() {
     $("#testFrame").hide();
     $("#expBut").hide();
     trial.end();
-}
+}*/
 /*
 function END_EXPT() {
     $("#trialPage").hide();
@@ -227,88 +311,3 @@ function END_EXPT() {
     });
 }*/
 
-var trial_options = {
-    subj: 'pre-define', // assign after subj is created
-    //trialN: TRIAL_N,
-    titles: TRIAL_TITLES,
-    //stimPath: STIM_PATH,
-    //dataFile: TRIAL_FILE,
-    savingScript: SAVING_SCRIPT,
-    savingDir: SAVING_DIR,
-    //trialList: TRIAL_LIST,
-    //intertrialInterval: INTERTRIAL_INTERVAL,
-    //updateFunc: TRIAL_UPDATE,
-    trialFunc: TRIAL,
-    //endExptFunc: END_EXPT
-}
-/*
-                            
- ###### #    # #####  ##### 
- #       #  #  #    #   #   
- #####    ##   #    #   #   
- #        ##   #####    #   
- #       #  #  #        #   
- ###### #    # #        #   
-                            
-*/
-
-function START_EXPT(){
-    obj.isExptTrial = true;
-    trialNum = 0;
-    score = 0;
-    step = 0;
-    $("#round").html(trialNum+1);
-    $(".step").html(step);
-    TRIAL_SET_UP(trialNum);
-    CREATE_GRID(trial, GRID_NROW, GRID_NCOL);
-    SETUP_RECORD_BOX(goal, score);
-    //MOVE();
-    startTime = Date.now();
-    $("#exptInstr").show();
-    $("#exptPage").show();
-}
-
-
-function NEXT_TRIAL(obj) {
-    if(instrTry){
-        instr.next();
-        $("#instrText").show();
-        $("#instrNextBut").show();
-        $("#instrBackBut").css("position", "absolute");
-    } else if(!obj.isExptTrial){
-        $("#decision").html('');
-        $("#result").hide();
-        EXPT_INSTR_APPEAR();
-        practice.next();
-    }
-        /*
-        var currentTime = Date.now();
-        finishTime = (currentTime - startTime)/1000;
-
-        var postData = "qAttemptNum,trialNum,expt,decision,decideTime,finishTime\n";
-        postData += qAttemptNum + "," + trialNum + "," + trialList[trialNum] + "," + decision + "," + decideTime + "," + finishTime + "\n";
-        trialObj.postData = postData;
-        if(obj.isExptTrial) {
-            POST_DATA(trialObj, SUCCESS, ERROR);
-            console.log(postData);
-        }
-        $("#round").html(trialNum+1);
-        //console.log(obj.step);
-        //$(".step").html(obj.step);
-        if(!obj.isExptTrial && trialNum == PRAC_TRIAL_NUM) {
-            SHOW_INSTR_QUESTION();
-        } else if (obj.isExptTrial && trialNum == TRIAL_NUM){
-            $("#exptPage").hide();
-            $("#thankPage").show();
-        } else {
-            recorded = false;
-            TRIAL_SET_UP(obj);
-            CREATE_GRID(trial, GRID_NROW, GRID_NCOL);
-            SETUP_RECORD_BOX(goal, score);
-            $("#exptInstr").show();
-            startTime = Date.now();
-            //MOVE();
-        }*/
-    
-   
-}

@@ -41,13 +41,147 @@
         <!--=====INSTRUCTION QUIZ=====-->
         <button class="butNext" id="startExptBut" onclick="START_EXPT()">NEXT</button>
     </div>
-    <!--==========EXPERIMENT==========-->
+    <!--==========TRY EXPERIMENT==========-->
+    <div class="pageBox" id="tryExptPage">
+        <div id="tryExptBox">
+            <div id="tryScoreBoard">
+                    <div class="info" id="tryPracticeInfo">
+                        <p>Practice </p>
+                        <p></p>
+                    </div>
+                    <div class="info">
+                        <p style="top: -5px;">Target: </p>
+                        <img class="shape" id="tryGoalShape" alt="An error occurred when loading the picture.">
+                    </div>
+                    <div class="info">
+                        <p>Total Score: </p>
+                        <p id="tryScore"></p>
+                    </div>
+                    <div class="info">
+                        <p>Steps Taken: </p>
+                        <p class="tryStep"></p>
+                    </div>                
+            </div>
+            <div class="tryColumn" id="tryVerticalAxis">9 8 7 6 5 4 3 2 1 0</div>
+            <div class="tryColumn" id="tryGridContainer"></div>
+            <div id="tryHorizontalAxis">0 1 2 3 4 5 6 7 8</div>
+            <div class="tryColumn text">
+                <div id="tryExptInstr">
+                    <div id="tryExptFade">
+                        <div id="trySay">
+                            <p>Send one signal to <img class="shape" src="shape/receiver.png">:</p>
+                            <button class="butExpt" id="tryButOption0">red</button> 
+                            <button class="butExpt" id="tryButOption1">green</button>
+                            <button class="butExpt" id="tryButOption2">purple</button>
+                            <button class="butExpt" id="tryButOption3">circle</button>
+                            <button class="butExpt" id="tryButOption4">square</button>
+                            <button class="butExpt" id="tryButOption5">triangle</button>
+                        </div>
+                        <div id="tryDo">
+                            <p class="inlineImg">Use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</p>
+                        </div>
+                    </div>
+                    <div id="tryDecision"></div>
+                </div>
+            </div>
+            <div id="tryResult">
+                <p id="tryResultText"></p>
+                <div class="resultInfo">
+                    <p class="title">Steps: </p>
+                    <p class="data tryStep"></p>
+                </div>
+                <div class="resultInfo">
+                    <p class="title">Reward: </p>
+                    <p class="data" id="tryReward"></p>
+                </div>
+                <div id="tryScoreThisRoundBox">
+                    <p class="title">Score this round:</p>
+                    <p class="data" id="tryScoreThisRound"></p>
+                </div>
+                <div id="tryTotalScoreBox">
+                    <p class="title">New Total Score: </p>
+                    <p class="data" id="tryTotalAfter"></p>
+                </div>
+                <button class="butNext" id="tryResultBut">NEXT</button>
+            </div>
+        </div>
+    </div>
+    <!--==========PRACTICE EXPERIMENT==========-->
+    <div class="pageBox" id="practiceExptPage">
+        <div id="practiceExptBox">
+            <div id="practiceScoreBoard">
+                    <div class="info" id="practiceInfo">
+                        <p>Practice </p>
+                        <p id="round"></p>
+                    </div>
+                    <div class="info">
+                        <p style="top: -5px;">Target: </p>
+                        <img class="shape" id="practiceGoalShape" alt="An error occurred when loading the picture.">
+                    </div>
+                    <div class="info">
+                        <p>Total Score: </p>
+                        <p id="practiceScore"></p>
+                    </div>
+                    <div class="info">
+                        <p>Steps Taken: </p>
+                        <p class="practiceStep"></p>
+                    </div>                
+            </div>
+            <div class="column" id="practiceVerticalAxis">9 8 7 6 5 4 3 2 1 0</div>
+            <div class="column" id="practiceGridContainer"></div>
+            <div id="practiceHorizontalAxis">0 1 2 3 4 5 6 7 8</div>
+            <div class="column text">
+                <div id="practiceExptInstr">
+                    <div id="practiceExptFade">
+                        <div id="practiceSay">
+                            <p>Send one signal to <img class="shape" src="shape/receiver.png">:</p>
+                            <button class="butExpt" id="practiceButOption0">red</button> 
+                            <button class="butExpt" id="practiceButOption1">green</button>
+                            <button class="butExpt" id="practiceButOption2">purple</button>
+                            <button class="butExpt" id="practiceButOption3">circle</button>
+                            <button class="butExpt" id="practiceButOption4">square</button>
+                            <button class="butExpt" id="practiceButOption5">triangle</button>
+                        </div>
+                        <div id="practiceDo">
+                            <p class="inlineImg">Use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</p>
+                        </div>
+                        <div id="practiceQuit">
+                            <p id="practiceQuitText">Give up on this trial: </p>
+                            <button class="butExpt" id="practiceQuitBut">Quit</button>
+                        </div>
+                    </div>
+                    <div id="practiceDecision"></div>
+                </div>
+            </div>
+            <div id="practiceResult">
+                <p id="practiceResultText"></p>
+                <div class="resultInfo">
+                    <p class="title">Steps: </p>
+                    <p class="data practiceStep"></p>
+                </div>
+                <div class="resultInfo">
+                    <p class="title">Reward: </p>
+                    <p class="data" id="practiceReward"></p>
+                </div>
+                <div id="practiceScoreThisRoundBox">
+                    <p class="title">Score this round:</p>
+                    <p class="data" id="practiceScoreThisRound"></p>
+                </div>
+                <div id="practiceTotalScoreBox">
+                    <p class="title">New Total Score: </p>
+                    <p class="data" id="practiceTotalAfter"></p>
+                </div>
+                <button class="butNext" id="practiceResultBut">NEXT</button>
+            </div>
+        </div>
+    </div>
+    <!--==========FORMAL EXPERIMENT==========-->
     <div class="pageBox" id="exptPage">
         <div id="exptBox">
             <div id="scoreBoard">
-                    <div class="info">
-                        <p style="opacity: 0">Practice: </p>
-                        <p id="round" style="opacity: 0"></p>
+                    <div class="info" id="exptPracticeInfo">
+                        <p>Practice </p>
+                        <p></p>
                     </div>
                     <div class="info">
                         <p style="top: -5px;">Target: </p>
@@ -63,7 +197,7 @@
                     </div>                
             </div>
             <div class="column" id="verticalAxis">9 8 7 6 5 4 3 2 1 0</div>
-            <div class="column gridContainer"></div>
+            <div class="column" id="gridContainer"></div>
             <div id="horizontalAxis">0 1 2 3 4 5 6 7 8</div>
             <div class="column text">
                 <div id="exptInstr">
@@ -110,6 +244,7 @@
             </div>
         </div>
     </div>
+    
     <!--==========THANK YOU==========-->
     <div class="pageBox" id="thankPage">
         <p id="thankText">Thank you for completing this experiment!</p>

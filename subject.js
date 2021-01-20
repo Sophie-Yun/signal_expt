@@ -1,6 +1,6 @@
 
 function LIST_TO_FORMATTED_STRING(data_list, divider) {
-    divider = (divider === undefined) ? '\t' : divider;
+    divider = (divider === undefined) ? ',' : divider;
     var string = '';
     for (var i = 0; i < data_list.length - 1; i++) {
         string += data_list[i] + divider;
