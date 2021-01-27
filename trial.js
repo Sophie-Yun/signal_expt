@@ -1,3 +1,7 @@
+// variable name for csv inputs
+// targetDictionary
+// inputLocation
+// receiverSignal
 class trialObject {
     constructor(options = {}) {
         Object.assign(this, {
@@ -44,6 +48,7 @@ class trialObject {
         this.receiverPath = { "red": ["right","right","right","down"],
                             "green": ["right","down","down","down","down","down","down"],
                         "circle": ["right","right","right","down"]};
+
         this.receiverPathNum = 0;
     }
     
@@ -142,10 +147,74 @@ class trialObject {
 }
 
 function CONVERT_CSV_COORD_TO_ARRAY_COORD(inputCol, inputRow) {
+    console.log("whatever")
     var colInArray = inputCol;
     var rowInArray = GRID_NROW - inputRow - 1;
-    return [colInArray, rowInArray]
+    return [rowInArray, colInArray]; // changed order from col, row -> row, col
 }
+
+function FIND_PATH(receiverLocation, receiverIntentionLocation) {
+    initialDirection = Math.floor(Math.random() * 2); // 0 or 1
+
+    horizontalDiff = receiverLocation[0] - receiverIntentionLocation[0];
+    verticalDiff = receiverLocation[1] - receiverIntentionLocation[1];
+
+    path = [];
+    switch (initialDirection) {
+        case 0: // initialDirection is vertical
+            if (verticalDiff > 0) {
+                for (i = 0; i < Math.abs(verticalDiff); i++) {
+                    path[i] = "down";
+                }
+            } else if (verticalDiff < 0) {
+                for (i = 0; i < Math.abs(verticalDiff); i++) {
+                    path[i] = "up";
+                }
+            }
+
+            currentPathLength = path.length;
+            if (horizontalDiff > 0) {
+                for (i = currentPathLength; i < currentPathLength + Math.abs(horizontalDiff); i++) {
+                    path[i] = "left";
+                }
+            } else if (horizontalDiff < 0) {
+                for (i = currentPathLength; i < currentPathLength + Math.abs(horizontalDiff); i++) {
+                    path[i] = "right";
+                }
+            }
+
+            break;
+
+        case 1: // initialDirection is horizontal
+            if (horizontalDiff > 0) {
+                for (i = 0; i < Math.abs(horizontalDiff); i++) {
+                    path[i] = "left";
+                }
+            } else if (horizontalDiff < 0) {
+                for (i = 0; i < Math.abs(horizontalDiff); i++) {
+                    path[i] = "right";
+                }
+            }
+
+            currentPathLength = path.length;
+            if (verticalDiff > 0) {
+                for (i = currentPathLength; i < currentPathLength+ Math.abs(verticalDiff); i++) {
+                    path[i] = "down";
+                }
+            } else if (verticalDiff < 0) {
+                for (i = currentPathLength; i < currentPathLength + Math.abs(verticalDiff); i++) {
+                    path[i] = "up";
+                }
+            }
+            break;
+
+        default:
+            console.log("ERROR: invalid initialDirection");
+            break;
+    }
+    return path;
+}
+
 
 function TRIAL_SET_UP (obj) {
     $(".gridItem").remove();
@@ -163,8 +232,12 @@ function TRIAL_SET_UP (obj) {
         [,,,,,,,,],
         [,,,,,,,,]
     ];
-    receiver = [2, 4];//row, col
-    signaler = [9, 4];
+
+    receiverFromCSV = expt.inputData[obj.trialIndex]["receiverLocation"];
+    signalerFromCSV = expt.inputData[obj.trialIndex]["signalerLocation"];
+    receiver = CONVERT_CSV_COORD_TO_ARRAY_COORD(receiverFromCSV[0], receiverFromCSV[1]);
+    signaler = CONVERT_CSV_COORD_TO_ARRAY_COORD(signalerFromCSV[0], signalerFromCSV[1]);
+
     obj.gridArray[receiver[0]][receiver[1]] = SHAPE_DIR + "receiver.png";
     obj.gridArray[signaler[0]][signaler[1]] = SHAPE_DIR + "signaler.png";
 
@@ -191,8 +264,8 @@ function TRIAL_SET_UP (obj) {
     for (var i = 0; i < shape.length; i++) {
         var coordFromCSV = coordinates[i].split(",");
         var coordInArray = CONVERT_CSV_COORD_TO_ARRAY_COORD(coordFromCSV[0], coordFromCSV[1])
-        var col = coordInArray[0];
-        var row = coordInArray[1];
+        var row = coordInArray[0];
+        var col = coordInArray[1];
         obj.gridArray[row][col] = PIC_DICT[shape[i]];
         if(!obj.isExptTrial) {
             //if (shape[i] == GOAL_DICT["expt" + obj.trialIndex])
@@ -210,6 +283,23 @@ function TRIAL_SET_UP (obj) {
 
     signalerMoved = false;
     receiverMoved = false;
+
+    // Below section finds a path for each signal from signalSpace and assigns them into a dict for receiverPath
+    // TEMPORARY TO REVERSE KEY:VALUE ORDER OF A DICTIONARY FOR TARGET_DICTIONARY
+    tmpTargetDictionary = Object.entries(expt.inputData[obj.trialIndex]["targetDictionary"]).reduce((tmpObj, item) => (tmpObj[item[1]] = item[0]) && tmpObj, {});
+
+    var receiverPathsList = {};
+    var signalSpace = expt.inputData[obj.trialIndex]["signalSpace"];
+    for (var i = 0; i < signalSpace.length; i++) {
+        var receiverLocation = expt.inputData[obj.trialIndex]["receiverLocation"];
+
+        var receiverIntention = expt.inputData[obj.trialIndex]["receiverIntentionDict"][signalSpace[i]];
+        var targetLocation = CONVERT_STR_TO_ARRAY(tmpTargetDictionary[receiverIntention]);
+
+        receiverPathsList[signalSpace[i]] = FIND_PATH(receiverLocation, targetLocation);
+    }
+    obj.receiverPath = receiverPathsList;
+    console.log(obj.receiverPath);
 }
 
 function UPDATE_RESULT_IN_OBJ(obj,reward) {
@@ -265,9 +355,19 @@ function MOVE(obj) {
     }
 };
 
+// Use to do something like this: ie. "1, 2" -> [1, 2]
+// TODO: should implement built-in PARSE_CSV in index.js
+function CONVERT_STR_TO_ARRAY(input) {
+    return input.split(',').map(Number);
+}
+
 function RECEIVER_WALK(obj, signal) {
     RECORD_DECISION_DATA(obj, signal);
+
     var path = obj.receiverPath[signal];
+    
+    // TODO: path here.
+
     var stepOnGrid = path[obj.pathIndex];
     CHANGE_IN_TRIAL_INSTR("do");
     UPDATE_STEPS(obj);
