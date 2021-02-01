@@ -1,7 +1,3 @@
-// variable name for csv inputs
-// targetDictionary
-// inputLocation
-// receiverSignal
 class trialObject {
     constructor(options = {}) {
         Object.assign(this, {
@@ -79,8 +75,7 @@ class trialObject {
         } else if(this.isExptTrial) {
             var currentTime = Date.now();
             this.finishTime = (currentTime - this.startTime) / 1000; // in second
-            //this.exptId = randomizedTrialKeyList[this.trialIndex];
-            //this.exptId = randomizedTrialKeyList[this.trialIndex];
+            this.exptId = this.randomizedTrialList[this.trialIndex];
             var dataList = [this.subjId, this.trialIndex, this.exptId, this.decision, this.decideTime, this.endLocation, this.finishTime];
             this.exptDataToSave += LIST_TO_FORMATTED_STRING(dataList);
             this.startTime = Date.now();
@@ -147,7 +142,6 @@ class trialObject {
 }
 
 function CONVERT_CSV_COORD_TO_ARRAY_COORD(inputCol, inputRow) {
-    console.log("whatever")
     var colInArray = inputCol;
     var rowInArray = GRID_NROW - inputRow - 1;
     return [rowInArray, colInArray]; // changed order from col, row -> row, col
@@ -215,6 +209,43 @@ function FIND_PATH(receiverLocation, receiverIntentionLocation) {
     return path;
 }
 
+function CREATE_RECEIVER_PATH_DICT(obj) {
+    // Below section finds a path for each signal from signalSpace and assigns them into a dict for receiverPath
+    // TEMPORARY TO REVERSE KEY:VALUE ORDER OF A DICTIONARY FOR TARGET_DICTIONARY
+    if(!obj.isExptTrial) {
+        tmpTargetDictionary = Object.entries(expt.inputData[obj.trialIndex]["targetDictionary"]).reduce((tmpObj, item) => (tmpObj[item[1]] = item[0]) && tmpObj, {});
+
+        var receiverPathsList = {};
+        var signalSpace = expt.inputData[obj.trialIndex]["signalSpace"];
+        for (var i = 0; i < signalSpace.length; i++) {
+            var receiverLocation = expt.inputData[obj.trialIndex]["receiverLocation"];
+
+            var receiverIntention = expt.inputData[obj.trialIndex]["receiverIntentionDict"][signalSpace[i]];
+            var targetLocation = CONVERT_STR_TO_ARRAY(tmpTargetDictionary[receiverIntention]);
+
+            receiverPathsList[signalSpace[i]] = FIND_PATH(receiverLocation, targetLocation);
+        }
+        obj.receiverPath = receiverPathsList;
+        console.log(obj.receiverPath);
+    } else {
+        tmpTargetDictionary = Object.entries(expt.inputData[obj.randomizedTrialList[obj.trialIndex]]["targetDictionary"]).reduce((tmpObj, item) => (tmpObj[item[1]] = item[0]) && tmpObj, {});
+
+        var receiverPathsList = {};
+        var signalSpace = expt.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalSpace"];
+        for (var i = 0; i < signalSpace.length; i++) {
+            var receiverLocation = expt.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"];
+
+            var receiverIntention = expt.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverIntentionDict"][signalSpace[i]];
+            var targetLocation = CONVERT_STR_TO_ARRAY(tmpTargetDictionary[receiverIntention]);
+
+            receiverPathsList[signalSpace[i]] = FIND_PATH(receiverLocation, targetLocation);
+        }
+        obj.receiverPath = receiverPathsList;
+        console.log(obj.receiverPath);
+    }
+    
+}
+
 
 function TRIAL_SET_UP (obj) {
     $(".gridItem").remove();
@@ -242,20 +273,12 @@ function TRIAL_SET_UP (obj) {
     obj.gridArray[signaler[0]][signaler[1]] = SHAPE_DIR + "signaler.png";
 
     if (obj.isPracTrial) {
-        //obj.signalSpace = PRAC_TRIAL_DICT["prac" + obj.trialIndex][0];
-        //obj.gridString = PRAC_TRIAL_DICT["prac" + obj.trialIndex][1];
         obj.signalSpace = obj.inputData[obj.trialIndex].targetDictionary;
-        //console.log(obj.inputData);
-        //console.log(obj.inputData[obj.trialIndex]);
         obj.gridString = obj.inputData[obj.trialIndex].targetDictionary;
-
         $("#round").html(obj.trialIndex + 1);
     } else if (obj.isExptTrial) {
-        console.log(obj.inputData);
-        //obj.signalSpace = TRIAL_DICT[randomizedTrialKeyList[obj.trialIndex]][0];
-        obj.signalSpace = obj.inputData[obj.trialIndex].signalSpace;
-        //obj.gridString = TRIAL_DICT[randomizedTrialKeyList[obj.trialIndex]][1];
-        obj.gridString = obj.inputData[obj.trialIndex].targetDictionary;
+        obj.signalSpace = obj.inputData[obj.randomizedTrialList[obj.trialIndex]].signalSpace;
+        obj.gridString= obj.inputData[obj.randomizedTrialList[obj.trialIndex]].targetDictionary;
     }
 
     var coordinates = Object.keys(obj.gridString);
@@ -268,15 +291,10 @@ function TRIAL_SET_UP (obj) {
         var col = coordInArray[1];
         obj.gridArray[row][col] = PIC_DICT[shape[i]];
         if(!obj.isExptTrial) {
-            //if (shape[i] == GOAL_DICT["expt" + obj.trialIndex])
             if (shape[i] == obj.inputData[obj.trialIndex].intention)
                 obj.goalCoord = [row, col];
         } else {
-            //if (shape[i] == GOAL_DICT[randomizedTrialKeyList[obj.trialIndex]])
-            /*console.log(randomizedTrialKeyList[obj.trialIndex]);
-            console.log(obj.inputData[randomizedTrialKeyList[obj.trialIndex]]);
-            console.log(obj.inputData[randomizedTrialKeyList[obj.trialIndex]].intention)*/
-            if (shape[i] == obj.inputData[obj.trialIndex].intention)
+            if (shape[i] == obj.inputData[obj.randomizedTrialList[obj.trialIndex]].intention)
                 obj.goalCoord = [row, col];
         }
     }
@@ -284,22 +302,7 @@ function TRIAL_SET_UP (obj) {
     signalerMoved = false;
     receiverMoved = false;
 
-    // Below section finds a path for each signal from signalSpace and assigns them into a dict for receiverPath
-    // TEMPORARY TO REVERSE KEY:VALUE ORDER OF A DICTIONARY FOR TARGET_DICTIONARY
-    tmpTargetDictionary = Object.entries(expt.inputData[obj.trialIndex]["targetDictionary"]).reduce((tmpObj, item) => (tmpObj[item[1]] = item[0]) && tmpObj, {});
-
-    var receiverPathsList = {};
-    var signalSpace = expt.inputData[obj.trialIndex]["signalSpace"];
-    for (var i = 0; i < signalSpace.length; i++) {
-        var receiverLocation = expt.inputData[obj.trialIndex]["receiverLocation"];
-
-        var receiverIntention = expt.inputData[obj.trialIndex]["receiverIntentionDict"][signalSpace[i]];
-        var targetLocation = CONVERT_STR_TO_ARRAY(tmpTargetDictionary[receiverIntention]);
-
-        receiverPathsList[signalSpace[i]] = FIND_PATH(receiverLocation, targetLocation);
-    }
-    obj.receiverPath = receiverPathsList;
-    console.log(obj.receiverPath);
+    CREATE_RECEIVER_PATH_DICT(obj);
 }
 
 function UPDATE_RESULT_IN_OBJ(obj,reward) {
@@ -366,15 +369,15 @@ function RECEIVER_WALK(obj, signal) {
 
     var path = obj.receiverPath[signal];
     
-    // TODO: path here.
+    console.log(path);
 
     var stepOnGrid = path[obj.pathIndex];
+    console.log(stepOnGrid);
     CHANGE_IN_TRIAL_INSTR("do");
     UPDATE_STEPS(obj);
     UPDATE_GAME_BOARD(stepOnGrid);
-
         if(obj.pathIndex == path.length - 1) {
-            if(receiver[0] == obj.goalCoord[0] && receiver[1] == obj.goalCoord[1]){
+            if(receiver[0] == obj.goalCoord[0] && receiver[1] == obj.goalCoord[1]) {
                 UPDATE_RESULT_IN_OBJ(obj, REWARD);
                 SHOW_WIN_RESULT_BOX_FOR_SAY(obj, true);
                 obj.step = 0;
@@ -389,22 +392,6 @@ function RECEIVER_WALK(obj, signal) {
             obj.pathIndex++;
             setTimeout(RECEIVER_WALK, RECEIVER_MOVE_SPEED * 1000, obj, signal);
         }  
-}
-
-function SHUFFLE_ARRAY(array) {
-    var j, temp;
-    for (var i = array.length - 1; i > 0; i--) {
-        j = Math.floor(Math.random() * (i + 1));
-        temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
-    }
-    return array;
-}
-
-function CREATE_RANDOM_REPEAT_BEGINNING_LIST(stim_list, repeat_trial_n) {
-    const REPEAT_LIST = SHUFFLE_ARRAY(stim_list.slice()).splice(0, repeat_trial_n);
-    return REPEAT_LIST.concat(stim_list);
 }
 
 function SUCCESS(){
@@ -606,7 +593,7 @@ function START_PRACTICE_TRIAL() {
     $("#instrPage").hide();
     $("#practiceInfo").css("opacity", 1);
     practice.isPracTrial = true;
-    practice.trialN = PRAC_TRIAL_NUM;
+    practice.trialN = practice.inputData.length;
     TRIAL_SET_UP(practice);
     CREATE_GRID(practice);
     CREATE_SIGNAL_BUTTONS(practice, practice.signalSpace);
@@ -643,7 +630,8 @@ function START_EXPT(){
     $("#instrPage").hide();
     $("#exptPracticeInfo").css("opacity", 0);
     expt.isExptTrial = true;
-    expt.trialN = TRIAL_NUM;
+    expt.trialN = expt.inputData.length;
+    CREATE_RANDOM_LIST_FOR_EXPT(expt);  
     TRIAL_SET_UP(expt);
     CREATE_GRID(expt);
     CREATE_SIGNAL_BUTTONS(expt, expt.signalSpace);
