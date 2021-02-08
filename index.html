@@ -244,7 +244,42 @@
             </div>
         </div>
     </div>
-    
+    <!--======== DEBRIEFING QUESTION ========-->
+    <div class='pageBox' id='questionsBox'>
+        You are almost done! Please answer these last questions:<br /><br /><br />
+
+        <strong>Did you complete this experiment seriously throughout (without randomly responding)?</strong>
+        <div class='smallDimText'>You will receive credit regardless what your answer is here. Please be honest for science! Thanks!</div>
+        <label><div class="option"><input class='optionRadio' type='radio' name='serious' value='0' /><div class='optionText'>No, I didn't.</div></div></label>
+        <label><div class="option"><input class='optionRadio' type='radio' name='serious' value='1' /><div class='optionText'>Yes, I did.</div></div></label>
+
+        <br><br><br>
+
+        <strong> Was any part of the procedure unclear? Did you have any problems completing any of the tasks?</strong>
+        <div class='smallDimText'>You will receive credit regardless what your answer is here. Please be honest for science! Thanks!</div>
+        <textarea id='problems' name="debQ" rows="3" cols="90"></textarea>
+
+        <br><br><br>
+
+        <strong>What is your gender?</strong>
+        <label><div class="option"><input class='optionRadio' type='radio' name='gender' value='F' /><div class='optionText'>Female</div></div></label>
+        <label><div class="option"><input class='optionRadio' type='radio' name='gender' value='M' /><div class='optionText'>Male</div></div></label>
+        <label><div class="option"><input class='optionRadio' type='radio' name='gender' value='O' /><div class='optionText'>Other</div></div></label>
+        <label><div class="option"><input class='optionRadio' type='radio' name='gender' value='N' /><div class='optionText'>I would rather not say</div></div></label>
+
+      
+        <br><br><br>
+
+        <strong>What is your age?</strong>
+        <input type='number' id='age' name="debQ" min="18" max="100">
+
+        <br><br><br>
+
+        <p id="debQWarning"></p>
+        <div class='butNext' onclick='SUBMIT_DEBRIEFING_Q()'>SUBMIT</div>
+        <br />
+    </div>
+
     <!--==========THANK YOU==========-->
     <div class="pageBox" id="thankPage">
         <p id="thankText">Thank you for completing this experiment!</p>
