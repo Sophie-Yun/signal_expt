@@ -73,130 +73,143 @@ function REMOVE_PREVIOUS(actor) {
         $(".top").remove();
 }
 
-function NEW_POSITION(actor) {
-    if (actor == signaler)
-        var actorImg = "signaler.png";
-    else 
-        var actorImg = "receiver.png";
-    if($("#shape"+ actor[0] + "v" + actor[1]).hasClass("gridItem"))
-        $("#shape" + actor[0] + "v" + actor[1]).append($("<img>", {class: "top", src: SHAPE_DIR + actorImg}));
+function NEW_SIGNALER_POSITION(signalerLocation) {
+    var signalerImg = "signaler.png";
+    if($("#shape"+ signalerLocation[0] + "v" + signalerLocation[1]).hasClass("gridItem"))
+        $("#shape" + signalerLocation[0] + "v" + signalerLocation[1]).append($("<img>", {class: "top", src: SHAPE_DIR + signalerImg}));
     else
-        $("#shape" + actor[0] + "v" + actor[1]).append($("<img>", {class: "shape", src: SHAPE_DIR + actorImg}));
+        $("#shape" + signalerLocation[0] + "v" + signalerLocation[1]).append($("<img>", {class: "shape", src: SHAPE_DIR + signalerImg}));
 }
 
-function FIRST_MOVE() {
+function NEW_RECEIVER_POSITION(receiverLocation) {
+    var receiverImg = "receiver.png";
+    if($("#shape"+ receiverLocation[0] + "v" + receiverLocation[1]).hasClass("gridItem"))
+        $("#shape" + receiverLocation[0] + "v" + receiverLocation[1]).append($("<img>", {class: "top", src: SHAPE_DIR + receiverImg}));
+    else
+        $("#shape" + receiverLocation[0] + "v" + receiverLocation[1]).append($("<img>", {class: "shape", src: SHAPE_DIR + receiverImg}));
+}
+
+function FIRST_MOVE(obj) {
     if(!signalerMoved){
         signalerMoved = true;
-        $("#shape"+ signaler[0] + "v" + signaler[1] + " img").remove();
-        $("#shape"+ signaler[0] + "v" + signaler[1]).attr("class", "gridEmpty");
+        $("#shape"+ obj.signalerLocation[0] + "v" + obj.signalerLocation[1] + " img").remove();
+        $("#shape"+ obj.signalerLocation[0] + "v" + obj.signalerLocation[1]).attr("class", "gridEmpty");
     }
 }
 
-function MOVE_LEFT() {
-    if(signaler[1]-1 >= 0){
-        FIRST_MOVE();
-        REMOVE_PREVIOUS(signaler);
-        signaler = [signaler[0], (signaler[1]-1)];
-        NEW_POSITION(signaler);
+function MOVE_LEFT(obj) {
+    if(obj.signalerLocation[1]-1 >= 0){
+        FIRST_MOVE(obj);
+        REMOVE_PREVIOUS(obj.signalerLocation);
+        obj.signalerLocation = [obj.signalerLocation[0], (obj.signalerLocation[1]-1)];
+        RECORD_SIGNALER_PATH(obj);
+        NEW_SIGNALER_POSITION(obj.signalerLocation);
     }
 }
 
-function MOVE_UP() {
-    if(signaler[0]-1  >= 0){
-        FIRST_MOVE();
-        REMOVE_PREVIOUS(signaler);
-        signaler = [(signaler[0]-1), signaler[1]];
-        NEW_POSITION(signaler);
+function MOVE_UP(obj) {
+    if(obj.signalerLocation[0]-1  >= 0){
+        FIRST_MOVE(obj);
+        REMOVE_PREVIOUS(obj.signalerLocation);
+        obj.signalerLocation = [(obj.signalerLocation[0]-1), obj.signalerLocation[1]];
+        RECORD_SIGNALER_PATH(obj);
+        NEW_SIGNALER_POSITION(obj.signalerLocation);
     }
 }
 
-function MOVE_RIGHT() {
-    if(signaler[1]+1 < GRID_NCOL){
-        FIRST_MOVE();
-        REMOVE_PREVIOUS(signaler);
-        signaler = [signaler[0], (signaler[1]+1)];
-        NEW_POSITION(signaler);
+function MOVE_RIGHT(obj) {
+    if(obj.signalerLocation[1]+1 < GRID_NCOL){
+        FIRST_MOVE(obj);
+        REMOVE_PREVIOUS(obj.signalerLocation);
+        obj.signalerLocation = [obj.signalerLocation[0], (obj.signalerLocation[1]+1)];
+        RECORD_SIGNALER_PATH(obj);
+        NEW_SIGNALER_POSITION(obj.signalerLocation);
     }
 }
 
-function MOVE_DOWN() {
-    if((signaler[0]+1) < GRID_NROW){
-        FIRST_MOVE();
-        REMOVE_PREVIOUS(signaler);
-        signaler = [(signaler[0]+1), signaler[1]];
-        NEW_POSITION(signaler);
+function MOVE_DOWN(obj) {
+    if((obj.signalerLocation[0]+1) < GRID_NROW){
+        FIRST_MOVE(obj);
+        REMOVE_PREVIOUS(obj.signalerLocation);
+        obj.signalerLocation = [(obj.signalerLocation[0]+1), obj.signalerLocation[1]];
+        RECORD_SIGNALER_PATH(obj);
+        NEW_SIGNALER_POSITION(obj.signalerLocation);
     }
 }
 
-function RECEIVER_FIRST_MOVE() {
+function RECEIVER_FIRST_MOVE(obj) {
     if(!receiverMoved ){
         receiverMoved = true;
-        $("#shape"+ receiver[0] + "v" + receiver[1] + " img").remove();
-        $("#shape"+ receiver[0] + "v" + receiver[1]).attr("class", "gridEmpty");
+        $("#shape"+ obj.receiverLocation[0] + "v" + obj.receiverLocation[1] + " img").remove();
+        $("#shape"+ obj.receiverLocation[0] + "v" + obj.receiverLocation[1]).attr("class", "gridEmpty");
     }
 }
 
-function RECEIVER_MOVE_LEFT() {
-    if(receiver[1]-1 >= 0){
-        RECEIVER_FIRST_MOVE();
-        REMOVE_PREVIOUS(receiver);
-        receiver = [receiver[0], (receiver[1]-1)];
-        NEW_POSITION(receiver);
+function RECEIVER_MOVE_LEFT(obj) {
+    if(obj.receiverLocation[1]-1 >= 0){
+        RECEIVER_FIRST_MOVE(obj);
+        REMOVE_PREVIOUS(obj.receiverLocation);
+        obj.receiverLocation = [obj.receiverLocation[0], (obj.receiverLocation[1]-1)];
+        RECORD_RECEIVER_PATH(obj);
+        NEW_RECEIVER_POSITION(obj.receiverLocation);
     }
 }
 
-function RECEIVER_MOVE_UP() {
-    if(receiver[0]-1 >= 0){
-        RECEIVER_FIRST_MOVE();
-        REMOVE_PREVIOUS(receiver);                    
-        receiver = [(receiver[0]-1), (receiver[1])];
-        NEW_POSITION(receiver);
+function RECEIVER_MOVE_UP(obj) {
+    if(obj.receiverLocation[0]-1 >= 0){
+        RECEIVER_FIRST_MOVE(obj);
+        REMOVE_PREVIOUS(obj.receiverLocation);                
+        obj.receiverLocation = [(obj.receiverLocation[0]-1), (obj.receiverLocation[1])];
+        RECORD_RECEIVER_PATH(obj);
+        NEW_RECEIVER_POSITION(obj.receiverLocation);
     }
 }
 
-function RECEIVER_MOVE_RIGHT() {
-    if(receiver[1]+1 < GRID_NCOL){
-        RECEIVER_FIRST_MOVE();
-        REMOVE_PREVIOUS(receiver);
-        receiver = [receiver[0], (receiver[1]+1)];                    
-        NEW_POSITION(receiver);
+function RECEIVER_MOVE_RIGHT(obj) {
+    if(obj.receiverLocation[1]+1 < GRID_NCOL){
+        RECEIVER_FIRST_MOVE(obj);
+        REMOVE_PREVIOUS(obj.receiverLocation);
+        obj.receiverLocation = [obj.receiverLocation[0], (obj.receiverLocation[1]+1)];  
+        RECORD_RECEIVER_PATH(obj);
+        NEW_RECEIVER_POSITION(obj.receiverLocation);
     }
 }
 
-function RECEIVER_MOVE_DOWN() {
-    if(receiver[0]+1 < GRID_NROW){
-        RECEIVER_FIRST_MOVE();
-        REMOVE_PREVIOUS(receiver);
-        receiver = [(receiver[0]+1), receiver[1]];
-        NEW_POSITION(receiver);
+function RECEIVER_MOVE_DOWN(obj) {
+    if(obj.receiverLocation[0]+1 < GRID_NROW){
+        RECEIVER_FIRST_MOVE(obj);
+        REMOVE_PREVIOUS(obj.receiverLocation);
+        obj.receiverLocation = [(obj.receiverLocation[0]+1), obj.receiverLocation[1]];
+        RECORD_RECEIVER_PATH(obj);
+        NEW_RECEIVER_POSITION(obj.receiverLocation);
     }
 }
 
-function UPDATE_GAME_BOARD(key) {
+function UPDATE_GAME_BOARD(obj, key) {
     switch (key){
         case 37: //left
-            MOVE_LEFT();
+            MOVE_LEFT(obj);
             break;
         case 38: //up
-            MOVE_UP();
+            MOVE_UP(obj);
             break;
         case 39: //right
-            MOVE_RIGHT();
+            MOVE_RIGHT(obj);
             break;
         case 40: //down
-            MOVE_DOWN();
+            MOVE_DOWN(obj);
             break;
         case "left":
-            RECEIVER_MOVE_LEFT();
+            RECEIVER_MOVE_LEFT(obj);
             break;
         case "up":
-            RECEIVER_MOVE_UP();
+            RECEIVER_MOVE_UP(obj);
             break;
         case "right":
-            RECEIVER_MOVE_RIGHT();
+            RECEIVER_MOVE_RIGHT(obj);
             break;
         case "down":
-            RECEIVER_MOVE_DOWN();
+            RECEIVER_MOVE_DOWN(obj);
             break;
     }
 }
@@ -224,82 +237,80 @@ function CREATE_EXPT_BUTTONS(obj) {
 }
 
 function CREATE_SIGNAL_BUTTONS(obj, availableSignals) {
-    if(!obj.buttonsCreated) {
-        for (var i = 0; i < MAX_SAY_OPTION; i++) {
-            if(obj.isTrySay || obj.isTryMove){
-                $("#tryButOption" + i).css({
-                    "border": "1px solid", 
-                    "opacity": 0.2,
-                    "background": "#bcbab8", 
-                    "cursor": "auto",
-                    "box-shadow": "none",
-                    "pointer-events": "none"
-                });
+    for (var i = 0; i < MAX_SAY_OPTION; i++) {
+        if(obj.isTrySay || obj.isTryMove){
+            $("#tryButOption" + i).css({
+                "border": "1px solid", 
+                "opacity": 0.2,
+                "background": "#bcbab8", 
+                "cursor": "auto",
+                "box-shadow": "none",
+                "pointer-events": "none"
+            });
+            if(!obj.buttonsCreated)  
+                $("#tryButOption" + i).click(function(){RECEIVER_WALK(obj,$(this).html())});
 
-                for (var j = 0; j < availableSignals.length; j++) {
-                    if (availableSignals[j] == $("#tryButOption" + i).html()) {
-                        $("#tryButOption" + i).css({
-                            "border": "revert",
-                            "opacity": 1,
-                            "background": "#9D8F8F", 
-                            "box-shadow": "2px 2px 4px rgba(0, 0, 0, 0.25)",
-                            "pointer-events": "revert",
-                            "cursor": "pointer"
-                        });
-                        $("#tryButOption" + i).click(function(){RECEIVER_WALK(obj,$(this).html())});
-                    }
-                }
-            } else if (obj.isPracTrial) {
-                $("#practiceButOption" + i).css({
-                    "border": "1px solid", 
-                    "opacity": 0.2,
-                    "background": "#bcbab8", 
-                    "cursor": "auto",
-                    "box-shadow": "none",
-                    "pointer-events": "none"
-                });
-
-                for (var j = 0; j < availableSignals.length; j++) {
-                    if (availableSignals[j] == $("#practiceButOption" + i).html()) {
-                        $("#practiceButOption" + i).css({
-                            "border": "revert",
-                            "opacity": 1,
-                            "background": "#9D8F8F", 
-                            "box-shadow": "2px 2px 4px rgba(0, 0, 0, 0.25)",
-                            "pointer-events": "revert",
-                            "cursor": "pointer"
-                        });
-                        $("#practiceButOption" + i).click(function(){RECEIVER_WALK(obj,$(this).html())});
-                    }
-                }
-            } else if (obj.isExptTrial) {
-                $("#butOption" + i).css({    
-                    "border": "1px solid", 
-                    "opacity": 0.2,
-                    "background": "#bcbab8", 
-                    "cursor": "auto",
-                    "box-shadow": "none",
-                    "pointer-events": "none"
-                });
-
-                for (var j = 0; j < availableSignals.length; j++) {
-                    if (availableSignals[j] == $("#butOption" + i).html()) {
-                        $("#butOption" + i).css({
-                            "border": "revert",
-                            "opacity": 1,
-                            "background": "#9D8F8F", 
-                            "box-shadow": "2px 2px 4px rgba(0, 0, 0, 0.25)",
-                            "pointer-events": "revert",
-                            "cursor": "pointer"
-                        });
-                        $("#butOption" + i).click(function(){RECEIVER_WALK(obj,$(this).html())});
-                    }
+            for (var j = 0; j < availableSignals.length; j++) {
+                if (availableSignals[j] == $("#tryButOption" + i).html()) {
+                    $("#tryButOption" + i).css({
+                        "border": "revert",
+                        "opacity": 1,
+                        "background": "#9D8F8F", 
+                        "box-shadow": "2px 2px 4px rgba(0, 0, 0, 0.25)",
+                        "pointer-events": "revert",
+                        "cursor": "pointer"
+                    });
                 }
             }
-             
-        }  
-        obj.buttonsCreated = true;
-   }
+        } else if (obj.isPracTrial) {
+            $("#practiceButOption" + i).css({
+                "border": "1px solid", 
+                "opacity": 0.2,
+                "background": "#bcbab8", 
+                "cursor": "auto",
+                "box-shadow": "none",
+                "pointer-events": "none"
+            });
+            if(!obj.buttonsCreated)  
+                $("#practiceButOption" + i).click(function(){RECEIVER_WALK(obj,$(this).html())});
+            for (var j = 0; j < availableSignals.length; j++) {
+                if (availableSignals[j] == $("#practiceButOption" + i).html()) {
+                    $("#practiceButOption" + i).css({
+                        "border": "revert",
+                        "opacity": 1,
+                        "background": "#9D8F8F", 
+                        "box-shadow": "2px 2px 4px rgba(0, 0, 0, 0.25)",
+                        "pointer-events": "revert",
+                        "cursor": "pointer"
+                    });
+                }
+            }
+        } else if (obj.isExptTrial) {
+            $("#butOption" + i).css({    
+                "border": "1px solid", 
+                "opacity": 0.2,
+                "background": "#bcbab8", 
+                "cursor": "auto",
+                "box-shadow": "none",
+                "pointer-events": "none"
+            });
+            if(!obj.buttonsCreated)  
+                $("#butOption" + i).click(function(){RECEIVER_WALK(obj,$(this).html())});    
+            for (var j = 0; j < availableSignals.length; j++) {
+                if (availableSignals[j] == $("#butOption" + i).html()) {
+                    $("#butOption" + i).css({
+                        "border": "revert",
+                        "opacity": 1,
+                        "background": "#9D8F8F", 
+                        "box-shadow": "2px 2px 4px rgba(0, 0, 0, 0.25)",
+                        "pointer-events": "revert",
+                        "cursor": "pointer"
+                    });
+                }
+            }
+        }
+    }
+    obj.buttonsCreated = true;
 }
 
 function TRY_EXPT_INSTR_FADE() {
@@ -342,7 +353,7 @@ function CHANGE_IN_TRIAL_INSTR(decision) {
         $("#decision").html("Please hit ENTER when you land on the item.");
     } else if(decision == "say") {
         $("#tryDecision").html("<img class='shape' src='shape/receiver.png' />" + " is responding to your signal.");
-        $("#practiceDecision").html("Please hit ENTER when you land on the item.");
+        $("#practiceDecision").html("<img class='shape' src='shape/receiver.png' />" + " is responding to your signal.");
         $("#decision").html("<img class='shape' src='shape/receiver.png' />" + " is responding to your signal.");
     }
 }
@@ -446,11 +457,11 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         $("#tryResult .tryStep").html("-" + obj.step);
         var reward;
         if(win){
-            var landedItem = $('#shape'+ receiver[0] + 'v' + receiver[1] + ' .shape').attr('src');
+            var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
             $("#tryResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
             reward = REWARD;
         } else {
-            var landedItem = $('#shape'+ receiver[0] + 'v' + receiver[1] + ' .shape').attr('src');
+            var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
             $("#tryResultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target.<br>Good luck on your next round!");
             reward = 0;
         }
@@ -462,11 +473,11 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         $("#practiceResult .practiceStep").html("-" + obj.step);
         var reward;
         if(win){
-            var landedItem = $('#shape'+ receiver[0] + 'v' + receiver[1] + ' .shape').attr('src');
+            var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
             $("#practiceResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
             reward = REWARD;
         } else {
-            var landedItem = $('#shape'+ receiver[0] + 'v' + receiver[1] + ' .shape').attr('src');
+            var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
             $("#practiceResultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target.<br>Good luck on your next round!");
             reward = 0;
         }
@@ -478,11 +489,11 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         $("#result .step").html("-" + obj.step);
         var reward;
         if(win){
-            var landedItem = $('#shape'+ receiver[0] + 'v' + receiver[1] + ' .shape').attr('src');
+            var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
             $("#resultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
             reward = REWARD;
         } else {
-            var landedItem = $('#shape'+ receiver[0] + 'v' + receiver[1] + ' .shape').attr('src');
+            var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
             $("#resultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target.<br>Good luck on your next round!");
             reward = 0;
         }
@@ -503,14 +514,19 @@ function SHOW_QUIT_RESULT(obj) {
         $("#practiceTotalAfter").html(practice.totalScore);
         $("#practiceResult").show();
     } if(obj.isExptTrial){
+        RECORD_DECISION_DATA(obj, "quit");
+        RECORD_ACTION_TIME(obj);
         reward = 0;
         $("#resultText").html("Don't worry!<br>Good luck on your next round!");
         $("#reward").html(0);
         $("#scoreThisRound").html(reward - practice.step);
         $("#totalAfter").html(practice.totalScore);
         $("#result").show();
-        RECORD_DECISION_DATA(obj, "quit");
-        RECORD_END_LOCATION(obj, "noChange");
+        RECORD_SIGNAL_DATA(obj);
+        RECORD_SIGNALER_END_LOCATION(obj);
+        RECORD_SIGNALER_ACHIEVED(obj);
+        RECORD_RECEIVER_END_LOCATION(obj);
+        RECORD_RECEIVER_ACHIEVED(obj);
     }
     
 };

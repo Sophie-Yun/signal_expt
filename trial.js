@@ -22,6 +22,7 @@ class trialObject {
             isPracTrial: false,
             isExptTrial: false,
             startTime: 0,
+            signal: "N/A",
             gridArray: [
                 [,,,,,,,,],
                 [,,,,,,,,],
@@ -64,7 +65,6 @@ class trialObject {
                 this.end();
             } else {
                 this.step = 0;
-                this.buttonsCreated = false;
                 TRIAL_SET_UP(this);
                 CREATE_GRID(this);
                 SETUP_SCOREBOARD(this);
@@ -74,9 +74,16 @@ class trialObject {
             }
         } else if(this.isExptTrial) {
             var currentTime = Date.now();
-            this.finishTime = (currentTime - this.startTime) / 1000; // in second
+            this.feedbackTime = (currentTime - this.startTime) / 1000 - this.actionTime; // in second
             this.exptId = this.randomizedTrialList[this.trialIndex];
-            var dataList = [this.subjId, this.trialIndex, this.exptId, this.decision, this.decideTime, this.endLocation, this.finishTime];
+            this.totalUtility = this.totalScore;
+            var dataList = [this.subjId, this.trialIndex, this.exptId, 
+                this.decision, this.signal, 
+                this.exptSignalerPath, this.signalerEndCoordinate, this.signalerEndItem, 
+                this.exptReceiverPath, this.receiverEndCoordinate, this.receiverEndItem,
+                this.signalerAchievedGoal, this.receiverAchievedGoal,
+                this.totalUtility,
+                this.decisionTime, this.actionTime, this.feedbackTime];
             this.exptDataToSave += LIST_TO_FORMATTED_STRING(dataList);
             this.startTime = Date.now();
             this.trialIndex++;
@@ -85,7 +92,8 @@ class trialObject {
             } else {
                 this.step = 0;
                 this.decisionRecorded = false;
-                this.buttonsCreated = false;
+                this.exptSignalerPath = "N/A",
+                this.exptReceiverPath = "N/A",
                 TRIAL_SET_UP(this);
                 CREATE_GRID(this);
                 SETUP_SCOREBOARD(this);
@@ -106,22 +114,6 @@ class trialObject {
             this.saveExptData();
         }
     }
-    /*
-    end() {
-        
-        
-        if (this.trialNum > 0) {
-            var dataList = LIST_FROM_ATTRIBUTE_NAMES(this, this.titles);
-            this.exptDataToSave += LIST_TO_FORMATTED_STRING(dataList);
-        }
-        if (this.trialNum < this.trialN) {
-            this.run();
-        } else {
-            this.complete = true;
-            this.endExptFunc();
-        }
-    }
-    */
     move() {
         this.allowMove = true;
         MOVE(this);
@@ -145,6 +137,12 @@ function CONVERT_CSV_COORD_TO_ARRAY_COORD(inputCol, inputRow) {
     var colInArray = inputCol;
     var rowInArray = GRID_NROW - inputRow - 1;
     return [rowInArray, colInArray]; // changed order from col, row -> row, col
+}
+
+function CONVERT_ARRAY_COORD_TO_CSV_COORD(inputRow, inputCol) {
+    var colInCsv = inputCol;
+    var rowInCsv = GRID_NROW - inputRow - 1;
+    return [colInCsv, rowInCsv]; // changed order from row, col -> col, row
 }
 
 function FIND_PATH(receiverLocation, receiverIntentionLocation) {
@@ -213,40 +211,49 @@ function CREATE_RECEIVER_PATH_DICT(obj) {
     // Below section finds a path for each signal from signalSpace and assigns them into a dict for receiverPath
     // TEMPORARY TO REVERSE KEY:VALUE ORDER OF A DICTIONARY FOR TARGET_DICTIONARY
     if(!obj.isExptTrial) {
-        tmpTargetDictionary = Object.entries(expt.inputData[obj.trialIndex]["targetDictionary"]).reduce((tmpObj, item) => (tmpObj[item[1]] = item[0]) && tmpObj, {});
+        tmpTargetDictionary = Object.entries(obj.inputData[obj.trialIndex]["targetDictionary"]).reduce((tmpObj, item) => (tmpObj[item[1]] = item[0]) && tmpObj, {});
 
         var receiverPathsList = {};
-        var signalSpace = expt.inputData[obj.trialIndex]["signalSpace"];
+        var signalSpace = obj.inputData[obj.trialIndex]["signalSpace"];
         for (var i = 0; i < signalSpace.length; i++) {
-            var receiverLocation = expt.inputData[obj.trialIndex]["receiverLocation"];
+            var receiverLocation = obj.inputData[obj.trialIndex]["receiverLocation"];
 
-            var receiverIntention = expt.inputData[obj.trialIndex]["receiverIntentionDict"][signalSpace[i]];
+            var receiverIntention = obj.inputData[obj.trialIndex]["receiverIntentionDict"][signalSpace[i]];
             var targetLocation = CONVERT_STR_TO_ARRAY(tmpTargetDictionary[receiverIntention]);
 
             receiverPathsList[signalSpace[i]] = FIND_PATH(receiverLocation, targetLocation);
         }
         obj.receiverPath = receiverPathsList;
-        console.log(obj.receiverPath);
     } else {
-        tmpTargetDictionary = Object.entries(expt.inputData[obj.randomizedTrialList[obj.trialIndex]]["targetDictionary"]).reduce((tmpObj, item) => (tmpObj[item[1]] = item[0]) && tmpObj, {});
+        tmpTargetDictionary = Object.entries(obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["targetDictionary"]).reduce((tmpObj, item) => (tmpObj[item[1]] = item[0]) && tmpObj, {});
 
         var receiverPathsList = {};
-        var signalSpace = expt.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalSpace"];
+        var signalSpace = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalSpace"];
         for (var i = 0; i < signalSpace.length; i++) {
-            var receiverLocation = expt.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"];
+            var receiverLocation = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"];
 
-            var receiverIntention = expt.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverIntentionDict"][signalSpace[i]];
+            var receiverIntention = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverIntentionDict"][signalSpace[i]];
             var targetLocation = CONVERT_STR_TO_ARRAY(tmpTargetDictionary[receiverIntention]);
 
             receiverPathsList[signalSpace[i]] = FIND_PATH(receiverLocation, targetLocation);
         }
         obj.receiverPath = receiverPathsList;
-        console.log(obj.receiverPath);
     }
     
 }
 
+function SET_RECEIVER_SIGNALER_LOCATION(obj) {
+    //var receiverFromCSV, signalerFromCSV;
+        if (obj.isPracTrial) {
+            obj.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.trialIndex]["receiverLocation"][0], obj.inputData[obj.trialIndex]["receiverLocation"][1]); 
+            obj.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.trialIndex]["signalerLocation"][0], obj.inputData[obj.trialIndex]["signalerLocation"][1]);
+        } else if (obj.isExptTrial) {
+            obj.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"][0], obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"][1]); 
+            obj.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalerLocation"][0], obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalerLocation"][1]);
+        }
+}
 
+    
 function TRIAL_SET_UP (obj) {
     $(".gridItem").remove();
     $(".gridEmpty").remove();
@@ -264,16 +271,13 @@ function TRIAL_SET_UP (obj) {
         [,,,,,,,,]
     ];
 
-    receiverFromCSV = expt.inputData[obj.trialIndex]["receiverLocation"];
-    signalerFromCSV = expt.inputData[obj.trialIndex]["signalerLocation"];
-    receiver = CONVERT_CSV_COORD_TO_ARRAY_COORD(receiverFromCSV[0], receiverFromCSV[1]);
-    signaler = CONVERT_CSV_COORD_TO_ARRAY_COORD(signalerFromCSV[0], signalerFromCSV[1]);
+    SET_RECEIVER_SIGNALER_LOCATION(obj);
 
-    obj.gridArray[receiver[0]][receiver[1]] = SHAPE_DIR + "receiver.png";
-    obj.gridArray[signaler[0]][signaler[1]] = SHAPE_DIR + "signaler.png";
+    obj.gridArray[obj.receiverLocation[0]][obj.receiverLocation[1]] = SHAPE_DIR + "receiver.png";
+    obj.gridArray[obj.signalerLocation[0]][obj.signalerLocation[1]] = SHAPE_DIR + "signaler.png";
 
     if (obj.isPracTrial) {
-        obj.signalSpace = obj.inputData[obj.trialIndex].targetDictionary;
+        obj.signalSpace = obj.inputData[obj.trialIndex].signalSpace;
         obj.gridString = obj.inputData[obj.trialIndex].targetDictionary;
         $("#round").html(obj.trialIndex + 1);
     } else if (obj.isExptTrial) {
@@ -316,34 +320,34 @@ function MOVE(obj) {
     document.onkeydown = function(e) {
         if(obj.allowMove) {
             if(e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40) {// arrow keys
-                if(!obj.decisionRecorded)
+                if(!obj.decisionRecorded) {
                     RECORD_DECISION_DATA(obj, "move");
+                    RECORD_SIGNAL_DATA(obj);
+                }
                 arrowClicked = true;
                 CHANGE_IN_TRIAL_INSTR("do");
                 UPDATE_STEPS(obj);
-                UPDATE_GAME_BOARD(e.keyCode);
+                UPDATE_GAME_BOARD(obj, e.keyCode);
             } else if (e.keyCode == 13) { // ENTER key
                 e.preventDefault();
                 if(arrowClicked){
-                    if(signaler[0] == obj.goalCoord[0] && signaler[1] == obj.goalCoord[1]){ //reached
-                        var endLocation = obj.gridArray[signaler[0]][signaler[1]];
-                        var pictKeyIndex = 0;
-                        while(PIC_DICT[Object.keys(PIC_DICT)[pictKeyIndex]] != endLocation ) {
-                           pictKeyIndex++;
-                        }
-                        RECORD_END_LOCATION(obj, Object.keys(PIC_DICT)[pictKeyIndex]);
+                    if(obj.signalerLocation[0] == obj.goalCoord[0] && obj.signalerLocation[1] == obj.goalCoord[1]){ //reached
+                        RECORD_ACTION_TIME(obj);
+                        RECORD_SIGNALER_END_LOCATION(obj, obj.signalerLocation);
+                        RECORD_RECEIVER_END_LOCATION(obj);
+                        RECORD_SIGNALER_ACHIEVED(obj, "achieved")
+                        RECORD_RECEIVER_ACHIEVED(obj);
                         UPDATE_RESULT_IN_OBJ(obj, REWARD);
                         SHOW_WIN_RESULT_BOX_FOR_MOVE(obj, true);
                         obj.step = 0;
-                    } else if ($("#shape"+ signaler[0] + "v" + signaler[1]).hasClass("gridEmpty") || (signaler[0] == receiver[0] && signaler[1] == receiver[1])){
+                    } else if ($("#shape"+ obj.signalerLocation[0] + "v" + obj.signalerLocation[1]).hasClass("gridEmpty") || (obj.signalerLocation[0] == obj.receiverLocation[0] && obj.signalerLocation[1] == obj.receiverLocation[1])){
                         alert("You cannot stop on an empty square or the receiver's position! Please move to an item on the grid.")
                     } else {
-                        var endLocation = obj.gridArray[signaler[0]][signaler[1]];
-                        var pictKeyIndex = 0;
-                        while(PIC_DICT[Object.keys(PIC_DICT)[pictKeyIndex]] != endLocation ) {
-                            pictKeyIndex++;
-                         }
-                        RECORD_END_LOCATION(obj, Object.keys(PIC_DICT)[pictKeyIndex]);
+                        RECORD_ACTION_TIME(obj);
+                        RECORD_SIGNALER_END_LOCATION(obj, obj.signalerLocation);
+                        RECORD_RECEIVER_END_LOCATION(obj);
+                        RECORD_SIGNALER_ACHIEVED(obj);
+                        RECORD_RECEIVER_ACHIEVED(obj);
                         UPDATE_RESULT_IN_OBJ(obj, 0);
                         SHOW_WIN_RESULT_BOX_FOR_MOVE(obj, false);
                         obj.step = 0;
@@ -365,24 +369,31 @@ function CONVERT_STR_TO_ARRAY(input) {
 }
 
 function RECEIVER_WALK(obj, signal) {
-    RECORD_DECISION_DATA(obj, signal);
+    RECORD_DECISION_DATA(obj, "say");
+    RECORD_SIGNAL_DATA(obj, signal);
 
     var path = obj.receiverPath[signal];
-    
-    console.log(path);
-
     var stepOnGrid = path[obj.pathIndex];
-    console.log(stepOnGrid);
-    CHANGE_IN_TRIAL_INSTR("do");
+    CHANGE_IN_TRIAL_INSTR("say");
     UPDATE_STEPS(obj);
-    UPDATE_GAME_BOARD(stepOnGrid);
+    UPDATE_GAME_BOARD(obj, stepOnGrid);
         if(obj.pathIndex == path.length - 1) {
-            if(receiver[0] == obj.goalCoord[0] && receiver[1] == obj.goalCoord[1]) {
+            if(obj.receiverLocation[0] == obj.goalCoord[0] && obj.receiverLocation[1] == obj.goalCoord[1]) {
+                RECORD_ACTION_TIME(obj);
+                RECORD_SIGNALER_END_LOCATION(obj);
+                RECORD_RECEIVER_END_LOCATION(obj, obj.receiverLocation);
+                RECORD_SIGNALER_ACHIEVED(obj);
+                RECORD_RECEIVER_ACHIEVED(obj, "achieved");
                 UPDATE_RESULT_IN_OBJ(obj, REWARD);
                 SHOW_WIN_RESULT_BOX_FOR_SAY(obj, true);
                 obj.step = 0;
                 obj.pathIndex = 0;
             } else {
+                RECORD_ACTION_TIME(obj);
+                RECORD_SIGNALER_END_LOCATION(obj);
+                RECORD_RECEIVER_END_LOCATION(obj, obj.receiverLocation);
+                RECORD_SIGNALER_ACHIEVED(obj);
+                RECORD_RECEIVER_ACHIEVED(obj);
                 UPDATE_RESULT_IN_OBJ(obj, 0);
                 SHOW_WIN_RESULT_BOX_FOR_SAY(obj, false);
                 obj.step = 0;  
@@ -452,19 +463,24 @@ function NEXT_TRIAL(obj) {
 */
 
 
-function RESET_SIGNALER() {
-    if(signaler[0] != 9 || signaler[1] != 4){
-        REMOVE_PREVIOUS(signaler);
-        signaler = [9, 4];//row, col
-        NEW_POSITION(signaler);
+function RESET_TRYMOVE_SIGNALER() {
+    if(tryMove.gridCreated) {
+        if(tryMove.signalerLocation[0] != 9 || tryMove.signalerLocation[1] != 4){
+            REMOVE_PREVIOUS(tryMove.signalerLocation);
+            tryMove.signalerLocation = [9, 4];//row, col
+            NEW_SIGNALER_POSITION(tryMove.signalerLocation);
+        } 
     }
 }
 
-function RESET_RECEIVER() {
-    if(receiver[0] != 2 || receiver[1] != 4){
-        REMOVE_PREVIOUS(receiver);
-        receiver = [2, 4];//row, col
-        NEW_POSITION(receiver);
+function RESET_TRYMOVE_RECEIVER() {
+    if(tryMove.gridCreated) {
+        if(tryMove.receiverLocation[0] != 2 || tryMove.receiverLocation[1] != 4){
+            REMOVE_PREVIOUS(tryMove.receiverLocation);
+            tryMove.receiverLocation = [2, 4];//row, col
+            NEW_RECEIVER_POSITION(tryMove.receiverLocation);
+            console.log("receivertryMove");
+        } 
     }
 }
 
@@ -484,9 +500,8 @@ function TRY_GRID_SETUP(obj) {
    if(!obj.gridCreated) {
         $(".gridItem").remove();
         $(".gridEmpty").remove();
-
-        obj.gridArray[receiver[0]][receiver[1]] = SHAPE_DIR + "receiver.png";
-        obj.gridArray[signaler[0]][signaler[1]] = SHAPE_DIR + "signaler.png";
+        obj.gridArray[obj.receiverLocation[0]][obj.receiverLocation[1]] = SHAPE_DIR + "receiver.png";
+        obj.gridArray[obj.signalerLocation[0]][obj.signalerLocation[1]] = SHAPE_DIR + "signaler.png";
         CREATE_GRID(obj);
         obj.gridCreated = true;
     }
@@ -513,6 +528,8 @@ function TRY_SAY_GAMEBOARD_SETUP() {
 function TRY_MOVE() {
     tryMove.isTryMove = true;
     tryMove.step = 0;
+    tryMove.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(practice.inputData[0]["signalerLocation"][0], practice.inputData[0]["signalerLocation"][1]);
+    tryMove.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(practice.inputData[0]["receiverLocation"][0], practice.inputData[0]["receiverLocation"][1]);
     if(!tryMove.reached)
         $("#instrNextBut").hide();
     CREATE_EXPT_BUTTONS(tryMove);
@@ -545,7 +562,8 @@ function TRY_SAY(){
         $("#instrNextBut").hide();
     CREATE_EXPT_BUTTONS(trySay);
     $("#tryPracticeInfo").css("opacity", 0);
-
+    trySay.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(practice.inputData[0]["receiverLocation"][0], practice.inputData[0]["receiverLocation"][1]);
+    trySay.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(practice.inputData[0]["signalerLocation"][0], practice.inputData[0]["signalerLocation"][1]);
     trySay.gridArray = [
         [,,,,,,,,],
         [,,,,,,,,],
@@ -641,18 +659,93 @@ function START_EXPT(){
     expt.move();
 
     expt.startTime = Date.now();
+    expt.exptSignalerPath = "N/A",
+    expt.exptReceiverPath = "N/A",
     $("#exptPage").show();
 }
+
+/*
+ ######  #######  #####  ####### ######  ######  
+ #     # #       #     # #     # #     # #     # 
+ #     # #       #       #     # #     # #     # 
+ ######  #####   #       #     # ######  #     # 
+ #   #   #       #       #     # #   #   #     # 
+ #    #  #       #     # #     # #    #  #     # 
+ #     # #######  #####  ####### #     # ######  
+                                                 
+*/
 
 function RECORD_DECISION_DATA(obj, decision) {
     if(!obj.decisionRecorded){
         obj.decision = decision;
         var currentTime = Date.now();
-        obj.decideTime = (currentTime - obj.startTime)/1000;
+        obj.decisionTime = (currentTime - obj.startTime)/1000;
         obj.decisionRecorded = true;
     }
 }
 
-function RECORD_END_LOCATION(obj, location) {
-    obj.endLocation = location;
+function RECORD_ACTION_TIME(obj) {
+    var currentTime = Date.now();
+    obj.actionTime = (currentTime - obj.startTime)/1000 - obj.decisionTime;
+}
+
+function RECORD_SIGNAL_DATA(obj, signal) {
+    if(obj.isExptTrial)
+        obj.signal = (signal == undefined) ? "N/A" : signal;
+}
+
+function RECORD_SIGNALER_PATH(obj) {
+    if(obj.isExptTrial) {
+        if (obj.exptSignalerPath == "N/A")
+            obj.exptSignalerPath = "";
+        obj.exptSignalerPath += CONVERT_COORD_ARRAY_TO_STR(CONVERT_ARRAY_COORD_TO_CSV_COORD(obj.signalerLocation[0], obj.signalerLocation[1]));
+    } 
+}
+
+function RECORD_RECEIVER_PATH(obj) {
+    if(obj.isExptTrial) {
+        if (obj.exptReceiverPath == "N/A")
+            obj.exptReceiverPath = "";
+        obj.exptReceiverPath += CONVERT_COORD_ARRAY_TO_STR(CONVERT_ARRAY_COORD_TO_CSV_COORD(obj.receiverLocation[0], obj.receiverLocation[1]));
+    } 
+}
+
+function FIND_SHAPENAME_FROM_SHAPEPIC (shapePic) {
+    var pictKeyIndex = 0;
+    while(PIC_DICT[Object.keys(PIC_DICT)[pictKeyIndex]] != shapePic ) {
+        pictKeyIndex++;
+    }
+    return Object.keys(PIC_DICT)[pictKeyIndex];
+}
+
+function CONVERT_COORD_ARRAY_TO_STR (array) {
+    return "(" + array.toString() + ")";
+}
+
+function RECORD_SIGNALER_END_LOCATION(obj, signalerLocation) {
+    if(obj.isExptTrial){
+        var startingCoord = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalerLocation"];
+        obj.signalerEndCoordinate = (signalerLocation == undefined) ? CONVERT_COORD_ARRAY_TO_STR(startingCoord): CONVERT_COORD_ARRAY_TO_STR(CONVERT_ARRAY_COORD_TO_CSV_COORD(signalerLocation[0], signalerLocation[1]));
+        obj.signalerEndItem = (signalerLocation == undefined) ? "noChange": FIND_SHAPENAME_FROM_SHAPEPIC (obj.gridArray[signalerLocation[0]][signalerLocation[1]]);
+    }
+}
+
+function RECORD_RECEIVER_END_LOCATION(obj, receiverLocation) {
+    if(obj.isExptTrial){
+        var startingCoord = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"];
+        obj.receiverEndCoordinate = (receiverLocation == undefined) ? CONVERT_COORD_ARRAY_TO_STR(startingCoord): CONVERT_COORD_ARRAY_TO_STR(CONVERT_ARRAY_COORD_TO_CSV_COORD(receiverLocation[0], receiverLocation[1]));
+        obj.receiverEndItem = (receiverLocation == undefined) ? "noChange": FIND_SHAPENAME_FROM_SHAPEPIC (obj.gridArray[receiverLocation[0]][receiverLocation[1]]);
+    }
+}
+
+function RECORD_SIGNALER_ACHIEVED(obj, achieved) {
+    if(obj.isExptTrial){
+        obj.signalerAchievedGoal = (achieved == undefined) ? false : true;
+    }
+}
+
+function RECORD_RECEIVER_ACHIEVED(obj, achieved) {
+    if(obj.isExptTrial){
+        obj.receiverAchievedGoal = (achieved == undefined) ? false : true;
+    }
 }

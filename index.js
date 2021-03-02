@@ -28,14 +28,9 @@ var trial;
 var reward;
 var signalerMoved;
 var receiverMoved;
-var decision;
 var startTime;
-var decideTime;
-var finishTime;
 var trialNum = 0;
 var trialObj = {};
-var receiver = [2, 4]; //row, col
-var signaler = [9, 4];
 var goal;
 var signalSpace;
 var pathNum = 0;
@@ -148,12 +143,12 @@ $(document).ready(function() {
     //} else if (subj.id !== null){
     } else {
         //fetches CSV from file into a string
-        fetch("exampleTrials2_withReceiverIntentionDict2021118.csv")
+        fetch("exampleTrials_Set2_20210201.csv")
             .then(response => response.text())
             .then(textString => {
                 PRACTICE_INPUT_DATA = PARSE_CSV(textString)
             })
-            .then( () => {fetch("exampleTrials_withReceiverIntentionDict.csv")
+            .then( () => {fetch("exampleTrials_Set1_20210201.csv")
                 .then(response => response.text())
                 .then(textString => {
                     EXPT_INPUT_DATA = PARSE_CSV(textString)
@@ -167,7 +162,6 @@ $(document).ready(function() {
                     expt = new trialObject(trial_options);
                     expt.inputData = EXPT_INPUT_DATA;
                     instr.start();
-                    
                     console.log(practice.inputData);       
                     console.log(expt.inputData);           
                     DISABLE_DEFAULT_KEYS();
@@ -196,9 +190,18 @@ const TRIAL_TITLES = [
     "trialIndex",
     "exptId",
     "decision",
-    "decideTime",
-    "endLocation",
-    "finishTime"];
+    "signal",
+    "signalerPath",
+    "signalerEndCoordinate",
+    "signalerEndItem",
+    "receiverEndCoordinate",
+    "receiverEndItem",
+    "signalerAchievedGoal", 
+    "receiverAchievedGoal", 
+    "totalUtility", 
+    "decisionTime", 
+    "actionTime", 
+    "feedbackTime"];
     
 var practice_trial_options = {
     subj: 'pre-define', // assign after subj is created
@@ -231,19 +234,5 @@ function SHOW_BLOCK() {
     $("#expBut").hide();
     $("#trialPage").show();
     subj.detectVisibilityStart();
-    //trial.run();
 }
-
-/*
-function END_EXPT() {
-    $("#trialPage").hide();
-    trial.save();
-    $("#aqBox").css("display", "block");
-    $(document).keyup(function(e) {
-        if (e.which == 32) { // the 'space' key
-            $(document).off("keyup");
-            START_AQ();
-        }
-    });
-}*/
 
