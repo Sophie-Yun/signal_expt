@@ -506,6 +506,7 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
             $("#sanityCheckResultText").html("Sorry, you did not reach the target. " + getSanityCheckFeedback(obj, trialStrategy) + "<br><br>Good luck on your next round! ");
             reward = 0;
             obj.sanityMoveFails++; // TODO: did we decide on how to drop them
+            obj.sanityMoveAttempts++; // TODO: did we decide on how to drop them
             console.log(obj.sanityMoveFails);
             // if drop right away, do it by checking here and the respective for say and quit
         }
@@ -577,6 +578,7 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
             $("#sanityCheckResultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target. " + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");
             reward = 0;
             obj.sanitySayFails++;
+            obj.sanitySayAttempts++;
             console.log(obj.sanitySayFails);
         }
         $("#sanityCheckReward").html(reward);
@@ -624,6 +626,7 @@ function SHOW_QUIT_RESULT(obj) {
         trialStrategy = obj.inputData[obj.trialIndex]["trialStrategy"];
         reward = 0;
         obj.sanityQuitFails++;
+        obj.sanityQuitAttempts++;
         console.log(obj.sanityQuitFails);
 
         $("#sanityCheckResultText").html("Don't worry! " + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");

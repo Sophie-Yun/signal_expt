@@ -53,6 +53,10 @@ class trialObject {
         this.sanityMoveFails = 0;
         this.sanitySayFails = 0;
         this.sanityQuitFails = 0;
+
+        this.sanityMoveAttempts = 0;
+        this.sanitySayAttempts = 0;
+        this.sanityQuitAttempts = 0;
     }
     
     next(){
@@ -65,9 +69,11 @@ class trialObject {
                 this.buttonsCreated = false;
                 $("#tryExptInstr").show();
             }
-        } else if(this.isSanityCheck) { //TODO: random sampling
-            this.inputData
-            this.trialIndex++;
+        } else if(this.isSanityCheck) { 
+            // this.trialIndex++;
+            if (this.sanityMoveFails == 3 || this.sanitySayFails == 3 || this.sanityQuitAttempts == 3) {
+                // drop participant
+            }
             
             if(this.trialIndex >= this.trialN) {
                 this.end();
@@ -77,8 +83,6 @@ class trialObject {
                 CREATE_GRID(this);
                 SETUP_SCOREBOARD(this);
                 CREATE_SIGNAL_BUTTONS(this, this.signalSpace);
-                console.log("test")
-                console.log(this.signalSpace);
                 $("#sanityCheckInstr").show();
                 this.move();
             }
@@ -650,6 +654,10 @@ function START_SANITY_CHECK_TRIAL() {
     $("#sanityCheckInfo").css("opacity", 1);
     sanityCheck.isSanityCheck = true;
     sanityCheck.trialN = sanityCheck.inputData.length;
+
+    // random sampling for first trial; the following trials are handled in next()
+    CREATE_RANDOM_LIST_FOR_EXPT(sanityCheck);  
+
     TRIAL_SET_UP(sanityCheck);
     CREATE_GRID(sanityCheck);
     CREATE_SIGNAL_BUTTONS(sanityCheck, sanityCheck.signalSpace);

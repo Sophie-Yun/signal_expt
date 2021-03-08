@@ -169,7 +169,7 @@ $(document).ready(function() {
                         tryMove = new trialObject(trial_options);
                         trySay = new trialObject(trial_options);
                         sanityCheck = new trialObject(sanity_check_options);
-                        sanityCheck.inputData = SANITY_CHECK_INPUT_DATA; // where is this :o
+                        sanityCheck.inputData = SANITY_CHECK_INPUT_DATA; 
                         practice = new trialObject(practice_trial_options);
                         practice.inputData = PRACTICE_INPUT_DATA;
                         expt = new trialObject(trial_options);
