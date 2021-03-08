@@ -70,7 +70,7 @@ class trialObject {
                 $("#tryExptInstr").show();
             }
         } else if(this.isSanityCheck) { 
-            // this.trialIndex++;
+            this.trialIndex++;
             if (this.sanityMoveFails == 3 || this.sanitySayFails == 3 || this.sanityQuitAttempts == 3) {
                 // drop participant
             }
