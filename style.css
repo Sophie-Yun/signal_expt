@@ -62,7 +62,7 @@ body {
                                  
 */
 
-#tryExptBox, #practiceExptBox, #exptBox {
+#tryExptBox, #sanityCheckBox, #practiceExptBox, #exptBox {
     position: absolute;
     width: 1000px;
     left: 50%;
@@ -70,7 +70,7 @@ body {
     top: 50px;
 }
 
-#tryScoreBoard, #practiceScoreBoard, #scoreBoard {
+#tryScoreBoard, #sanityCheckScoreBoard, #practiceScoreBoard, #scoreBoard {
     display: flex;
     justify-content: space-around;
     background: linear-gradient(180deg, #F9F9F9 0%, rgba(255, 255, 255, 0.5) 100%), #BCBAB8;
@@ -79,23 +79,23 @@ body {
     box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
-#tryScoreBoard .info, #practiceScoreBoard .info, #scoreBoard .info {
+#tryScoreBoard .info, #sanityCheckScoreBoard .info, #practiceScoreBoard .info, #scoreBoard .info {
     display: inline-block;
 }
 
-#tryScoreBoard p, #practiceScoreBoard p, #scoreBoard p {
+#tryScoreBoard p, #sanityCheckScoreBoard p, #practiceScoreBoard p, #scoreBoard p {
     position: relative;
     display: inline;
     top: 8px;
 }
 
-#tryScoreBoard img, #practiceScoreBoard img, #scoreBoard img {
+#tryScoreBoard img, #sanityCheckScoreBoard img, #practiceScoreBoard img, #scoreBoard img {
     display: inline-block;
     top: 10px;
     padding: 0px;
 }
 
-#tryVerticalAxis, #practiceVerticalAxis, #verticalAxis {
+#tryVerticalAxis, #sanityCheckVerticalAxis, #practiceVerticalAxis, #verticalAxis {
     position: relative;
     display: inline-block;
     writing-mode: vertical-rl;
@@ -114,7 +114,7 @@ body {
     height: 400px;
 }
 
-#tryExptInstr, #practiceExptInstr, #exptInstr {
+#tryExptInstr, #sanityCheckInstr, #practiceExptInstr, #exptInstr {
     display: inline-block;
 }
 
@@ -152,7 +152,7 @@ body {
     top: 30px;
 }
 
-#tryHorizontalAxis, #practiceHorizontalAxis, #horizontalAxis {
+#tryHorizontalAxis, #sanityCheckHorizontalAxis, #practiceHorizontalAxis, #horizontalAxis {
     position: absolute;
     left: 6%;
     top: 610px;
@@ -160,7 +160,7 @@ body {
 }
   
 /* Left column */
-#tryGridContainer, #practiceGridContainer, #gridContainer {
+#tryGridContainer, #sanityCheckGridContainer, #practiceGridContainer, #gridContainer {
     position: relative;
     background-color: #625757;
     border: 2px solid #625757;
@@ -181,22 +181,22 @@ body {
     margin: 0px;
 }*/
 
-#trySay, #practiceSay, #say {
+#trySay, #sanityCheckSay, #practiceSay, #say {
     position: absolute;
     top: 0px;
 }
 
-#tryDo, #practiceDo, #do {
+#tryDo, #sanityCheckDo, #practiceDo, #do {
     position: absolute;
     top: 200px;
 }
 
-#practiceQuit, #quit {
+#sanityCheckQuit, #practiceQuit, #quit {
     position: absolute;
     top: 280px;
 }
 
-#practiceQuitText, #practiceQuitBut, #quitText, #quitBut {
+#sanityCheckQuitText, #sanityCheckQuitBut, #practiceQuitText, #practiceQuitBut, #quitText, #quitBut {
     display:inline-block;
 }
 /*
@@ -204,7 +204,7 @@ body {
     border-radius: 4px;
 }
 */
-#tryDecision, #practiceDecision, #decision {
+#tryDecision, #sanityCheckDecision, #practiceDecision, #decision {
     padding-top: 20px;
     border-top: 2px solid;
     position: absolute;
@@ -212,7 +212,7 @@ body {
     width: 450px;
 }
 
-#tryResult, #practiceResult, #result {
+#tryResult, #sanityCheckResult, #practiceResult, #result {
     display: none;
     position: absolute;
     padding: 20px;
@@ -225,12 +225,12 @@ body {
     color: #F9F9F9;
 }
 
-#tryResultText, #practiceResultText, #resultText {
+#tryResultText, #sanityCheckResultText, #practiceResultText, #resultText {
     text-align: center;
     margin-bottom: 50px;
 }
 
-#tryResult .title, #practiceResult .title, #result .title {
+#tryResult .title, #sanityCheckResult .title, #practiceResult .title, #result .title {
     float: left;
     width: 50%;
     position: relative;
@@ -239,7 +239,7 @@ body {
     margin: 0px;
 }
 
-#tryResult .data, #practiceResult .data, #result .data {
+#tryResult .data, #sanityCheckResult .data, #practiceResult .data, #result .data {
     float: left;
     width: 50%;
     position: relative;
@@ -249,12 +249,12 @@ body {
     margin: 0px;
 }
 
-#tryResult #tryScoreThisRoundBox .title, #tryResult #tryScoreThisRoundBox .data, #practiceResult #practiceScoreThisRoundBox .title, #practiceResult #practiceScoreThisRoundBox .data,#result #scoreThisRoundBox .title, #result #scoreThisRoundBox .data {
+#tryResult #tryScoreThisRoundBox .title, #tryResult #tryScoreThisRoundBox .data, #sanityCheckResult #sanityCheckScoreThisRoundBox .title, #sanityCheckResult #sasanityCheckScoreThisRoundBox .data, #practiceResult #practiceScoreThisRoundBox .title, #practiceResult #practiceScoreThisRoundBox .data, #result #scoreThisRoundBox .title, #result #scoreThisRoundBox .data {
     border-top: 1px solid;
     margin: 10px 0px;
 }
 
-#tryResult #tryTotalScoreBox .title, #tryResult #tryTotalScoreBox .data, #practiceResult #practiceTotalScoreBox .title, #practiceResult #practiceTotalScoreBox .data, #result #totalScoreBox .title, #result #totalScoreBox .data {
+#tryResult #tryTotalScoreBox .title, #tryResult #tryTotalScoreBox .data, #sanityCheckResult #sanityCheckTotalScoreBox .title, #sanityCheckResult #sanityCheckTotalScoreBox .data,  #practiceResult #practiceTotalScoreBox .title, #practiceResult #practiceTotalScoreBox .data, #result #totalScoreBox .title, #result #totalScoreBox .data {
     margin: 20px 0px 90px;
 }
 
@@ -268,6 +268,15 @@ body {
 
 #instrQWarning {
     margin: 50px;
+}
+
+/* is this used? */
+#sanityCheckRound {
+    position: absolute;
+    display: block;
+    font-weight: bold;
+    left: 50%;
+    transform: translate(-50%, 0px);
 }
 
 #pracRound {

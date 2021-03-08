@@ -106,6 +106,76 @@
             </div>
         </div>
     </div>
+    <!--==========SANITY CHECK==========-->
+    <div class="pageBox" id="sanityCheckPage">
+        <div id="sanityCheckBox">
+            <div id="sanityCheckScoreBoard">
+                    <div class="info" id="sanityCheckInfo">
+                        <p>Sanity Check </p>
+                        <p id="round"></p>
+                    </div>
+                    <div class="info">
+                        <p style="top: -5px;">Target: </p>
+                        <img class="shape" id="sanityCheckGoalShape" alt="An error occurred when loading the picture.">
+                    </div>
+                    <div class="info">
+                        <p>Total Score: </p>
+                        <p id="sanityCheckScore"></p>
+                    </div>
+                    <div class="info">
+                        <p>Steps Taken: </p>
+                        <p class="sanityCheckStep"></p>
+                    </div>                
+            </div>
+            <div class="column" id="sanityCheckVerticalAxis">9 8 7 6 5 4 3 2 1 0</div>
+            <div class="column" id="sanityCheckGridContainer"></div>
+            <div id="sanityCheckHorizontalAxis">0 1 2 3 4 5 6 7 8</div>
+            <div class="column text">
+                <div id="sanityCheckInstr">
+                    <div id="sanityCheckFade">
+                        <div id="sanityCheckSay">
+                            <p>Send one signal to <img class="shape" src="shape/receiver.png">:</p>
+                            <button class="butExpt" id="sanityCheckButOption0">red</button> 
+                            <button class="butExpt" id="sanityCheckButOption1">green</button>
+                            <button class="butExpt" id="sanityCheckButOption2">purple</button>
+                            <button class="butExpt" id="sanityCheckButOption3">circle</button>
+                            <button class="butExpt" id="sanityCheckButOption4">square</button>
+                            <button class="butExpt" id="sanityCheckButOption5">triangle</button>
+                        </div>
+                        <div id="sanityCheckDo">
+                            <p class="inlineImg">Use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</p>
+                        </div>
+                        <div id="sanityCheckQuit">
+                            <p id="sanityCheckQuitText">Give up on this trial: </p>
+                            <button class="butExpt" id="sanityCheckQuitBut">Quit</button>
+                        </div>
+                    </div>
+                    <div id="sanityCheckDecision"></div>
+                </div>
+            </div>
+            <div id="sanityCheckResult">
+                <p id="sanityCheckResultText"></p>
+                <div class="resultInfo">
+                    <p class="title">Steps: </p>
+                    <p class="data sanityCheckStep"></p>
+                </div>
+                <div class="resultInfo">
+                    <p class="title">Reward: </p>
+                    <p class="data" id="sanityCheckReward"></p>
+                </div>
+                <div id="sanityCheckScoreThisRoundBox">
+                    <p class="title">Score this round:</p>
+                    <p class="data" id="sanityCheckScoreThisRound"></p>
+                </div>
+                <div id="sanityCheckTotalScoreBox">
+                    <p class="title">New Total Score: </p>
+                    <p class="data" id="sanityCheckTotalAfter"></p>
+                </div>
+                <button class="butNext" id="sanityCheckResultBut">NEXT</button>
+            </div>
+        </div>
+    </div>
+
     <!--==========PRACTICE EXPERIMENT==========-->
     <div class="pageBox" id="practiceExptPage">
         <div id="practiceExptBox">

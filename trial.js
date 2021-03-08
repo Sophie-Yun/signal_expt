@@ -19,6 +19,7 @@ class trialObject {
             endExptFunc: false,
             isTryMove:false,
             isTrySay: false,
+            isSanityCheck: false,
             isPracTrial: false,
             isExptTrial: false,
             startTime: 0,
@@ -47,6 +48,11 @@ class trialObject {
                         "circle": ["right","right","right","down"]};
 
         this.receiverPathNum = 0;
+
+        // for sanity check
+        this.sanityMoveFails = 0;
+        this.sanitySayFails = 0;
+        this.sanityQuitFails = 0;
     }
     
     next(){
@@ -58,6 +64,19 @@ class trialObject {
                 this.step = 0;
                 this.buttonsCreated = false;
                 $("#tryExptInstr").show();
+            }
+        } else if(this.isSanityCheck) { //TODO: random sampling
+            this.trialIndex++;
+            if(this.trialIndex >= this.trialN) {
+                this.end();
+            } else {
+                this.step = 0;
+                TRIAL_SET_UP(this);
+                CREATE_GRID(this);
+                SETUP_SCOREBOARD(this);
+                CREATE_SIGNAL_BUTTONS(this, this.signalSpace);
+                $("#sanityCheckExptInstr").show();
+                this.move();
             }
         } else if(this.isPracTrial) {
             this.trialIndex++;
@@ -104,7 +123,12 @@ class trialObject {
         }
     }
     end() {
-        if(this.isPracTrial) {
+        if(this.isSanityCheck) {
+            $("#sanityCheckExptPage").hide();
+            NEXT_INSTR();
+            $("#instrBackBut").hide();
+            $("#instrPage").show();
+        } else if(this.isPracTrial) {
             $("#practiceExptPage").hide();
             NEXT_INSTR();
             $("#instrBackBut").hide();
@@ -244,7 +268,7 @@ function CREATE_RECEIVER_PATH_DICT(obj) {
 
 function SET_RECEIVER_SIGNALER_LOCATION(obj) {
     //var receiverFromCSV, signalerFromCSV;
-        if (obj.isPracTrial) {
+        if (obj.isPracTrial || obj.isSanityCheck)  { // i hope || is or for javascript
             obj.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.trialIndex]["receiverLocation"][0], obj.inputData[obj.trialIndex]["receiverLocation"][1]); 
             obj.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.trialIndex]["signalerLocation"][0], obj.inputData[obj.trialIndex]["signalerLocation"][1]);
         } else if (obj.isExptTrial) {
@@ -276,7 +300,7 @@ function TRIAL_SET_UP (obj) {
     obj.gridArray[obj.receiverLocation[0]][obj.receiverLocation[1]] = SHAPE_DIR + "receiver.png";
     obj.gridArray[obj.signalerLocation[0]][obj.signalerLocation[1]] = SHAPE_DIR + "signaler.png";
 
-    if (obj.isPracTrial) {
+    if (obj.isPracTrial || obj.isSanityCheck) {
         obj.signalSpace = obj.inputData[obj.trialIndex].signalSpace;
         obj.gridString = obj.inputData[obj.trialIndex].targetDictionary;
         $("#round").html(obj.trialIndex + 1);
@@ -438,6 +462,10 @@ function NEXT_TRIAL(obj) {
         $("#instrText").show();
         $("#instrNextBut").show();
         $("#instrBackBut").css("position", "absolute");
+    } else if(obj.isSanityCheck){
+        RESET_GAMEBOARD();
+        SANITY_CHECK_INSTR_APPEAR();
+        sanityCheck.next();
     } else if(obj.isPracTrial){
         RESET_GAMEBOARD();
         PRACTICE_EXPT_INSTR_APPEAR();
@@ -486,12 +514,15 @@ function RESET_TRYMOVE_RECEIVER() {
 
 function RESET_GAMEBOARD() {
     TRY_EXPT_INSTR_APPEAR();
+    SANITY_CHECK_INSTR_APPEAR();
     PRACTICE_EXPT_INSTR_APPEAR();
     EXPT_INSTR_APPEAR();
     $("#tryDecision").html("");
+    $("#sanityCheckDecision").html("");
     $("#practiceDecision").html("");
     $("#decision").html("");
     $("#tryResult").hide();
+    $("#sanityCheckResult").hide();
     $("#practiceResult").hide();
     $("#result").hide();
 }
@@ -589,6 +620,41 @@ function TRY_SAY(){
         alert("Please click on one of the buttons to send the signal.");
     }
 }
+
+
+
+/*
+
+SANITY CHECK
+
+*/
+
+function SANITY_CHECK_GAMEBOARD_SETUP() {
+    $("#sanityCheckSay").show();
+    $("#sanityCheckDo").show();
+    $("#sanityCheckQuit").show();
+    $("#sanityCheckPage").show();
+}
+
+function START_SANITY_CHECK_TRIAL() {
+    $("#instrPage").hide();
+    $("#sanityCheckInfo").css("opacity", 1);
+    sanityCheck.isSanityCheck = true;
+    sanityCheck.trialN = sanityCheck.inputData.length;
+    TRIAL_SET_UP(sanityCheck);
+    CREATE_GRID(sanityCheck);
+    CREATE_SIGNAL_BUTTONS(sanityCheck, sanityCheck.signalSpace);
+    SETUP_SCOREBOARD(sanityCheck);
+    SANITY_CHECK_GAMEBOARD_SETUP();
+    CREATE_EXPT_BUTTONS(sanityCheck);
+    sanityCheck.move();
+}
+
+function NEXT_INSTR() {
+    instr.next();
+    SHOW_INSTR();
+}
+
 
 /*
  ######  ######     #     #####  ####### ###  #####  ####### 

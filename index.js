@@ -102,6 +102,12 @@ function PARSE_CSV(csvString) {
             intention = tmp[j].match(/'\w+ \w+'/)[0];
             linesArray[i - 1]["receiverIntentionDict"][signal.substring(1, signal.length - 1)] = intention.substring(1, intention.length - 1);
         }
+
+        tmp = null;
+        tmp = lines[i].match(/communicate/);
+        if (tmp == null) tmp = lines[i].match(/quit/);
+        if (tmp == null) tmp = lines[i].match(/do/)
+        linesArray[i - 1]["trialStrategy"] = tmp;
     }
     return linesArray;
 }
@@ -143,28 +149,37 @@ $(document).ready(function() {
     //} else if (subj.id !== null){
     } else {
         //fetches CSV from file into a string
-        fetch("exampleTrials_Set2_20210201.csv")
+        fetch("sanityTrials_Set1_20210222.csv")
             .then(response => response.text())
             .then(textString => {
-                PRACTICE_INPUT_DATA = PARSE_CSV(textString)
+                SANITY_CHECK_INPUT_DATA = PARSE_CSV(textString)
             })
-            .then( () => {fetch("exampleTrials_Set1_20210201.csv")
+            .then( () => {fetch("exampleTrials_Set2_20210201.csv")
                 .then(response => response.text())
                 .then(textString => {
-                    EXPT_INPUT_DATA = PARSE_CSV(textString)
+                    PRACTICE_INPUT_DATA = PARSE_CSV(textString)
                 })
-                .then (()=> {
-                    instr = new instrObject(instr_options);
-                    tryMove = new trialObject(trial_options);
-                    trySay = new trialObject(trial_options);
-                    practice = new trialObject(practice_trial_options);
-                    practice.inputData = PRACTICE_INPUT_DATA;
-                    expt = new trialObject(trial_options);
-                    expt.inputData = EXPT_INPUT_DATA;
-                    instr.start();
-                    console.log(practice.inputData);       
-                    console.log(expt.inputData);           
-                    DISABLE_DEFAULT_KEYS();
+                .then( () => {fetch("exampleTrials_Set1_20210201.csv")
+                    .then(response => response.text())
+                    .then(textString => {
+                        EXPT_INPUT_DATA = PARSE_CSV(textString)
+                    })
+                    .then (()=> {
+                        instr = new instrObject(instr_options);
+                        tryMove = new trialObject(trial_options);
+                        trySay = new trialObject(trial_options);
+                        sanityCheck = new trialObject(sanity_check_options);
+                        sanityCheck.inputData = SANITY_CHECK_INPUT_DATA; // where is this :o
+                        practice = new trialObject(practice_trial_options);
+                        practice.inputData = PRACTICE_INPUT_DATA;
+                        expt = new trialObject(trial_options);
+                        expt.inputData = EXPT_INPUT_DATA;
+                        instr.start();
+                        console.log(sanityCheck.inputData);
+                        console.log(practice.inputData);       
+                        console.log(expt.inputData);           
+                        DISABLE_DEFAULT_KEYS();
+                        });
                     });
                 });
         
@@ -203,6 +218,18 @@ const TRIAL_TITLES = [
     "actionTime", 
     "feedbackTime"];
     
+var sanity_check_options= {
+    subj: 'pre-define', // assign after subj is created
+    //trialN: TRIAL_N,
+    titles: TRIAL_TITLES,
+    //stimPath: STIM_PATH,
+    //dataFile: TRIAL_FILE,
+    savingScript: SAVING_SCRIPT,
+    savingDir: SAVING_DIR,
+    //updateFunc: TRIAL_UPDATE,
+    //trialFunc: TRIAL,
+    //endExptFunc: END_EXPT
+}
 var practice_trial_options = {
     subj: 'pre-define', // assign after subj is created
     //trialN: TRIAL_N,

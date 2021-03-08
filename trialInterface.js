@@ -34,6 +34,20 @@ function CREATE_GRID(obj) {
                 }
             };
         };
+    } else if (obj.isSanityCheck) {
+        for (var row = 0; row < nrow; row++) {
+            for (var col = 0; col < ncol; col++) {
+                shapeId = "shape" + row + "v" + col;
+                
+                if (gridArray[row][col]!= null){
+                    $("#sanityCheckGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>")
+                    $("#" + shapeId).append($("<img>", {class: "shape", src: gridArray[row][col]}));
+                }
+                else{
+                    $("#sanityCheckGridContainer").append("<div class='gridEmpty' id='" + shapeId + "'></div>");
+                }
+            };
+        };
     } else if (obj.isPracTrial) {
         for (var row = 0; row < nrow; row++) {
             for (var col = 0; col < ncol; col++) {
@@ -227,7 +241,10 @@ function UPDATE_GAME_BOARD(obj, key) {
 function CREATE_EXPT_BUTTONS(obj) {
     if(obj.isTryMove || obj.isTrySay)
         $("#tryResultBut").click(function(){NEXT_TRIAL(obj)});
-    else if (obj.isPracTrial) {
+    else if (obj.isSanityCheck) {
+        $("#sanityCheckQuitBut").click(function(){SHOW_QUIT_RESULT(obj)});
+        $("#sanityCheckResultBut").click(function(){NEXT_TRIAL(obj)});
+    } else if (obj.isPracTrial) {
         $("#practiceQuitBut").click(function(){SHOW_QUIT_RESULT(obj)});
         $("#practiceResultBut").click(function(){NEXT_TRIAL(obj)});
     } else if (obj.isExptTrial) {
@@ -253,6 +270,29 @@ function CREATE_SIGNAL_BUTTONS(obj, availableSignals) {
             for (var j = 0; j < availableSignals.length; j++) {
                 if (availableSignals[j] == $("#tryButOption" + i).html()) {
                     $("#tryButOption" + i).css({
+                        "border": "revert",
+                        "opacity": 1,
+                        "background": "#9D8F8F", 
+                        "box-shadow": "2px 2px 4px rgba(0, 0, 0, 0.25)",
+                        "pointer-events": "revert",
+                        "cursor": "pointer"
+                    });
+                }
+            }
+        } else if (obj.isSanityCheck) {
+            $("#sanityCheckButOption" + i).css({
+                "border": "1px solid", 
+                "opacity": 0.2,
+                "background": "#bcbab8", 
+                "cursor": "auto",
+                "box-shadow": "none",
+                "pointer-events": "none"
+            });
+            if(!obj.buttonsCreated)  
+                $("#sanityCheckButOption" + i).click(function(){RECEIVER_WALK(obj,$(this).html())});
+            for (var j = 0; j < availableSignals.length; j++) {
+                if (availableSignals[j] == $("#sanityCheckButOption" + i).html()) {
+                    $("#sanityCheckButOption" + i).css({
                         "border": "revert",
                         "opacity": 1,
                         "background": "#9D8F8F", 
@@ -318,6 +358,11 @@ function TRY_EXPT_INSTR_FADE() {
     $(".butExpt").css("pointer-events", "none");
 }
 
+function SANITY_CHECK_INSTR_FADE() {
+    $("#sanityCheckFade").fadeTo(200, 0.4);
+    $(".butExpt").css("pointer-events", "none");
+}
+
 function PRACTICE_EXPT_INSTR_FADE() {
     $("#practiceExptFade").fadeTo(200, 0.4);
     $(".butExpt").css("pointer-events", "none");
@@ -333,6 +378,11 @@ function TRY_EXPT_INSTR_APPEAR() {
     $(".butExpt").css("pointer-events", "auto");
 }
 
+function SANITY_CHECK_INSTR_APPEAR() {
+    $("#sanityCheckExptFade").css("opacity", 1);
+    $(".butExpt").css("pointer-events", "auto");
+}
+
 function PRACTICE_EXPT_INSTR_APPEAR() {
     $("#practiceExptFade").css("opacity", 1);
     $(".butExpt").css("pointer-events", "auto");
@@ -345,6 +395,7 @@ function EXPT_INSTR_APPEAR() {
 
 function CHANGE_IN_TRIAL_INSTR(decision) {
     TRY_EXPT_INSTR_FADE();
+    SANITY_CHECK_INSTR_FADE();
     PRACTICE_EXPT_INSTR_FADE();
     EXPT_INSTR_FADE();
     if(decision == "do"){
@@ -374,6 +425,10 @@ function SETUP_SCOREBOARD(obj) {
         $("#tryGoalShape").attr("src", obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]); 
         $("#tryScore").html(obj.totalScore);
         $(".tryStep").html("0");
+    } else if (obj.isSanityCheck){
+        $("#sanityCheckGoalShape").attr("src", obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]); 
+        $("#sanityCheckScore").html(obj.totalScore);
+        $(".sanityCheckStep").html("0");
     } else if (obj.isPracTrial){
         $("#practiceGoalShape").attr("src", obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]); 
         $("#practiceScore").html(obj.totalScore);
@@ -389,6 +444,8 @@ function UPDATE_STEPS(obj) {
     obj.step++;
     if (obj.isTrySay || obj.isTryMove)
         $(".tryStep").html(obj.step);
+    else if (obj.isSanityCheck)
+        $(".sanityCheckStep").html(obj.step);
     else if (obj.isPracTrial)
         $(".practiceStep").html(obj.step);
     else if (obj.isExptTrial)
@@ -406,6 +463,20 @@ function UPDATE_STEPS(obj) {
                                                                             
 */
 
+function getSanityCheckFeedback(obj, trialStrategy) {
+    if (trialStrategy == "communicate") {
+        reversedReceiverIntentionDict = Object.entries(obj.inputData[obj.trialIndex]["receiverIntentionDict"]).reduce((tmpObj, item) => (tmpObj[item[1]] = item[0]) && tmpObj, {});
+        intention = obj.inputData[obj.trialIndex]["intention"];
+        feedback = "Some feedback: the ideal way to reach the target would've been to signal " + reversedReceiverIntentionDict[intention] + ".";
+    } else if (trialStrategy == "do") {
+        feedback = "Some feedback: the ideal way to reach the target would've been to move to the target.";
+    } else if (trialStrategy == "quit") {
+        feedback = "Some feedback: the ideal way to reach the target would've been to quit.";
+    }
+    return feedback;
+}
+
+
 function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
     if (obj.isTrySay || obj.isTryMove){
         $("#tryResult .tryStep").html("-" + obj.step);
@@ -421,6 +492,27 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
         $("#tryScoreThisRound").html(reward - obj.step);
         $("#tryTotalAfter").html(obj.totalScore);
         $("#tryResult").show();
+    } else if (obj.isSanityCheck){ // TODO: THIS IS WHERE I SHOULD GIVE THEM THE NOTE/TIP
+        trialStrategy = obj.inputData[obj.trialIndex]["trialStrategy"];
+        $("#sanityCheckResult .sanityCheckStep").html("-" + obj.step);
+        var reward;
+        if(win){
+            if (trialStrategy == "do")
+                $("#sanityCheckResultText").html("Congratulations!<br><br>You reached the target!");
+            else
+                $("#sanityCheckResultText").html("Congratulations! " + getSanityCheckFeedback(obj, trialStrategy) + "<br><br>You reached the target!");
+            reward = REWARD;
+        } else {
+            $("#sanityCheckResultText").html("Sorry, you did not reach the target. " + getSanityCheckFeedback(obj, trialStrategy) + "<br><br>Good luck on your next round! ");
+            reward = 0;
+            obj.sanityMoveFails++; // TODO: did we decide on how to drop them
+            console.log(obj.sanityMoveFails);
+            // if drop right away, do it by checking here and the respective for say and quit
+        }
+        $("#sanityCheckReward").html(reward);
+        $("#sanityCheckScoreThisRound").html(reward - obj.step);
+        $("#sanityCheckTotalAfter").html(obj.totalScore);
+        $("#sanityCheckResult").show();
     } else if (obj.isPracTrial){
         $("#practiceResult .practiceStep").html("-" + obj.step);
         var reward;
@@ -469,6 +561,28 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         $("#tryScoreThisRound").html(reward - obj.step);
         $("#tryTotalAfter").html(obj.totalScore);
         $("#tryResult").show();
+    } else if(obj.isSanityCheck){ //TODO: SHOULD IS ALSO GO HERE IDK BRO
+        trialStrategy = obj.inputData[obj.trialIndex]["trialStrategy"];
+        $("#sanityCheckResult .sanityCheckStep").html("-" + obj.step);
+        var reward;
+        if(win){
+            var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
+            if (trialStrategy == "communicate")
+                $("#sanityCheckResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
+            else
+                $("#sanityCheckResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!" + getSanityCheckFeedback(obj, trialStrategy) + "<br>You reached the target!");
+            reward = REWARD;
+        } else {
+            var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
+            $("#sanityCheckResultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target. " + getSanityCheckFeedback(obj) + "<br>Good luck on your next round!");
+            reward = 0;
+            obj.sanitySayFails++;
+            console.log(obj.sanitySayFails);
+        }
+        $("#sanityCheckReward").html(reward);
+        $("#sanityCheckScoreThisRound").html(reward - obj.step);
+        $("#sanityCheckTotalAfter").html(obj.totalScore);
+        $("#sanityCheckResult").show();
     } else if(obj.isPracTrial){
         $("#practiceResult .practiceStep").html("-" + obj.step);
         var reward;
@@ -506,7 +620,18 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
 
 function SHOW_QUIT_RESULT(obj) {
     obj.allowMove = false;
-    if(obj.isPracTrial){
+    if(obj.isSanityCheck){ // TODO: OH I THINK HERE TOO. IT SHOULD BE ALL THREE. maybe right one function that I can just use universally
+        trialStrategy = obj.inputData[obj.trialIndex]["trialStrategy"];
+        reward = 0;
+        obj.sanityQuitFails++;
+        console.log(obj.sanityQuitFails);
+
+        $("#sanityCheckResultText").html("Don't worry! " + getSanityCheckFeedback(obj) + "<br>Good luck on your next round!");
+        $("#sanityCheckReward").html(0);
+        $("#sanityCheckScoreThisRound").html(reward - practice.step);
+        $("#sanityCheckTotalAfter").html(practice.totalScore);
+        $("#sanityCheckResult").show();
+    } if(obj.isPracTrial){
         reward = 0;
         $("#practiceResultText").html("Don't worry!<br>Good luck on your next round!");
         $("#practiceReward").html(0);
