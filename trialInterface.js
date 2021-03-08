@@ -500,7 +500,7 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
             if (trialStrategy == "do")
                 $("#sanityCheckResultText").html("Congratulations!<br><br>You reached the target!");
             else
-                $("#sanityCheckResultText").html("Congratulations! " + getSanityCheckFeedback(obj, trialStrategy) + "<br><br>You reached the target!");
+                $("#sanityCheckResultText").html("Congratulations! You reached the target! <br><br>" + getSanityCheckFeedback(obj, trialStrategy));
             reward = REWARD;
         } else {
             $("#sanityCheckResultText").html("Sorry, you did not reach the target. " + getSanityCheckFeedback(obj, trialStrategy) + "<br><br>Good luck on your next round! ");
@@ -562,7 +562,7 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         $("#tryScoreThisRound").html(reward - obj.step);
         $("#tryTotalAfter").html(obj.totalScore);
         $("#tryResult").show();
-    } else if(obj.isSanityCheck){ //TODO: SHOULD IS ALSO GO HERE IDK BRO
+    } else if(obj.isSanityCheck){ 
         trialStrategy = obj.inputData[obj.trialIndex]["trialStrategy"];
         $("#sanityCheckResult .sanityCheckStep").html("-" + obj.step);
         var reward;
@@ -571,7 +571,7 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
             if (trialStrategy == "communicate")
                 $("#sanityCheckResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
             else
-                $("#sanityCheckResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!" + getSanityCheckFeedback(obj, trialStrategy) + "<br>You reached the target!");
+                $("#sanityCheckResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations! You reached the target! " + getSanityCheckFeedback(obj, trialStrategy));
             reward = REWARD;
         } else {
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
