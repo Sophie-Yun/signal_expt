@@ -574,7 +574,7 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
             reward = REWARD;
         } else {
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            $("#sanityCheckResultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target. " + getSanityCheckFeedback(obj) + "<br>Good luck on your next round!");
+            $("#sanityCheckResultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target. " + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");
             reward = 0;
             obj.sanitySayFails++;
             console.log(obj.sanitySayFails);

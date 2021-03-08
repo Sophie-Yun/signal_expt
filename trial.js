@@ -75,6 +75,8 @@ class trialObject {
                 CREATE_GRID(this);
                 SETUP_SCOREBOARD(this);
                 CREATE_SIGNAL_BUTTONS(this, this.signalSpace);
+                console.log("test")
+                console.log(this.signalSpace);
                 $("#sanityCheckExptInstr").show();
                 this.move();
             }
@@ -268,7 +270,7 @@ function CREATE_RECEIVER_PATH_DICT(obj) {
 
 function SET_RECEIVER_SIGNALER_LOCATION(obj) {
     //var receiverFromCSV, signalerFromCSV;
-        if (obj.isPracTrial || obj.isSanityCheck)  { // i hope || is or for javascript
+        if (obj.isPracTrial || obj.isSanityCheck)  {  
             obj.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.trialIndex]["receiverLocation"][0], obj.inputData[obj.trialIndex]["receiverLocation"][1]); 
             obj.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.trialIndex]["signalerLocation"][0], obj.inputData[obj.trialIndex]["signalerLocation"][1]);
         } else if (obj.isExptTrial) {
@@ -300,7 +302,12 @@ function TRIAL_SET_UP (obj) {
     obj.gridArray[obj.receiverLocation[0]][obj.receiverLocation[1]] = SHAPE_DIR + "receiver.png";
     obj.gridArray[obj.signalerLocation[0]][obj.signalerLocation[1]] = SHAPE_DIR + "signaler.png";
 
-    if (obj.isPracTrial || obj.isSanityCheck) {
+    // TODO: random sampling for sanity check
+    if (obj.isSanityCheck) {
+        obj.signalSpace = obj.inputData[obj.trialIndex].signalSpace;
+        obj.gridString = obj.inputData[obj.trialIndex].targetDictionary;
+        $("#round").html(obj.trialIndex + 1);
+    } else if (obj.isPracTrial) {
         obj.signalSpace = obj.inputData[obj.trialIndex].signalSpace;
         obj.gridString = obj.inputData[obj.trialIndex].targetDictionary;
         $("#round").html(obj.trialIndex + 1);
