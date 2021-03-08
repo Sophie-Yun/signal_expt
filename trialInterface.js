@@ -379,7 +379,7 @@ function TRY_EXPT_INSTR_APPEAR() {
 }
 
 function SANITY_CHECK_INSTR_APPEAR() {
-    $("#sanityCheckExptFade").css("opacity", 1);
+    $("#sanityCheckFade").css("opacity", 1);
     $(".butExpt").css("pointer-events", "auto");
 }
 
@@ -626,7 +626,7 @@ function SHOW_QUIT_RESULT(obj) {
         obj.sanityQuitFails++;
         console.log(obj.sanityQuitFails);
 
-        $("#sanityCheckResultText").html("Don't worry! " + getSanityCheckFeedback(obj) + "<br>Good luck on your next round!");
+        $("#sanityCheckResultText").html("Don't worry! " + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");
         $("#sanityCheckReward").html(0);
         $("#sanityCheckScoreThisRound").html(reward - practice.step);
         $("#sanityCheckTotalAfter").html(practice.totalScore);

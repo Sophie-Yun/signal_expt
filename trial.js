@@ -66,7 +66,9 @@ class trialObject {
                 $("#tryExptInstr").show();
             }
         } else if(this.isSanityCheck) { //TODO: random sampling
+            this.inputData
             this.trialIndex++;
+            
             if(this.trialIndex >= this.trialN) {
                 this.end();
             } else {
@@ -77,7 +79,7 @@ class trialObject {
                 CREATE_SIGNAL_BUTTONS(this, this.signalSpace);
                 console.log("test")
                 console.log(this.signalSpace);
-                $("#sanityCheckExptInstr").show();
+                $("#sanityCheckInstr").show();
                 this.move();
             }
         } else if(this.isPracTrial) {
@@ -126,7 +128,7 @@ class trialObject {
     }
     end() {
         if(this.isSanityCheck) {
-            $("#sanityCheckExptPage").hide();
+            $("#sanityCheckPage").hide();
             NEXT_INSTR();
             $("#instrBackBut").hide();
             $("#instrPage").show();
