@@ -15,6 +15,17 @@ function DISABLE_DEFAULT_KEYS() {
                                                                 
 */
 
+function ADD_BARRIER(obj) {
+    for (var i = 0; i < obj.barrier["up"].length; i++) {
+        var coord = obj.barrier["up"][i];
+        $("#shape" + coord[0] + "v" + coord[1]).css("border-top", "black solid");
+    }
+    for (var i = 0; i < obj.barrier["down"].length; i++) {
+        var coord = obj.barrier["down"][i];
+        $("#shape" + coord[0] + "v" + coord[1]).css("border-bottom", "black solid");
+    }
+}
+
 function CREATE_GRID(obj) {
     var gridArray = obj.gridArray;
     var nrow = GRID_NROW;
@@ -34,6 +45,7 @@ function CREATE_GRID(obj) {
                 }
             };
         };
+        ADD_BARRIER(obj);
     } else if (obj.isPracTrial) {
         for (var row = 0; row < nrow; row++) {
             for (var col = 0; col < ncol; col++) {
@@ -106,14 +118,39 @@ function MOVE_LEFT(obj) {
         NEW_SIGNALER_POSITION(obj.signalerLocation);
     }
 }
-
+function MEET_UP_BARRIER(obj) {
+    if(obj.isTryMove){
+        for (var i = 0; i < obj.barrier["up"].length; i++){
+            var coord = obj.barrier["up"][i];
+            if(obj.signalerLocation[0] == coord[0] && obj.signalerLocation[1] == coord[1])
+                return true
+        }
+        return false
+    }
+    else
+        return false
+}
+function MEET_DOWN_BARRIER(obj) {
+    if(obj.isTryMove){
+        for (var i = 0; i < obj.barrier["down"].length; i++){
+            var coord = obj.barrier["down"][i];
+            if(obj.signalerLocation[0] == coord[0] && obj.signalerLocation[1] == coord[1])
+                return true
+        }
+        return false
+    }
+    else
+        return false
+}
 function MOVE_UP(obj) {
     if(obj.signalerLocation[0]-1  >= 0){
-        FIRST_MOVE(obj);
-        REMOVE_PREVIOUS(obj.signalerLocation);
-        obj.signalerLocation = [(obj.signalerLocation[0]-1), obj.signalerLocation[1]];
-        RECORD_SIGNALER_PATH(obj);
-        NEW_SIGNALER_POSITION(obj.signalerLocation);
+        if(!MEET_UP_BARRIER(obj)){
+            FIRST_MOVE(obj);
+            REMOVE_PREVIOUS(obj.signalerLocation);
+            obj.signalerLocation = [(obj.signalerLocation[0]-1), obj.signalerLocation[1]];
+            RECORD_SIGNALER_PATH(obj);
+            NEW_SIGNALER_POSITION(obj.signalerLocation);
+        }  
     }
 }
 
@@ -129,11 +166,13 @@ function MOVE_RIGHT(obj) {
 
 function MOVE_DOWN(obj) {
     if((obj.signalerLocation[0]+1) < GRID_NROW){
-        FIRST_MOVE(obj);
-        REMOVE_PREVIOUS(obj.signalerLocation);
-        obj.signalerLocation = [(obj.signalerLocation[0]+1), obj.signalerLocation[1]];
-        RECORD_SIGNALER_PATH(obj);
-        NEW_SIGNALER_POSITION(obj.signalerLocation);
+        if(!MEET_DOWN_BARRIER(obj)){
+            FIRST_MOVE(obj);
+            REMOVE_PREVIOUS(obj.signalerLocation);
+            obj.signalerLocation = [(obj.signalerLocation[0]+1), obj.signalerLocation[1]];
+            RECORD_SIGNALER_PATH(obj);
+            NEW_SIGNALER_POSITION(obj.signalerLocation);
+        }
     }
 }
 
@@ -386,7 +425,7 @@ function SETUP_SCOREBOARD(obj) {
 }
 
 function UPDATE_STEPS(obj) {
-    obj.step++;
+    obj.step = obj.step + STEP_COST;
     if (obj.isTrySay || obj.isTryMove)
         $(".tryStep").html(obj.step);
     else if (obj.isPracTrial)
@@ -407,9 +446,13 @@ function UPDATE_STEPS(obj) {
 */
 
 function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
+    var reward;
+    var bonus;
+    bonus = obj.totalScore / 100;
+    bonus = (bonus >= 0)? bonus : 0;
+    bonus = (bonus <= MAX_BONUS)? bonus : MAX_BONUS;
     if (obj.isTrySay || obj.isTryMove){
         $("#tryResult .tryStep").html("-" + obj.step);
-        var reward;
         if(win){
             $("#tryResultText").html("Congratulations!<br><br>You reached the target!");
             reward = REWARD;
@@ -419,11 +462,11 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
         }
         $("#tryReward").html(reward);
         $("#tryScoreThisRound").html(reward - obj.step);
-        $("#tryTotalAfter").html(obj.totalScore);
+        $("#tryTotalAfter").html(obj.totalScore);   
+        $("#tryTotalBonus").html(bonus);
         $("#tryResult").show();
     } else if (obj.isPracTrial){
         $("#practiceResult .practiceStep").html("-" + obj.step);
-        var reward;
         if(win){
             $("#practiceResultText").html("Congratulations!<br><br>You reached the target!");
             reward = REWARD;
@@ -434,10 +477,10 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
         $("#practiceReward").html(reward);
         $("#practiceScoreThisRound").html(reward - obj.step);
         $("#practiceTotalAfter").html(obj.totalScore);
+        $("#practiceTotalBonus").html(bonus);
         $("#practiceResult").show();
     } else if (obj.isExptTrial){
         $("#result .step").html("-" + obj.step);
-        var reward;
         if(win){
             $("#resultText").html("Congratulations!<br><br>You reached the target!");
             reward = REWARD;
@@ -448,14 +491,19 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
         $("#reward").html(reward);
         $("#scoreThisRound").html(reward - obj.step);
         $("#totalAfter").html(obj.totalScore);
+        $("#totalBonus").html(bonus);
         $("#result").show();
     }
 }
 
 function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
+    var reward;
+    var bonus;
+    bonus = obj.totalScore / 100;
+    bonus = (bonus >= 0)? bonus : 0;
+    bonus = (bonus <= MAX_BONUS)? bonus : MAX_BONUS;
     if (obj.isTrySay || obj.isTryMove) {
         $("#tryResult .tryStep").html("-" + obj.step);
-        var reward;
         if(win){
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
             $("#tryResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
@@ -468,10 +516,10 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         $("#tryReward").html(reward);
         $("#tryScoreThisRound").html(reward - obj.step);
         $("#tryTotalAfter").html(obj.totalScore);
+        $("#tryTotalBonus").html(bonus);
         $("#tryResult").show();
     } else if(obj.isPracTrial){
         $("#practiceResult .practiceStep").html("-" + obj.step);
-        var reward;
         if(win){
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
             $("#practiceResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
@@ -484,10 +532,10 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         $("#practiceReward").html(reward);
         $("#practiceScoreThisRound").html(reward - obj.step);
         $("#practiceTotalAfter").html(obj.totalScore);
+        $("#practiceTotalBonus").html(bonus);
         $("#practiceResult").show();
     } else if (obj.isExptTrial){
         $("#result .step").html("-" + obj.step);
-        var reward;
         if(win){
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
             $("#resultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
@@ -500,18 +548,24 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         $("#reward").html(reward);
         $("#scoreThisRound").html(reward - obj.step);
         $("#totalAfter").html(obj.totalScore);
+        $("#totalBonus").html(bonus);
         $("#result").show();
     }
 }
 
 function SHOW_QUIT_RESULT(obj) {
     obj.allowMove = false;
+    var bonus;
+    bonus = obj.totalScore / 100;
+    bonus = (bonus >= 0)? bonus : 0;
+    bonus = (bonus <= MAX_BONUS)? bonus : MAX_BONUS;
     if(obj.isPracTrial){
         reward = 0;
         $("#practiceResultText").html("Don't worry!<br>Good luck on your next round!");
         $("#practiceReward").html(0);
         $("#practiceScoreThisRound").html(reward - practice.step);
         $("#practiceTotalAfter").html(practice.totalScore);
+        $("#practiceTotalBonus").html(bonus);
         $("#practiceResult").show();
     } if(obj.isExptTrial){
         RECORD_DECISION_DATA(obj, "quit");
@@ -521,6 +575,7 @@ function SHOW_QUIT_RESULT(obj) {
         $("#reward").html(0);
         $("#scoreThisRound").html(reward - practice.step);
         $("#totalAfter").html(practice.totalScore);
+        $("#totalBonus").html(bonus);
         $("#result").show();
         RECORD_SIGNAL_DATA(obj);
         RECORD_SIGNALER_END_LOCATION(obj);

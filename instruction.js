@@ -79,20 +79,21 @@ instr_text[0] = "<strong>Welcome to this experiment!</strong><br><br>In this exp
 instr_text[1] = "Please carefully read the instructions on the next few pages. There will be a question that asks you about the instructions later and a couple of practice trials."
 instr_text[2] = "In this experiment, you are the agent in blue " + "<img class='inlineShape' src='shape/signaler.png'/>" + " and your partner is in white " + "<img class='inlineShape' src='shape/receiver.png' />" + " ."
 instr_text[3] = "At the beginning of each round, you and your partner will stand at different positions in a game board. <br><br>You will also see items in some of the grids."
-instr_text[4] = "Besides the game board, you will also see the target for this round. For example, \"Target: <img class='inlineShape' src='shape/redCircle.png'/> \". The target will be different for each round. <br><br>If either you or your partner successfully reach the target at the end of one round, both of you will receive 8 points as reward."
-instr_text[5] = "To reach the target, you can choose to move by yourself. <br><br>You can move from grid to grid by taking steps to your left, right, top, or bottom. Each step will cost you one point. You cannot move diagonally. You cannot move outside the grid. <br><br>You can try to move by yourself on the next page."
+instr_text[4] = "Besides the game board, you will also see the target for this round. For example, \"Target: <img class='inlineShape' src='shape/redCircle.png'/> \". The target will be different for each round. <br><br>If either you or your partner successfully reach the target at the end of one round, both of you will receive 40 points as reward."
+instr_text[5] = "To reach the target, you can choose to move by yourself. <br><br>You can move from grid to grid by taking steps to your left, right, top, or bottom. Each step will cost you 5 points. You cannot move diagonally. You cannot move outside the grid. <br><br>You can try to move by yourself on the next page."
 instr_text[6] = "";
-instr_text[7] = "Good job! Now that you know how to move by yourself!<br><br>If you don't want to move, you can ask your partner to move. <br><br>However, you are the only person that knows the target for each round. Your partner does not know the target. <br><br>You have the option to send one of the given signals to your partner. The signal can give partial information about the target."
-instr_text[8] = "After you send the signal, your partner will try its best to reach the target given the information you provided. <br><br>Each step that your partner takes will also cost one point. <br><br>You can try to send a signal on the next page."
+instr_text[7] = "Good job! Now that you know how to move by yourself!<br><br>If you don't want to move, you can ask your partner to move. <br><br>However, you are the only person that knows the target for each round. Your partner does not know the target. <br><br>You have the option to send one of the given signals to your partner. The signal can give partial information about the target. There is no cost for sending a signal."
+instr_text[8] = "After you send the signal, your partner will try its best to reach the target given the information you provided. <br><br>Each step that your partner takes will also cost 5 points. <br><br>You can try to send a signal on the next page."
 instr_text[9] = "";
 instr_text[10] = "Nice! Now that you know how to send a signal to your partner.<br><br>If you decide that it is too costly for either of you to move towards the target. You have the option to QUIT this round. Neither of you will lose or receive point if you choose to quit. ";
-instr_text[11] = "";
-instr_text[12] = "By clicking on the NEXT button, I am acknowledged and hereby accept the terms. I understand the task in this experiment.";
-instr_text[13] = "Please start the practice rounds on the next page.";
-instr_text[14] = "haha";
-instr_text[15] = "You have finished all the practice rounds. You are now ready for the experiment. Good luck!";
-instr_text[16] = "";
-instr_text[17] = "Thank you for completing this experiment!";
+instr_text[11] = "At the end of the experiment, you will get a compensate of the total score / 100 in dollars. <br><br> For example, if you received 570 points in total, you will receive $5.7 at the end of the experiment."
+instr_text[12] = "";
+instr_text[13] = "By clicking on the NEXT button, I am acknowledged and hereby accept the terms. I understand the task in this experiment.";
+instr_text[14] = "Please start the practice rounds on the next page.";
+instr_text[15] = "";
+instr_text[16] = "You have finished all the practice rounds. You are now ready for the experiment. Good luck!";
+instr_text[17] = "";
+instr_text[18] = "Thank you for completing this experiment!";
 
 
 const INSTR_FUNC_DICT = {
@@ -107,13 +108,13 @@ const INSTR_FUNC_DICT = {
     8: SHOW_INSTR,
     9: TRY_SAY,
     10: SHOW_INSTR,
-    11: SHOW_INSTR_QUESTION, 
-    12: SHOW_CONSENT,
-    13: SHOW_INSTR,
-    14: START_PRACTICE_TRIAL,
-    15: SHOW_INSTR,
-    16: START_EXPT,
-    17: SHOW_INSTR
+    12: SHOW_INSTR_QUESTION, 
+    13: SHOW_CONSENT,
+    14: SHOW_INSTR,
+    15: START_PRACTICE_TRIAL,
+    16: SHOW_INSTR,
+    17: START_EXPT,
+    18: SHOW_INSTR
 };
 
 function HIDE_BACK_BUTTON(){

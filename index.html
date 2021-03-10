@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.3/mobile-detect.min.js'></script>
+    <script src="record.js"></script>
     <script src="trialInterface.js"></script>
     <script src="trial.js"></script>
     <script src="instruction.js"></script>
@@ -58,7 +59,7 @@
                         <p id="tryScore"></p>
                     </div>
                     <div class="info">
-                        <p>Steps Taken: </p>
+                        <p>Cost: -</p>
                         <p class="tryStep"></p>
                     </div>                
             </div>
@@ -87,7 +88,7 @@
             <div id="tryResult">
                 <p id="tryResultText"></p>
                 <div class="resultInfo">
-                    <p class="title">Steps: </p>
+                    <p class="title">Cost: </p>
                     <p class="data tryStep"></p>
                 </div>
                 <div class="resultInfo">
@@ -95,12 +96,16 @@
                     <p class="data" id="tryReward"></p>
                 </div>
                 <div id="tryScoreThisRoundBox">
-                    <p class="title">Score this round:</p>
+                    <p class="title">Score this round: </p>
                     <p class="data" id="tryScoreThisRound"></p>
                 </div>
                 <div id="tryTotalScoreBox">
                     <p class="title">New Total Score: </p>
                     <p class="data" id="tryTotalAfter"></p>
+                </div>
+                <div id="tryTotalBonusBox">
+                    <p class="title">Your Total Bonus ($): </p>
+                    <p class="data" id="tryTotalBonus"></p>
                 </div>
                 <button class="butNext" id="tryResultBut">NEXT</button>
             </div>
@@ -123,7 +128,7 @@
                         <p id="practiceScore"></p>
                     </div>
                     <div class="info">
-                        <p>Steps Taken: </p>
+                        <p>Cost: -</p>
                         <p class="practiceStep"></p>
                     </div>                
             </div>
@@ -156,7 +161,7 @@
             <div id="practiceResult">
                 <p id="practiceResultText"></p>
                 <div class="resultInfo">
-                    <p class="title">Steps: </p>
+                    <p class="title">Cost: </p>
                     <p class="data practiceStep"></p>
                 </div>
                 <div class="resultInfo">
@@ -170,6 +175,10 @@
                 <div id="practiceTotalScoreBox">
                     <p class="title">New Total Score: </p>
                     <p class="data" id="practiceTotalAfter"></p>
+                </div>
+                <div id="practiceTotalBonusBox">
+                    <p class="title">Your Total Bonus ($): </p>
+                    <p class="data" id="practiceTotalBonus"></p>
                 </div>
                 <button class="butNext" id="practiceResultBut">NEXT</button>
             </div>
@@ -192,7 +201,7 @@
                         <p id="score"></p>
                     </div>
                     <div class="info">
-                        <p>Steps Taken: </p>
+                        <p>Cost: -</p>
                         <p class="step"></p>
                     </div>                
             </div>
@@ -225,7 +234,7 @@
             <div id="result">
                 <p id="resultText"></p>
                 <div class="resultInfo">
-                    <p class="title">Steps: </p>
+                    <p class="title">Cost: </p>
                     <p class="data step"></p>
                 </div>
                 <div class="resultInfo">
@@ -239,6 +248,10 @@
                 <div id="totalScoreBox">
                     <p class="title">New Total Score: </p>
                     <p class="data" id="totalAfter"></p>
+                </div>
+                <div id="totalBonusBox">
+                    <p class="title">Your Total Bonus ($): </p>
+                    <p class="data" id="totalBonus"></p>
                 </div>
                 <button class="butNext" id="resultBut">NEXT</button>
             </div>

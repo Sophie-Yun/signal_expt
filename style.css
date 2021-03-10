@@ -162,8 +162,8 @@ body {
 /* Left column */
 #tryGridContainer, #practiceGridContainer, #gridContainer {
     position: relative;
-    background-color: #625757;
-    border: 2px solid #625757;
+    background-color: black;
+    border: 2px solid black;
     display: inline-grid;
     grid-gap: 2px;
     grid-template-columns: repeat(9, 50px);
@@ -232,7 +232,7 @@ body {
 
 #tryResult .title, #practiceResult .title, #result .title {
     float: left;
-    width: 50%;
+    width: 70%;
     position: relative;
     display: inline-block;
     left: 20px;
@@ -241,7 +241,7 @@ body {
 
 #tryResult .data, #practiceResult .data, #result .data {
     float: left;
-    width: 50%;
+    width: 30%;
     position: relative;
     display: inline-block;
     text-align: right;
@@ -255,7 +255,11 @@ body {
 }
 
 #tryResult #tryTotalScoreBox .title, #tryResult #tryTotalScoreBox .data, #practiceResult #practiceTotalScoreBox .title, #practiceResult #practiceTotalScoreBox .data, #result #totalScoreBox .title, #result #totalScoreBox .data {
-    margin: 20px 0px 90px;
+    margin: 20px 0px 0px;
+}
+
+#tryResult #tryTotalBonusBox .title, #tryResult #tryTotalBonusBox .data, #practiceResult #practiceTotalBonusBox .title, #practiceResult #practiceTotalBonusBox .data, #result #totalBonusBox .title, #result #totalBonusBox .data {
+    margin: 0px 0px 50px;
 }
 
 .top {

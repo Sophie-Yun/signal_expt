@@ -18,7 +18,17 @@ const RECEIVER_MOVE_SPEED = 0.5;
 const MAX_SAY_OPTION = 6;
 const TRIAL_DICT = {};
 const PRAC_TRIAL_DICT = {};
-const REWARD = 8;
+const REWARD = 40;
+const STEP_COST = 5;
+const MAX_BONUS = 8;
+
+//temporary variables:
+const BARRIER = {
+    "up": "(4, 2), (5, 2), (6, 2), (7, 2)",
+    "down": "(4, 3), (5, 3), (6, 3), (7, 3)"
+}
+
+//end
 
 var chooseSay = false;
 var allowWalk = false;
@@ -143,7 +153,7 @@ $(document).ready(function() {
     //} else if (subj.id !== null){
     } else {
         //fetches CSV from file into a string
-        fetch("exampleTrials_Set2_20210201.csv")
+        fetch("practiceTrialsNItems_Set1_20210303.csv")
             .then(response => response.text())
             .then(textString => {
                 PRACTICE_INPUT_DATA = PARSE_CSV(textString)
