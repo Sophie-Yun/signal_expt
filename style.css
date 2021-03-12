@@ -249,7 +249,7 @@ body {
     margin: 0px;
 }
 
-#tryResult #tryScoreThisRoundBox .title, #tryResult #tryScoreThisRoundBox .data, #sanityCheckResult #sanityCheckScoreThisRoundBox .title, #sanityCheckResult #sasanityCheckScoreThisRoundBox .data, #practiceResult #practiceScoreThisRoundBox .title, #practiceResult #practiceScoreThisRoundBox .data, #result #scoreThisRoundBox .title, #result #scoreThisRoundBox .data {
+#tryResult #tryScoreThisRoundBox .title, #tryResult #tryScoreThisRoundBox .data, #sanityCheckResult #sanityCheckScoreThisRoundBox .title, #sanityCheckResult #sanityCheckScoreThisRoundBox .data, #practiceResult #practiceScoreThisRoundBox .title, #practiceResult #practiceScoreThisRoundBox .data, #result #scoreThisRoundBox .title, #result #scoreThisRoundBox .data {
     border-top: 1px solid;
     margin: 10px 0px;
 }

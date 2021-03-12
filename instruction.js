@@ -90,10 +90,11 @@ instr_text[11] = "";
 instr_text[12] = "By clicking on the NEXT button, I am acknowledged and hereby accept the terms. I understand the task in this experiment.";
 instr_text[13] = "Please start the practice rounds on the next page.";
 instr_text[14] = "LOG: Sanity Check";
-instr_text[15] = "LOG: Practice Trial";
-instr_text[16] = "You have finished all the practice rounds. You are now ready for the experiment. Good luck!";
-instr_text[17] = "";
-instr_text[18] = "Thank you for completing this experiment!";
+instr_text[15] = "You have finished the first set of practice rounds. Please the start the second set on the next page.";
+instr_text[16] = "LOG: Practice Trial";
+instr_text[17] = "You have finished all the practice rounds. You are now ready for the experiment. Good luck!";
+instr_text[18] = "";
+instr_text[19] = "Thank you for completing this experiment!";
 
 
 const INSTR_FUNC_DICT = {
@@ -112,10 +113,11 @@ const INSTR_FUNC_DICT = {
     12: SHOW_CONSENT,
     13: SHOW_INSTR,
     14: START_SANITY_CHECK_TRIAL,
-    15: START_PRACTICE_TRIAL,
-    16: SHOW_INSTR,
-    17: START_EXPT,
-    18: SHOW_INSTR
+    15: SHOW_INSTR,
+    16: START_PRACTICE_TRIAL,
+    17: SHOW_INSTR,
+    18: START_EXPT,
+    19: SHOW_INSTR
 };
 
 function HIDE_BACK_BUTTON(){

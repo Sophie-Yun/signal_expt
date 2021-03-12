@@ -465,8 +465,8 @@ function UPDATE_STEPS(obj) {
 
 function getSanityCheckFeedback(obj, trialStrategy) {
     if (trialStrategy == "communicate") {
-        reversedReceiverIntentionDict = Object.entries(obj.inputData[obj.trialIndex]["receiverIntentionDict"]).reduce((tmpObj, item) => (tmpObj[item[1]] = item[0]) && tmpObj, {});
-        intention = obj.inputData[obj.trialIndex]["intention"];
+        reversedReceiverIntentionDict = Object.entries(obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverIntentionDict"]).reduce((tmpObj, item) => (tmpObj[item[1]] = item[0]) && tmpObj, {});
+        intention = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["intention"];
         feedback = "Some feedback: the ideal way to reach the target would've been to signal " + reversedReceiverIntentionDict[intention] + ".";
     } else if (trialStrategy == "do") {
         feedback = "Some feedback: the ideal way to reach the target would've been to move to the target.";
@@ -492,23 +492,33 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
         $("#tryScoreThisRound").html(reward - obj.step);
         $("#tryTotalAfter").html(obj.totalScore);
         $("#tryResult").show();
-    } else if (obj.isSanityCheck){ // TODO: THIS IS WHERE I SHOULD GIVE THEM THE NOTE/TIP
-        trialStrategy = obj.inputData[obj.trialIndex]["trialStrategy"];
+    } else if (obj.isSanityCheck){ 
+        trialStrategy = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["trialStrategy"];
+        if (trialStrategy == "do") {
+            if (!win) {
+                obj.sanityMoveFails++;
+            }
+            obj.sanityMoveAttempts++; 
+        } else if (trialStrategy == "quit") {
+            obj.sanityQuitFails++;
+            obj.sanityQuitAttempts++;
+        } else if (trialStrategy == "communicate") {
+            obj.sanitySayFails++;
+            obj.sanitySayAttempts++;
+        }
         $("#sanityCheckResult .sanityCheckStep").html("-" + obj.step);
         var reward;
         if(win){
-            if (trialStrategy == "do")
+            if (trialStrategy == "do") {
                 $("#sanityCheckResultText").html("Congratulations!<br><br>You reached the target!");
-            else
+            }
+            else {
                 $("#sanityCheckResultText").html("Congratulations! You reached the target! <br><br>" + getSanityCheckFeedback(obj, trialStrategy));
+            }
             reward = REWARD;
         } else {
             $("#sanityCheckResultText").html("Sorry, you did not reach the target. " + getSanityCheckFeedback(obj, trialStrategy) + "<br><br>Good luck on your next round! ");
             reward = 0;
-            obj.sanityMoveFails++; // TODO: did we decide on how to drop them
-            obj.sanityMoveAttempts++; // TODO: did we decide on how to drop them
-            console.log(obj.sanityMoveFails);
-            // if drop right away, do it by checking here and the respective for say and quit
         }
         $("#sanityCheckReward").html(reward);
         $("#sanityCheckScoreThisRound").html(reward - obj.step);
@@ -563,23 +573,34 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         $("#tryTotalAfter").html(obj.totalScore);
         $("#tryResult").show();
     } else if(obj.isSanityCheck){ 
-        trialStrategy = obj.inputData[obj.trialIndex]["trialStrategy"];
+        trialStrategy = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["trialStrategy"];
+        if (trialStrategy == "do") {
+            obj.sanityMoveFails++;
+            obj.sanityMoveAttempts++;
+        } else if (trialStrategy == "quit") {
+            obj.sanityQuitFails++;
+            obj.sanityQuitAttempts++;
+        } else if (trialStrategy == "communicate") {
+            if (!win) {
+                obj.sanitySayFails++;
+            }
+            obj.sanitySayAttempts++;
+        }
         $("#sanityCheckResult .sanityCheckStep").html("-" + obj.step);
         var reward;
         if(win){
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            if (trialStrategy == "communicate")
+            if (trialStrategy == "communicate") {
                 $("#sanityCheckResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
-            else
+            }
+            else {
                 $("#sanityCheckResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations! You reached the target! " + getSanityCheckFeedback(obj, trialStrategy));
+            }
             reward = REWARD;
         } else {
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
             $("#sanityCheckResultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target. " + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");
             reward = 0;
-            obj.sanitySayFails++;
-            obj.sanitySayAttempts++;
-            console.log(obj.sanitySayFails);
         }
         $("#sanityCheckReward").html(reward);
         $("#sanityCheckScoreThisRound").html(reward - obj.step);
@@ -622,14 +643,24 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
 
 function SHOW_QUIT_RESULT(obj) {
     obj.allowMove = false;
-    if(obj.isSanityCheck){ // TODO: OH I THINK HERE TOO. IT SHOULD BE ALL THREE. maybe right one function that I can just use universally
-        trialStrategy = obj.inputData[obj.trialIndex]["trialStrategy"];
+    if(obj.isSanityCheck){ 
+        trialStrategy = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["trialStrategy"];
+        if (trialStrategy == "do") {
+            obj.sanityMoveFails++;
+            obj.sanityMoveAttempts++;
+        } else if (trialStrategy == "quit") {
+            obj.sanityQuitAttempts++;
+        } else if (trialStrategy == "communicate") {
+            obj.sanitySayFails++;
+            obj.sanitySayAttempts++;
+        }
         reward = 0;
-        obj.sanityQuitFails++;
-        obj.sanityQuitAttempts++;
-        console.log(obj.sanityQuitFails);
+        if (trialStrategy == "quit") {
+            $("#sanityCheckResultText").html("Don't worry!<br>Good luck on your next round!");
+        } else {
+            $("#sanityCheckResultText").html("Don't worry! " + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");
+        }
 
-        $("#sanityCheckResultText").html("Don't worry! " + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");
         $("#sanityCheckReward").html(0);
         $("#sanityCheckScoreThisRound").html(reward - practice.step);
         $("#sanityCheckTotalAfter").html(practice.totalScore);

@@ -71,12 +71,43 @@ class trialObject {
             }
         } else if(this.isSanityCheck) { 
             this.trialIndex++;
-            if (this.sanityMoveFails == 3 || this.sanitySayFails == 3 || this.sanityQuitAttempts == 3) {
-                // drop participant
+            if (this.sanitySayFails == 3 || this.sanityQuitFails == 3 || this.sanityMoveFails == 3) {
+                // TODO: drop participant
             }
-            
-            if(this.trialIndex >= this.trialN) {
-                this.end();
+
+            // TODO: refractor repeats with a function
+            // this is for conditional third trial
+            if(this.trialIndex >= this.trialN - 3) { // 3 for 3 types of strategies
+                if (this.sanitySayFails > 0 && this.sanitySayAttempts < 3) {
+                    this.trialIndex = 6;
+                    this.step = 0;
+                    TRIAL_SET_UP(this);
+                    CREATE_GRID(this);
+                    SETUP_SCOREBOARD(this);
+                    CREATE_SIGNAL_BUTTONS(this, this.signalSpace);
+                    $("#sanityCheckInstr").show();
+                    this.move();
+                } else if (this.sanityQuitFails > 0 && this.sanityQuitAttempts < 3) {
+                    this.trialIndex = 7;
+                    this.step = 0;
+                    TRIAL_SET_UP(this);
+                    CREATE_GRID(this);
+                    SETUP_SCOREBOARD(this);
+                    CREATE_SIGNAL_BUTTONS(this, this.signalSpace);
+                    $("#sanityCheckInstr").show();
+                    this.move();
+                } else if (this.sanityMoveFails > 0 && this.sanityMoveAttempts < 3) {
+                    this.trialIndex = 8;
+                    this.step = 0;
+                    TRIAL_SET_UP(this);
+                    CREATE_GRID(this);
+                    SETUP_SCOREBOARD(this);
+                    CREATE_SIGNAL_BUTTONS(this, this.signalSpace);
+                    $("#sanityCheckInstr").show();
+                    this.move();
+                } else {
+                    this.end();
+                }
             } else {
                 this.step = 0;
                 TRIAL_SET_UP(this);
@@ -86,6 +117,8 @@ class trialObject {
                 $("#sanityCheckInstr").show();
                 this.move();
             }
+            console.log(this.inputData[this.randomizedTrialList[this.trialIndex]])
+
         } else if(this.isPracTrial) {
             this.trialIndex++;
             if(this.trialIndex >= this.trialN) {
@@ -242,7 +275,7 @@ function FIND_PATH(receiverLocation, receiverIntentionLocation) {
 function CREATE_RECEIVER_PATH_DICT(obj) {
     // Below section finds a path for each signal from signalSpace and assigns them into a dict for receiverPath
     // TEMPORARY TO REVERSE KEY:VALUE ORDER OF A DICTIONARY FOR TARGET_DICTIONARY
-    if(!obj.isExptTrial) {
+    if(!obj.isExptTrial && !obj.isSanityCheck) {
         tmpTargetDictionary = Object.entries(obj.inputData[obj.trialIndex]["targetDictionary"]).reduce((tmpObj, item) => (tmpObj[item[1]] = item[0]) && tmpObj, {});
 
         var receiverPathsList = {};
@@ -276,10 +309,10 @@ function CREATE_RECEIVER_PATH_DICT(obj) {
 
 function SET_RECEIVER_SIGNALER_LOCATION(obj) {
     //var receiverFromCSV, signalerFromCSV;
-        if (obj.isPracTrial || obj.isSanityCheck)  {  
+        if (obj.isPracTrial)  {  
             obj.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.trialIndex]["receiverLocation"][0], obj.inputData[obj.trialIndex]["receiverLocation"][1]); 
             obj.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.trialIndex]["signalerLocation"][0], obj.inputData[obj.trialIndex]["signalerLocation"][1]);
-        } else if (obj.isExptTrial) {
+        } else if (obj.isExptTrial || obj.isSanityCheck) {
             obj.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"][0], obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"][1]); 
             obj.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalerLocation"][0], obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalerLocation"][1]);
         }
@@ -308,10 +341,13 @@ function TRIAL_SET_UP (obj) {
     obj.gridArray[obj.receiverLocation[0]][obj.receiverLocation[1]] = SHAPE_DIR + "receiver.png";
     obj.gridArray[obj.signalerLocation[0]][obj.signalerLocation[1]] = SHAPE_DIR + "signaler.png";
 
-    // TODO: random sampling for sanity check
     if (obj.isSanityCheck) {
+        /*
         obj.signalSpace = obj.inputData[obj.trialIndex].signalSpace;
         obj.gridString = obj.inputData[obj.trialIndex].targetDictionary;
+        */
+        obj.signalSpace = obj.inputData[obj.randomizedTrialList[obj.trialIndex]].signalSpace;
+        obj.gridString= obj.inputData[obj.randomizedTrialList[obj.trialIndex]].targetDictionary;
         $("#round").html(obj.trialIndex + 1);
     } else if (obj.isPracTrial) {
         obj.signalSpace = obj.inputData[obj.trialIndex].signalSpace;
@@ -331,7 +367,7 @@ function TRIAL_SET_UP (obj) {
         var row = coordInArray[0];
         var col = coordInArray[1];
         obj.gridArray[row][col] = PIC_DICT[shape[i]];
-        if(!obj.isExptTrial) {
+        if(!obj.isExptTrial && !obj.isSanityCheck) {
             if (shape[i] == obj.inputData[obj.trialIndex].intention)
                 obj.goalCoord = [row, col];
         } else {
@@ -400,7 +436,6 @@ function MOVE(obj) {
 };
 
 // Use to do something like this: ie. "1, 2" -> [1, 2]
-// TODO: should implement built-in PARSE_CSV in index.js
 function CONVERT_STR_TO_ARRAY(input) {
     return input.split(',').map(Number);
 }
@@ -656,7 +691,25 @@ function START_SANITY_CHECK_TRIAL() {
     sanityCheck.trialN = sanityCheck.inputData.length;
 
     // random sampling for first trial; the following trials are handled in next()
+    // idea: copy a random third trial of each type, remove that from object -- repeat for all three types
+    // then randomize, then add the conditionals at the end in order of (communicate, quit, do)
+    randomIndexCommunicate = Math.floor(Math.random() * 3);
+    conditionalCommunicateTrial = JSON.parse(JSON.stringify(sanityCheck.inputData[randomIndexCommunicate]));
+    sanityCheck.inputData.splice(randomIndexCommunicate, 1);
+
+    randomIndexQuit = Math.floor(Math.random() * 3) + 3 - 1;
+    conditionalQuitTrial = JSON.parse(JSON.stringify(sanityCheck.inputData[randomIndexQuit]));
+    sanityCheck.inputData.splice(randomIndexQuit, 1);
+
+    randomIndexDo = Math.floor(Math.random() * 3) + 3 * 2 - 2;
+    conditionalDoTrial = JSON.parse(JSON.stringify(sanityCheck.inputData[randomIndexDo]));
+    sanityCheck.inputData.splice(randomIndexDo, 1);
+
+
     CREATE_RANDOM_LIST_FOR_EXPT(sanityCheck);  
+
+    sanityCheck.inputData.push(conditionalCommunicateTrial, conditionalQuitTrial, conditionalDoTrial);
+    sanityCheck.randomizedTrialList.push("6", "7", "8");
 
     TRIAL_SET_UP(sanityCheck);
     CREATE_GRID(sanityCheck);
@@ -806,7 +859,7 @@ function CONVERT_COORD_ARRAY_TO_STR (array) {
 }
 
 function RECORD_SIGNALER_END_LOCATION(obj, signalerLocation) {
-    if(obj.isExptTrial){
+    if(obj.isExptTrial || obj.isSanityCheck){
         var startingCoord = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalerLocation"];
         obj.signalerEndCoordinate = (signalerLocation == undefined) ? CONVERT_COORD_ARRAY_TO_STR(startingCoord): CONVERT_COORD_ARRAY_TO_STR(CONVERT_ARRAY_COORD_TO_CSV_COORD(signalerLocation[0], signalerLocation[1]));
         obj.signalerEndItem = (signalerLocation == undefined) ? "noChange": FIND_SHAPENAME_FROM_SHAPEPIC (obj.gridArray[signalerLocation[0]][signalerLocation[1]]);
@@ -814,8 +867,10 @@ function RECORD_SIGNALER_END_LOCATION(obj, signalerLocation) {
 }
 
 function RECORD_RECEIVER_END_LOCATION(obj, receiverLocation) {
-    if(obj.isExptTrial){
+    if(obj.isExptTrial || obj.isSanityCheck){
         var startingCoord = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"];
+
+
         obj.receiverEndCoordinate = (receiverLocation == undefined) ? CONVERT_COORD_ARRAY_TO_STR(startingCoord): CONVERT_COORD_ARRAY_TO_STR(CONVERT_ARRAY_COORD_TO_CSV_COORD(receiverLocation[0], receiverLocation[1]));
         obj.receiverEndItem = (receiverLocation == undefined) ? "noChange": FIND_SHAPENAME_FROM_SHAPEPIC (obj.gridArray[receiverLocation[0]][receiverLocation[1]]);
     }
