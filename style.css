@@ -62,7 +62,7 @@ body {
                                  
 */
 
-#tryExptBox, #practiceExptBox, #exptBox {
+#tryMoveBox, #trySayBox, #practiceExptBox, #exptBox {
     position: absolute;
     width: 1000px;
     left: 50%;
@@ -70,7 +70,7 @@ body {
     top: 50px;
 }
 
-#tryScoreBoard, #practiceScoreBoard, #scoreBoard {
+#tryMoveBoard, #trySayBoard, #practiceScoreBoard, #scoreBoard {
     display: flex;
     justify-content: space-around;
     background: linear-gradient(180deg, #F9F9F9 0%, rgba(255, 255, 255, 0.5) 100%), #BCBAB8;
@@ -79,23 +79,23 @@ body {
     box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
-#tryScoreBoard .info, #practiceScoreBoard .info, #scoreBoard .info {
+#tryMoveBoard .info, #trySayBoard .info, #practiceScoreBoard .info, #scoreBoard .info {
     display: inline-block;
 }
 
-#tryScoreBoard p, #practiceScoreBoard p, #scoreBoard p {
+#tryMoveBoard p, #trySayBoard p, #practiceScoreBoard p, #scoreBoard p {
     position: relative;
     display: inline;
     top: 8px;
 }
 
-#tryScoreBoard img, #practiceScoreBoard img, #scoreBoard img {
+#tryMoveBoard img, #trySayBoard img, #practiceScoreBoard img, #scoreBoard img {
     display: inline-block;
     top: 10px;
     padding: 0px;
 }
 
-#tryVerticalAxis, #practiceVerticalAxis, #verticalAxis {
+.tryVerticalAxis, #practiceVerticalAxis, #verticalAxis {
     position: relative;
     display: inline-block;
     writing-mode: vertical-rl;
@@ -114,7 +114,7 @@ body {
     height: 400px;
 }
 
-#tryExptInstr, #practiceExptInstr, #exptInstr {
+.tryExptInstr, #practiceExptInstr, #exptInstr {
     display: inline-block;
 }
 
@@ -152,7 +152,7 @@ body {
     top: 30px;
 }
 
-#tryHorizontalAxis, #practiceHorizontalAxis, #horizontalAxis {
+.tryHorizontalAxis, #practiceHorizontalAxis, #horizontalAxis {
     position: absolute;
     left: 6%;
     top: 610px;
@@ -160,7 +160,7 @@ body {
 }
   
 /* Left column */
-#tryGridContainer, #practiceGridContainer, #gridContainer {
+#tryMoveGridContainer, #trySayGridContainer, #practiceGridContainer, #gridContainer {
     position: relative;
     background-color: black;
     border: 2px solid black;
@@ -181,12 +181,12 @@ body {
     margin: 0px;
 }*/
 
-#trySay, #practiceSay, #say {
+.trySay, #practiceSay, #say {
     position: absolute;
     top: 0px;
 }
 
-#tryDo, #practiceDo, #do {
+.tryDo, #practiceDo, #do {
     position: absolute;
     top: 200px;
 }
@@ -204,7 +204,7 @@ body {
     border-radius: 4px;
 }
 */
-#tryDecision, #practiceDecision, #decision {
+.tryDecision, #practiceDecision, #decision {
     padding-top: 20px;
     border-top: 2px solid;
     position: absolute;
@@ -212,7 +212,7 @@ body {
     width: 450px;
 }
 
-#tryResult, #practiceResult, #result {
+.tryResult, #practiceResult, #result {
     display: none;
     position: absolute;
     padding: 20px;
@@ -225,12 +225,12 @@ body {
     color: #F9F9F9;
 }
 
-#tryResultText, #practiceResultText, #resultText {
+.tryResultText, #practiceResultText, #resultText {
     text-align: center;
     margin-bottom: 50px;
 }
 
-#tryResult .title, #practiceResult .title, #result .title {
+.tryResult .title, #practiceResult .title, #result .title {
     float: left;
     width: 70%;
     position: relative;
@@ -239,7 +239,7 @@ body {
     margin: 0px;
 }
 
-#tryResult .data, #practiceResult .data, #result .data {
+.tryResult .data, #practiceResult .data, #result .data {
     float: left;
     width: 30%;
     position: relative;
@@ -249,16 +249,15 @@ body {
     margin: 0px;
 }
 
-#tryResult #tryScoreThisRoundBox .title, #tryResult #tryScoreThisRoundBox .data, #practiceResult #practiceScoreThisRoundBox .title, #practiceResult #practiceScoreThisRoundBox .data,#result #scoreThisRoundBox .title, #result #scoreThisRoundBox .data {
+.tryResult .tryScoreThisRoundBox .title, .tryResult .tryScoreThisRoundBox .data, #practiceResult #practiceScoreThisRoundBox .title, #practiceResult #practiceScoreThisRoundBox .data,#result #scoreThisRoundBox .title, #result #scoreThisRoundBox .data {
     border-top: 1px solid;
     margin: 10px 0px;
 }
-
-#tryResult #tryTotalScoreBox .title, #tryResult #tryTotalScoreBox .data, #practiceResult #practiceTotalScoreBox .title, #practiceResult #practiceTotalScoreBox .data, #result #totalScoreBox .title, #result #totalScoreBox .data {
+.tryResult .tryTotalScoreBox .title, .tryResult .tryTotalScoreBox .data, #practiceResult #practiceTotalScoreBox .title, #practiceResult #practiceTotalScoreBox .data, #result #totalScoreBox .title, #result #totalScoreBox .data {
     margin: 20px 0px 0px;
 }
 
-#tryResult #tryTotalBonusBox .title, #tryResult #tryTotalBonusBox .data, #practiceResult #practiceTotalBonusBox .title, #practiceResult #practiceTotalBonusBox .data, #result #totalBonusBox .title, #result #totalBonusBox .data {
+.tryResult .tryTotalBonusBox .title, .tryResult .tryTotalBonusBox .data, #practiceResult #practiceTotalBonusBox .title, #practiceResult #practiceTotalBonusBox .data, #result #totalBonusBox .title, #result #totalBonusBox .data {
     margin: 0px 0px 50px;
 }
 

@@ -55,14 +55,18 @@ class trialObject {
     
     next(){
         if(this.isTryMove || this.isTrySay) {
+            this.step = 0;
+            $(".tryExptInstr").show();
+            this.end();
+            /*
             this.trialIndex++;
             if(this.trialIndex >= this.trialN) {
                 this.end();
             } else {
                 this.step = 0;
                 this.buttonsCreated = false;
-                $("#tryExptInstr").show();
-            }
+                $(".tryExptInstr").show();
+            }*/
         } else if(this.isPracTrial) {
             this.trialIndex++;
             if(this.trialIndex >= this.trialN) {
@@ -108,7 +112,13 @@ class trialObject {
         }
     }
     end() {
-        if(this.isPracTrial) {
+        if(this.isTryMove){
+            $("#tryMovePage").hide();
+            NEXT_INSTR();
+        } else if (this.isTrySay) {
+            $("#trySayPage").hide();
+            NEXT_INSTR();
+        } else if(this.isPracTrial) {
             $("#practiceExptPage").hide();
             NEXT_INSTR();
             $("#instrBackBut").hide();
@@ -116,6 +126,8 @@ class trialObject {
         } else if(this.isExptTrial) {
             console.log(this.exptDataToSave);
             this.saveExptData();
+            $("#exptPage").hide();
+            NEXT_INSTR();
         }
     }
     move() {
@@ -443,24 +455,19 @@ function POST_DATA(trial_obj, success_func, error_func) {
 
 
 function NEXT_TRIAL(obj) {
-    if(obj.isTryMove){
-        instr.next();
+    if(obj.isTryMove || obj.isTrySay){
+        obj.next()
         $("#instrText").show();
         $("#instrNextBut").show();
-        $("#instrBackBut").css("position", "absolute");
-    } else if (obj.isTrySay) {
-        //instr.next();
-        $("#instrText").show();
-        $("#instrNextBut").show();
-        $("#instrBackBut").css("position", "absolute");
+        $("#instrBackBut").css("position", "absolute");   
     } else if(obj.isPracTrial){
         RESET_GAMEBOARD();
         PRACTICE_EXPT_INSTR_APPEAR();
-        practice.next();
+        obj.next()
     } else if(obj.isExptTrial){
         RESET_GAMEBOARD();
         EXPT_INSTR_APPEAR();
-        expt.next();
+        obj.next()
     } 
 }
 
@@ -503,10 +510,10 @@ function RESET_GAMEBOARD() {
     TRY_EXPT_INSTR_APPEAR();
     PRACTICE_EXPT_INSTR_APPEAR();
     EXPT_INSTR_APPEAR();
-    $("#tryDecision").html("");
+    $(".tryDecision").html("");
     $("#practiceDecision").html("");
     $("#decision").html("");
-    $("#tryResult").hide();
+    $(".tryResult").hide();
     $("#practiceResult").hide();
     $("#result").hide();
 }
@@ -524,20 +531,21 @@ function TRY_GRID_SETUP(obj) {
 
 function TRY_SCOREBOARD_SETUP(obj) {
     $(".tryStep").html(obj.step);
-    $("#tryGoalShape").attr("src", PIC_DICT["red circle"]);
-    $("#tryScore").html(obj.totalScore);
+    $("#tryMoveGoal").attr("src", PIC_DICT["red circle"]);
+    $("#trySayGoal").attr("src", PIC_DICT["red circle"]);
+    $(".tryScore").html(obj.totalScore);
 }
 
 function TRY_MOVE_GAMEBOARD_SETUP() {
-    $("#trySay").hide();
-    $("#tryDo").show();
-    $("#tryExptPage").show();
+    $(".trySay").hide();
+    $(".tryDo").show();
+    $("#tryMovePage").show();
 }
 
 function TRY_SAY_GAMEBOARD_SETUP() {
-    $("#trySay").show();
-    $("#tryDo").hide();
-    $("#tryExptPage").show();
+    $(".trySay").show();
+    $(".tryDo").hide();
+    $("#trySayPage").show();
 }
 
 function TRY_MOVE() {
@@ -548,7 +556,7 @@ function TRY_MOVE() {
     if(!tryMove.reached)
         $("#instrNextBut").hide();
     CREATE_EXPT_BUTTONS(tryMove);
-    $("#tryPracticeInfo").css("opacity", 0);
+    $("#tryMoveInfo").css("opacity", 0);
     tryMove.gridArray = [
             [,,,,,,,,],
             [,,,,,,,,],
@@ -571,12 +579,12 @@ function TRY_MOVE() {
 
 function TRY_SAY(){
     trySay.isTrySay = true;
-    if (trySay.totalScore == 0)
-        trySay.totalScore = tryMove.totalScore;
+    //if (trySay.totalScore == 0)
+    trySay.totalScore = tryMove.totalScore;
     if(!trySay.reached)
         $("#instrNextBut").hide();
     CREATE_EXPT_BUTTONS(trySay);
-    $("#tryPracticeInfo").css("opacity", 0);
+    $("#trySayInfo").css("opacity", 0);
     trySay.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(practice.inputData[0]["receiverLocation"][0], practice.inputData[0]["receiverLocation"][1]);
     trySay.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(practice.inputData[0]["signalerLocation"][0], practice.inputData[0]["signalerLocation"][1]);
     trySay.gridArray = [
@@ -594,10 +602,8 @@ function TRY_SAY(){
     trySay.goalCoord = [3,7];
     var trySayOptions = ["red", "circle", "green"];
     CREATE_SIGNAL_BUTTONS(trySay, trySayOptions);
-
     TRY_GRID_SETUP(trySay);
     tryMove.gridCreated = false;
-
     TRY_SCOREBOARD_SETUP(trySay);
     TRY_SAY_GAMEBOARD_SETUP();
     document.onkeydown = function (e) {

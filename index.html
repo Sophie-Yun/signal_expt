@@ -42,75 +42,144 @@
         <!--=====INSTRUCTION QUIZ=====-->
         <button class="butNext" id="startExptBut" onclick="START_EXPT()">NEXT</button>
     </div>
-    <!--==========TRY EXPERIMENT==========-->
-    <div class="pageBox" id="tryExptPage">
-        <div id="tryExptBox">
-            <div id="tryScoreBoard">
-                    <div class="info" id="tryPracticeInfo">
+    <!--==========TRY MOVE==========-->
+    <div class="pageBox" id="tryMovePage">
+        <div id="tryMoveBox">
+            <div id="tryMoveBoard">
+                    <div class="info" id="tryMoveInfo">
                         <p>Practice </p>
                         <p></p>
                     </div>
                     <div class="info">
                         <p style="top: -5px;">Target: </p>
-                        <img class="shape" id="tryGoalShape" alt="An error occurred when loading the picture.">
+                        <img class="shape" id="tryMoveGoal" alt="An error occurred when loading the picture.">
                     </div>
                     <div class="info">
                         <p>Total Score: </p>
-                        <p id="tryScore"></p>
+                        <p class="tryScore"></p>
                     </div>
                     <div class="info">
-                        <p>Cost: -</p>
+                        <p>Cost: </p>
                         <p class="tryStep"></p>
                     </div>                
             </div>
-            <div class="tryColumn" id="tryVerticalAxis">9 8 7 6 5 4 3 2 1 0</div>
-            <div class="tryColumn" id="tryGridContainer"></div>
-            <div id="tryHorizontalAxis">0 1 2 3 4 5 6 7 8</div>
+            <div class="tryColumn tryVerticalAxis">9 8 7 6 5 4 3 2 1 0</div>
+            <div class="tryColumn" id="tryMoveGridContainer"></div>
+            <div class="tryHorizontalAxis">0 1 2 3 4 5 6 7 8</div>
             <div class="tryColumn text">
-                <div id="tryExptInstr">
-                    <div id="tryExptFade">
-                        <div id="trySay">
+                <div class="tryExptInstr">
+                    <div class="tryExptFade">
+                        <div class="trySay">
                             <p>Send one signal to <img class="shape" src="shape/receiver.png">:</p>
-                            <button class="butExpt" id="tryButOption0">red</button> 
-                            <button class="butExpt" id="tryButOption1">green</button>
-                            <button class="butExpt" id="tryButOption2">purple</button>
-                            <button class="butExpt" id="tryButOption3">circle</button>
-                            <button class="butExpt" id="tryButOption4">square</button>
-                            <button class="butExpt" id="tryButOption5">triangle</button>
+                            <button class="butExpt">red</button> 
+                            <button class="butExpt">green</button>
+                            <button class="butExpt">purple</button>
+                            <button class="butExpt">circle</button>
+                            <button class="butExpt">square</button>
+                            <button class="butExpt">triangle</button>
                         </div>
-                        <div id="tryDo">
+                        <div class="tryDo">
                             <p class="inlineImg">Use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</p>
                         </div>
                     </div>
-                    <div id="tryDecision"></div>
+                    <div class="tryDecision"></div>
                 </div>
             </div>
-            <div id="tryResult">
-                <p id="tryResultText"></p>
+            <div class="tryResult">
+                <p class="tryResultText"></p>
                 <div class="resultInfo">
                     <p class="title">Cost: </p>
                     <p class="data tryStep"></p>
                 </div>
                 <div class="resultInfo">
                     <p class="title">Reward: </p>
-                    <p class="data" id="tryReward"></p>
+                    <p class="data tryReward"></p>
                 </div>
-                <div id="tryScoreThisRoundBox">
+                <div class="tryScoreThisRoundBox">
                     <p class="title">Score this round: </p>
-                    <p class="data" id="tryScoreThisRound"></p>
+                    <p class="data tryScoreThisRound"></p>
                 </div>
-                <div id="tryTotalScoreBox">
+                <div class="tryTotalScoreBox">
                     <p class="title">New Total Score: </p>
-                    <p class="data" id="tryTotalAfter"></p>
+                    <p class="data tryTotalAfter"></p>
                 </div>
-                <div id="tryTotalBonusBox">
+                <div class="tryTotalBonusBox">
                     <p class="title">Your Total Bonus ($): </p>
-                    <p class="data" id="tryTotalBonus"></p>
+                    <p class="data tryTotalBonus"></p>
                 </div>
-                <button class="butNext" id="tryResultBut">NEXT</button>
+                <button class="butNext" id="tryMoveResultBut">NEXT</button>
             </div>
         </div>
     </div>
+        <!--==========TRY SAY==========-->
+        <div class="pageBox" id="trySayPage">
+            <div id="trySayBox">
+                <div id="trySayBoard">
+                        <div class="info" id="trySayInfo">
+                            <p>Practice </p>
+                            <p></p>
+                        </div>
+                        <div class="info">
+                            <p style="top: -5px;">Target: </p>
+                            <img class="shape" id="trySayGoal" alt="An error occurred when loading the picture.">
+                        </div>
+                        <div class="info">
+                            <p>Total Score: </p>
+                            <p class="tryScore"></p>
+                        </div>
+                        <div class="info">
+                            <p>Cost: </p>
+                            <p class="tryStep"></p>
+                        </div>                
+                </div>
+                <div class="tryColumn tryVerticalAxis">9 8 7 6 5 4 3 2 1 0</div>
+                <div class="tryColumn" id="trySayGridContainer"></div>
+                <div class="tryHorizontalAxis">0 1 2 3 4 5 6 7 8</div>
+                <div class="tryColumn text">
+                    <div class="tryExptInstr">
+                        <div class="tryExptFade">
+                            <div class="trySay">
+                                <p>Send one signal to <img class="shape" src="shape/receiver.png">:</p>
+                                <button class="butExpt" id="tryButOption0">red</button> 
+                                <button class="butExpt" id="tryButOption1">green</button>
+                                <button class="butExpt" id="tryButOption2">purple</button>
+                                <button class="butExpt" id="tryButOption3">circle</button>
+                                <button class="butExpt" id="tryButOption4">square</button>
+                                <button class="butExpt" id="tryButOption5">triangle</button>
+                            </div>
+                            <div class="tryDo">
+                                <p class="inlineImg">Use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</p>
+                            </div>
+                        </div>
+                        <div class="tryDecision"></div>
+                    </div>
+                </div>
+                <div class="tryResult">
+                    <p class="tryResultText"></p>
+                    <div class="resultInfo">
+                        <p class="title">Cost: </p>
+                        <p class="data tryStep"></p>
+                    </div>
+                    <div class="resultInfo">
+                        <p class="title">Reward: </p>
+                        <p class="data tryReward"></p>
+                    </div>
+                    <div class="tryScoreThisRoundBox">
+                        <p class="title">Score this round: </p>
+                        <p class="data tryScoreThisRound"></p>
+                    </div>
+                    <div class="tryTotalScoreBox">
+                        <p class="title">New Total Score: </p>
+                        <p class="data tryTotalAfter"></p>
+                    </div>
+                    <div class="tryTotalBonusBox">
+                        <p class="title">Your Total Bonus ($): </p>
+                        <p class="data tryTotalBonus"></p>
+                    </div>
+                    <button class="butNext" id="trySayResultBut">NEXT</button>
+                </div>
+            </div>
+        </div>
     <!--==========PRACTICE EXPERIMENT==========-->
     <div class="pageBox" id="practiceExptPage">
         <div id="practiceExptBox">

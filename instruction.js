@@ -152,7 +152,8 @@ function HIDE_INSTR_Q() {
 function RESET_INSTR() {
     $("#instrText").show();
     $("#instrNextBut").show();
-    $("#tryExptPage").hide();
+    $("#tryMovePage").hide();
+    $("#trySayPage").hide();
 }
 
 function SHOW_CONSENT() {
