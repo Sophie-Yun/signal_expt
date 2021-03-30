@@ -1,3 +1,4 @@
+
 /*
  ####### #     # ######  ####### 
  #        #   #  #     #    #    
@@ -14,8 +15,23 @@ function RECORD_DECISION_DATA(obj, decision) {
         obj.decision = decision;
         var currentTime = Date.now();
         obj.decisionTime = (currentTime - obj.startTime)/1000;
+        CHECK_CONSECUTIVE_QUICK_DECISION(obj);
         obj.decisionRecorded = true;
     }
+}
+
+function CHECK_CONSECUTIVE_QUICK_DECISION(obj) {
+    if (obj.decisionTime < 1)
+        obj.consecutiveQuickDecisionNum += 1;
+    else 
+        obj.consecutiveQuickDecisionNum = 0;
+    
+    if (obj.consecutiveQuickDecisionNum >= CONSECUTIVE_FAST_DECISION_MAX) {
+        alert("You have been making decisions too fast! Please do the future rounds more carefully.")
+        obj.responseWarningPopup = true;
+    } else 
+        obj.responseWarningPopup = false;
+
 }
 
 function RECORD_ACTION_TIME(obj) {

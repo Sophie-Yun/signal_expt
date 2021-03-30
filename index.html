@@ -18,35 +18,30 @@
     <!--==========INSTRUCTIONS==========-->
     <div class="pageBox" id="instrPage">
         <div id="instrBox">
-            <iframe id="consent" src="informedConsent.pdf"></iframe>
+            <p></p>
+            <embed id="consent" src="informedConsent.pdf"></iframe>
             <p id="instrText"></p>
             <img id="examGrid" src="exampleGrid.png" alt="An error occurred when loading the picture.">
             <div class="pageBox" id="instrQBox">
                 <p id="instrQText">Which of the following is <b>not correct</b>?</p>
                 <div id="quizBox">
-                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="walk"><div class="optionText">You can achieve the goal by walking on your own.</div></div></label>
-                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="points"><div class="optionText">If either the robot or you achieve the goal, you get 8 points.</div></div></label>
-                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="costs"><div class="optionText">Each step taken by either the robot or you costs 1 point.</div></div></label>
-                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="several"><div class="optionText">You can achieve the goal by sending out several signals to the robot.</div></div></label>
+                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="walk"><div class="optionText">You can achieve the target by walking on your own.</div></div></label>
+                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="points"><div class="optionText">If either your partner or you reach the target, you get $0.40 as money bonus.</div></div></label>
+                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="costs"><div class="optionText">Each step taken by either your partner or you costs $0.05.</div></div></label>
+                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="several"><div class="optionText">You can send out multiple signals to your partner in each round.</div></div></label>
                 </div>
                 <div class='warning' id='instrQWarning'></div>
-                <div class="butNext" id="instrQBut" onclick="SUBMIT_INSTR_Q()">SUBMIT</div>
+                <button class="butNext" id="instrQBut" onclick="SUBMIT_INSTR_Q()">SUBMIT</button> 
             </div>
             <button class="butNext" id="instrNextBut" onclick="instr.next()">NEXT</button>
             <button class="butNext" id="instrBackBut" onclick="instr.back()">BACK</button>
         </div>
-        
-        <div id="bufferContainer">
-            <img id="buffer" alt="An error occurred when loading the picture.">
-        </div>
-        <!--=====INSTRUCTION QUIZ=====-->
-        <button class="butNext" id="startExptBut" onclick="START_EXPT()">NEXT</button>
     </div>
     <!--==========TRY MOVE==========-->
     <div class="pageBox" id="tryMovePage">
         <div id="tryMoveBox">
             <div id="tryMoveBoard">
-                    <div class="info" id="tryMoveInfo">
+                    <div class="info hiddenInfo">
                         <p>Practice </p>
                         <p></p>
                     </div>
@@ -54,16 +49,27 @@
                         <p style="top: -5px;">Target: </p>
                         <img class="shape" id="tryMoveGoal" alt="An error occurred when loading the picture.">
                     </div>
-                    <div class="info">
+                    <div class="info hiddenInfo">
                         <p>Total Score: </p>
                         <p class="tryScore"></p>
                     </div>
-                    <div class="info">
+                    <div class="info hiddenInfo">
                         <p>Cost: </p>
-                        <p class="tryStep"></p>
+                        <p></p>
                     </div>                
             </div>
-            <div class="tryColumn tryVerticalAxis">9 8 7 6 5 4 3 2 1 0</div>
+            <div class="tryColumn tryVerticalAxis">
+                <p>9</p>
+                <p>8</p>
+                <p>7</p>
+                <p>6</p>
+                <p>5</p>
+                <p>4</p>
+                <p>3</p>
+                <p>2</p>
+                <p>1</p>
+                <p>0</p>
+            </div>
             <div class="tryColumn" id="tryMoveGridContainer"></div>
             <div class="tryHorizontalAxis">0 1 2 3 4 5 6 7 8</div>
             <div class="tryColumn text">
@@ -87,27 +93,6 @@
             </div>
             <div class="tryResult">
                 <p class="tryResultText"></p>
-                <div class="resultInfo">
-                    <p class="title">Cost: </p>
-                    <p class="data tryStep"></p>
-                </div>
-                <div class="resultInfo">
-                    <p class="title">Reward: </p>
-                    <p class="data tryReward"></p>
-                </div>
-                <div class="tryScoreThisRoundBox">
-                    <p class="title">Score this round: </p>
-                    <p class="data tryScoreThisRound"></p>
-                </div>
-                <div class="tryTotalScoreBox">
-                    <p class="title">New Total Score: </p>
-                    <p class="data tryTotalAfter"></p>
-                </div>
-                <!--
-                <div class="tryTotalBonusBox">
-                    <p class="title">Your Total Bonus ($): </p>
-                    <p class="data tryTotalBonus"></p>
-                </div>-->
                 <button class="butNext" id="tryMoveResultBut">NEXT</button>
             </div>
         </div>
@@ -116,7 +101,7 @@
         <div class="pageBox" id="trySayPage">
             <div id="trySayBox">
                 <div id="trySayBoard">
-                        <div class="info" id="trySayInfo">
+                        <div class="info hiddenInfo">
                             <p>Practice </p>
                             <p></p>
                         </div>
@@ -124,16 +109,27 @@
                             <p style="top: -5px;">Target: </p>
                             <img class="shape" id="trySayGoal" alt="An error occurred when loading the picture.">
                         </div>
-                        <div class="info">
+                        <div class="info hiddenInfo">
                             <p>Total Score: </p>
                             <p class="tryScore"></p>
                         </div>
-                        <div class="info">
+                        <div class="info hiddenInfo">
                             <p>Cost: </p>
-                            <p class="tryStep"></p>
+                            <p></p>
                         </div>                
                 </div>
-                <div class="tryColumn tryVerticalAxis">9 8 7 6 5 4 3 2 1 0</div>
+                <div class="tryColumn tryVerticalAxis">
+                    <p>9</p>
+                    <p>8</p>
+                    <p>7</p>
+                    <p>6</p>
+                    <p>5</p>
+                    <p>4</p>
+                    <p>3</p>
+                    <p>2</p>
+                    <p>1</p>
+                    <p>0</p>
+                </div>
                 <div class="tryColumn" id="trySayGridContainer"></div>
                 <div class="tryHorizontalAxis">0 1 2 3 4 5 6 7 8</div>
                 <div class="tryColumn text">
@@ -157,26 +153,6 @@
                 </div>
                 <div class="tryResult">
                     <p class="tryResultText"></p>
-                    <div class="resultInfo">
-                        <p class="title">Cost: </p>
-                        <p class="data tryStep"></p>
-                    </div>
-                    <div class="resultInfo">
-                        <p class="title">Reward: </p>
-                        <p class="data tryReward"></p>
-                    </div>
-                    <div class="tryScoreThisRoundBox">
-                        <p class="title">Score this round: </p>
-                        <p class="data tryScoreThisRound"></p>
-                    </div>
-                    <div class="tryTotalScoreBox">
-                        <p class="title">New Total Score: </p>
-                        <p class="data tryTotalAfter"></p>
-                    </div>
-                    <!--<div class="tryTotalBonusBox">
-                        <p class="title">Your Total Bonus ($): </p>
-                        <p class="data tryTotalBonus"></p>
-                    </div>-->
                     <button class="butNext" id="trySayResultBut">NEXT</button>
                 </div>
             </div>
@@ -194,15 +170,26 @@
                         <img class="shape" id="sanityCheckGoalShape" alt="An error occurred when loading the picture.">
                     </div>
                     <div class="info">
-                        <p>Total Score: </p>
-                        <p id="sanityCheckScore"></p>
+                        <p>Total Bonus: </p>
+                        <p id="sanityCheckTotalBonusBefore"></p>
                     </div>
                     <div class="info">
                         <p>Cost: </p>
-                        <p class="sanityCheckStep"></p>
+                        <p class="sanityCheckCost"></p>
                     </div>                
             </div>
-            <div class="column" id="sanityCheckVerticalAxis">9 8 7 6 5 4 3 2 1 0</div>
+            <div class="column" id="sanityCheckVerticalAxis">
+                <p>9</p>
+                <p>8</p>
+                <p>7</p>
+                <p>6</p>
+                <p>5</p>
+                <p>4</p>
+                <p>3</p>
+                <p>2</p>
+                <p>1</p>
+                <p>0</p>
+            </div>
             <div class="column" id="sanityCheckGridContainer"></div>
             <div id="sanityCheckHorizontalAxis">0 1 2 3 4 5 6 7 8</div>
             <div class="column text">
@@ -232,19 +219,19 @@
                 <p id="sanityCheckResultText"></p>
                 <div class="resultInfo">
                     <p class="title">Cost: </p>
-                    <p class="data sanityCheckStep"></p>
+                    <p class="data sanityCheckCost"></p>
                 </div>
                 <div class="resultInfo">
                     <p class="title">Reward: </p>
                     <p class="data" id="sanityCheckReward"></p>
                 </div>
-                <div id="sanityCheckScoreThisRoundBox">
-                    <p class="title">Score this round:</p>
-                    <p class="data" id="sanityCheckScoreThisRound"></p>
+                <div id="sanityCheckRoundBonusBox">
+                    <p class="title">Round Bonus: </p>
+                    <p class="data" id="sanityCheckRoundBonus"></p>
                 </div>
-                <div id="sanityCheckTotalScoreBox">
-                    <p class="title">New Total Score: </p>
-                    <p class="data" id="sanityCheckTotalAfter"></p>
+                <div id="sanityCheckTotalBonusBox">
+                    <p class="title">Total Bonus (Practice): </p>
+                    <p class="data" id="sanityCheckTotalBonusAfter"></p>
                 </div>
                 <button class="butNext" id="sanityCheckResultBut">NEXT</button>
             </div>
@@ -264,15 +251,26 @@
                         <img class="shape" id="practiceGoalShape" alt="An error occurred when loading the picture.">
                     </div>
                     <div class="info">
-                        <p>Total Score: </p>
-                        <p id="practiceScore"></p>
+                        <p>Total Bonus: </p>
+                        <p id="practiceTotalBonusBefore"></p>
                     </div>
                     <div class="info">
                         <p>Cost: </p>
-                        <p class="practiceStep"></p>
+                        <p class="practiceCost"></p>
                     </div>                
             </div>
-            <div class="column" id="practiceVerticalAxis">9 8 7 6 5 4 3 2 1 0</div>
+            <div class="column" id="practiceVerticalAxis">
+                <p>9</p>
+                <p>8</p>
+                <p>7</p>
+                <p>6</p>
+                <p>5</p>
+                <p>4</p>
+                <p>3</p>
+                <p>2</p>
+                <p>1</p>
+                <p>0</p>
+            </div>
             <div class="column" id="practiceGridContainer"></div>
             <div id="practiceHorizontalAxis">0 1 2 3 4 5 6 7 8</div>
             <div class="column text">
@@ -302,24 +300,20 @@
                 <p id="practiceResultText"></p>
                 <div class="resultInfo">
                     <p class="title">Cost: </p>
-                    <p class="data practiceStep"></p>
+                    <p class="data practiceCost"></p>
                 </div>
                 <div class="resultInfo">
                     <p class="title">Reward: </p>
                     <p class="data" id="practiceReward"></p>
                 </div>
-                <div id="practiceScoreThisRoundBox">
-                    <p class="title">Score this round:</p>
-                    <p class="data" id="practiceScoreThisRound"></p>
+                <div id="practiceRoundBonusBox">
+                    <p class="title">Round Bonus: </p>
+                    <p class="data" id="practiceRoundBonus"></p>
                 </div>
-                <div id="practiceTotalScoreBox">
-                    <p class="title">New Total Score: </p>
-                    <p class="data" id="practiceTotalAfter"></p>
+                <div id="practiceTotalBonusBox">
+                    <p class="title">Total Bonus (Practice): </p>
+                    <p class="data" id="practiceTotalBonusAfter"></p>
                 </div>
-                <!--<div id="practiceTotalBonusBox">
-                    <p class="title">Your Total Bonus ($): </p>
-                    <p class="data" id="practiceTotalBonus"></p>
-                </div>-->
                 <button class="butNext" id="practiceResultBut">NEXT</button>
             </div>
         </div>
@@ -337,15 +331,26 @@
                         <img class="shape" id="goalShape" alt="An error occurred when loading the picture.">
                     </div>
                     <div class="info">
-                        <p>Total Score: </p>
-                        <p id="score"></p>
+                        <p>Total Bonus: </p>
+                        <p id="exptTotalBonusBefore"></p>
                     </div>
                     <div class="info">
                         <p>Cost: </p>
-                        <p class="step"></p>
+                        <p class="exptCost"></p>
                     </div>                
             </div>
-            <div class="column" id="verticalAxis">9 8 7 6 5 4 3 2 1 0</div>
+            <div class="column" id="verticalAxis">
+                <p>9</p>
+                <p>8</p>
+                <p>7</p>
+                <p>6</p>
+                <p>5</p>
+                <p>4</p>
+                <p>3</p>
+                <p>2</p>
+                <p>1</p>
+                <p>0</p>
+            </div>
             <div class="column" id="gridContainer"></div>
             <div id="horizontalAxis">0 1 2 3 4 5 6 7 8</div>
             <div class="column text">
@@ -375,23 +380,19 @@
                 <p id="resultText"></p>
                 <div class="resultInfo">
                     <p class="title">Cost: </p>
-                    <p class="data step"></p>
+                    <p class="data exptCost"></p>
                 </div>
                 <div class="resultInfo">
                     <p class="title">Reward: </p>
                     <p class="data" id="reward"></p>
                 </div>
-                <div id="scoreThisRoundBox">
-                    <p class="title">Score this round:</p>
-                    <p class="data" id="scoreThisRound"></p>
-                </div>
-                <div id="totalScoreBox">
-                    <p class="title">New Total Score: </p>
-                    <p class="data" id="totalAfter"></p>
+                <div id="exptRoundBonusBox">
+                    <p class="title">Round Bonus:</p>
+                    <p class="data" id="exptRoundBonus"></p>
                 </div>
                 <div id="totalBonusBox">
-                    <p class="title">Your Total Bonus: </p>
-                    <p class="data" id="totalBonus"></p>
+                    <p class="title">Total Bonus: </p>
+                    <p class="data" id="exptTotalBonusAfter"></p>
                 </div>
                 <button class="butNext" id="resultBut">NEXT</button>
             </div>
@@ -399,38 +400,28 @@
     </div>
     <!--======== DEBRIEFING QUESTION ========-->
     <div class='pageBox' id='questionsBox'>
-        You are almost done! Please answer these last questions:<br /><br /><br />
-
-        <strong>Did you complete this experiment seriously throughout (without randomly responding)?</strong>
-        <div class='smallDimText'>You will receive credit regardless what your answer is here. Please be honest for science! Thanks!</div>
+        <p>Did you complete this experiment seriously throughout (without randomly responding)?</p>
+        <div class='smallDimText'>(You will receive your compensation regardless what your answer is here. Please be honest for science! Thanks!)</div>
         <label><div class="option"><input class='optionRadio' type='radio' name='serious' value='0' /><div class='optionText'>No, I didn't.</div></div></label>
         <label><div class="option"><input class='optionRadio' type='radio' name='serious' value='1' /><div class='optionText'>Yes, I did.</div></div></label>
-
+        <br><br>
+        <p>What was the your strategy for solving this task?</p>
+        <textarea id='strategy' name="debQ" rows="3"></textarea>
         <br><br><br>
-
-        <strong> Was any part of the procedure unclear? Did you have any problems completing any of the tasks?</strong>
-        <div class='smallDimText'>You will receive credit regardless what your answer is here. Please be honest for science! Thanks!</div>
-        <textarea id='problems' name="debQ" rows="3" cols="90"></textarea>
-
-        <br><br><br>
-
-        <strong>What is your gender?</strong>
+        <p>Was any part of the procedure unclear? Did you have any technical difficulty completing any of the tasks?</p>
+        <textarea id='problems' name="debQ" rows="3"></textarea>
+        <br><br>
+        <p>What is your gender?</p>
         <label><div class="option"><input class='optionRadio' type='radio' name='gender' value='F' /><div class='optionText'>Female</div></div></label>
         <label><div class="option"><input class='optionRadio' type='radio' name='gender' value='M' /><div class='optionText'>Male</div></div></label>
         <label><div class="option"><input class='optionRadio' type='radio' name='gender' value='O' /><div class='optionText'>Other</div></div></label>
         <label><div class="option"><input class='optionRadio' type='radio' name='gender' value='N' /><div class='optionText'>I would rather not say</div></div></label>
-
-      
-        <br><br><br>
-
-        <strong>What is your age?</strong>
+        <br><br>
+        <p>What is your age?</p>
         <input type='number' id='age' name="debQ" min="18" max="100">
-
-        <br><br><br>
-
+        <br><br>
         <p id="debQWarning"></p>
-        <div class='butNext' onclick='SUBMIT_DEBRIEFING_Q()'>SUBMIT</div>
-        <br />
+        <button class='butNext' onclick='SUBMIT_DEBRIEFING_Q()'>SUBMIT</button>
     </div>
 
     <!--==========THANK YOU==========-->

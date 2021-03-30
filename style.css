@@ -72,15 +72,16 @@ body {
 
 #tryMoveBoard, #trySayBoard, #sanityCheckScoreBoard, #practiceScoreBoard, #scoreBoard {
     display: flex;
-    justify-content: space-around;
     background: linear-gradient(180deg, #F9F9F9 0%, rgba(255, 255, 255, 0.5) 100%), #BCBAB8;
     border: 2px solid rgb(98, 87, 87, 0.5);
     box-sizing: border-box;
     box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+    padding-left: 50px;
 }
 
 #tryMoveBoard .info, #trySayBoard .info, #sanityCheckScoreBoard .info, #practiceScoreBoard .info, #scoreBoard .info {
     display: inline-block;
+    width: 235px;
 }
 
 #tryMoveBoard p, #trySayBoard p, #sanityCheckScoreBoard p, #practiceScoreBoard p, #scoreBoard p {
@@ -98,10 +99,13 @@ body {
 .tryVerticalAxis, #sanityCheckVerticalAxis, #practiceVerticalAxis, #verticalAxis {
     position: relative;
     display: inline-block;
-    writing-mode: vertical-rl;
-    text-orientation: upright;
     top: 45px;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
+}
+
+.tryVerticalAxis p, #sanityCheckVerticalAxis p, #practiceVerticalAxis p, #verticalAxis p {
+    padding: 6px;
+    margin: 0px;
 }
 
 #bufferContainer {
@@ -199,11 +203,7 @@ body {
 #sanityCheckQuitText, #sanityCheckQuitBut, #practiceQuitText, #practiceQuitBut, #quitText, #quitBut {
     display:inline-block;
 }
-/*
-#practiceQuitBut:visited, #quitBut:visited {
-    border-radius: 4px;
-}
-*/
+
 .tryDecision, #sanityCheckDecision, #practiceDecision, #decision {
     padding-top: 20px;
     border-top: 2px solid;
@@ -218,17 +218,23 @@ body {
     padding: 20px;
     background: rgba(98, 87, 87, 0.95);
     top: 80px;
-    height: 530px;
     left: 50%;
     transform: translate(-50%, 0px);
     color: #F9F9F9;
 }
 
+.tryResult {
+    height: 280px;
+    width: 40%;
+}
+
 #sanityCheckResult {
+    height: 530px;
     width: 60%;
 }
 
-.tryResult, #practiceResult, #result {
+#practiceResult, #result {
+    height: 530px;
     width: 40%;
 }
 
@@ -256,19 +262,19 @@ body {
     margin: 0px;
 }
 
-.tryResult .tryScoreThisRoundBox .title, .tryResult .tryScoreThisRoundBox .data, #sanityCheckResult #sanityCheckScoreThisRoundBox .title, #sanityCheckResult #sanityCheckScoreThisRoundBox .data, #practiceResult #practiceScoreThisRoundBox .title, #practiceResult #practiceScoreThisRoundBox .data, #result #scoreThisRoundBox .title, #result #scoreThisRoundBox .data {
+.tryResult .tryScoreThisRoundBox .title, .tryResult .tryScoreThisRoundBox .data, #sanityCheckResult #sanityCheckRoundBonusBox .title, #sanityCheckResult #sanityCheckRoundBonusBox .data, #practiceResult #practiceRoundBonusBox .title, #practiceResult #practiceRoundBonusBox .data, #result #exptRoundBonusBox .title, #result #exptRoundBonusBox .data {
     border-top: 1px solid;
     margin: 10px 0px;
 }
-.tryResult .tryTotalScoreBox .title, .tryResult .tryTotalScoreBox .data, #practiceTotalScoreBox .title, #practiceTotalScoreBox .data {
+.tryResult .tryTotalScoreBox .title, .tryResult .tryTotalScoreBox .data, #practiceTotalBonusBox .title, #practiceTotalBonusBox .data {
     margin: 20px 0px 90px;
 }
 
-#sanityCheckResult #sanityCheckTotalScoreBox .title, #sanityCheckResult #sanityCheckTotalScoreBox .data {
+#sanityCheckResult #sanityCheckTotalBonusBox .title, #sanityCheckResult #sanityCheckTotalBonusBox .data {
     margin: 20px 0px 20px;
 }
 
-#totalScoreBox .title, #totalScoreBox .data {
+#totalBonusBox .title, #totalBonusBox .data {
     margin: 20px 0px 0px;
 }
 
@@ -307,8 +313,7 @@ body {
     outline: none;
     cursor: pointer;
     font-size: 16px;
-    padding: 10px 20px;
-    text-align: center;                             
+    padding: 10px 20px;                           
 }
 
 .butNext:hover {
@@ -321,9 +326,9 @@ body {
     border: none;
 }
 
-.butNext {
-    display: block;
-    margin: auto;
+#tryMoveResultBut, #trySayResultBut, #sanityCheckResultBut, #practiceResultBut, #resultBut {
+    margin-left: 50%;
+    transform: translate(-50%, 0px);
 }
 
 #instrNextBut {
@@ -337,12 +342,12 @@ body {
     position: absolute;
     display: inline-block;
     left: 0px;
-    top: 600px;
+    top: 600px
 }
 
 #instrQBut {
     display: inline;
-    margin-left: 40%;
+    margin-left: 50%;
     transform: translate(-50%, 0px);
 }
 
@@ -362,11 +367,6 @@ body {
     border: none;
 }
 
-#startExptBut {
-    display: none;
-    margin-left: 50%;
-    transform: translate(-50%, 0px);
-}
 /*
                              
  ######  ####  #####  #    # 
@@ -411,4 +411,35 @@ body {
     position: relative;
     left: 40px;
     width: calc(100% - 60px);
+}
+
+#questionsBox {
+    position: relative;
+    width: 60%;
+    left: 50%;
+    transform: translate(-50%, 100px);
+}
+
+#questionsBox textarea {
+    width: 100%;
+}
+
+#questionsBox .option {
+    padding: 0px;
+}
+
+.smallDimText {
+    font-size: 15px;
+    line-height: 30px;
+    margin-top: -10px;
+}
+
+#age {
+    width: 100%;
+}
+
+#questionsBox button {
+    margin-left: 50%;
+    transform: translate(-50%, 0px);
+    margin-bottom: 50px;
 }

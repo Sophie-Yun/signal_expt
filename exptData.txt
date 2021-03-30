@@ -9,3 +9,551 @@ undefined,6,expt2,quit,1.156,noChange,1.978
 undefined,7,expt1,quit,0.881,noChange,1.627
 undefined,8,expt9,move,1.194,green square,3.675
 undefined,9,expt8,quit,1.004,noChange,1.737
+subjId,trialIndex,exptId,decision,decideTime,endLocation,finishTime
+undefined,0,5,red,3.756,undefined,6.166
+undefined,1,11,red,3.325,undefined,5.589
+undefined,2,0,red,9.508,undefined,12.942
+undefined,3,13,red,7.32,undefined,10.25
+undefined,4,2,quit,4.376,noChange,5.202
+undefined,5,7,move,2.057,green circle,15.395
+undefined,6,12,red,2.339,green circle,5.309
+undefined,7,4,quit,0.893,noChange,1.621
+undefined,8,1,quit,0.957,noChange,1.677
+undefined,9,3,quit,0.761,noChange,1.624
+undefined,10,9,quit,2,noChange,2.647
+undefined,11,6,quit,0.783,noChange,1.456
+undefined,12,10,quit,0.817,noChange,1.456
+undefined,13,14,quit,0.76,noChange,1.392
+undefined,14,8,quit,0.646,noChange,1.293
+subjId,trialIndex,exptId,decision,decideTime,endLocation,finishTime
+undefined,0,5,red,3.756,undefined,6.166
+undefined,1,11,red,3.325,undefined,5.589
+undefined,2,0,red,9.508,undefined,12.942
+undefined,3,13,red,7.32,undefined,10.25
+undefined,4,2,quit,4.376,noChange,5.202
+undefined,5,7,move,2.057,green circle,15.395
+undefined,6,12,red,2.339,green circle,5.309
+undefined,7,4,quit,0.893,noChange,1.621
+undefined,8,1,quit,0.957,noChange,1.677
+undefined,9,3,quit,0.761,noChange,1.624
+undefined,10,9,quit,2,noChange,2.647
+undefined,11,6,quit,0.783,noChange,1.456
+undefined,12,10,quit,0.817,noChange,1.456
+undefined,13,14,quit,0.76,noChange,1.392
+undefined,14,8,quit,0.646,noChange,1.293
+undefined,15,undefined,quit,0.646,noChange,1.546
+subjId,trialIndex,exptId,decision,decideTime,endLocation,finishTime
+undefined,0,10,red,4.98,undefined,9.785
+undefined,1,3,square,4.734,undefined,10.448
+undefined,2,13,red,5.383,undefined,11.727
+undefined,3,4,triangle,5.523,undefined,11.318
+undefined,4,2,circle,20.55,undefined,22.529
+undefined,5,1,red,6.043,undefined,10.679
+undefined,6,7,green,3.882,undefined,6.846
+undefined,7,5,red,3.727,undefined,5.279
+undefined,8,11,quit,25.2,noChange,26.076
+undefined,9,9,triangle,4.466,noChange,8.151
+undefined,10,8,red,3.141,noChange,5.016
+undefined,11,14,circle,3.493,noChange,6.358
+undefined,12,6,red,4.522,noChange,7.93
+undefined,13,12,purple,2.756,noChange,5.704
+undefined,14,0,square,4.033,noChange,6.843
+subjId,trialIndex,exptId,decision,decideTime,endLocation,finishTime
+undefined,0,13,square,17.157,undefined,20.656
+undefined,1,11,green,13.048,undefined,16.19
+undefined,2,12,quit,1.073,noChange,1.88
+undefined,3,2,quit,0.781,noChange,1.507
+undefined,4,8,red,6.671,noChange,8.301
+undefined,5,6,red,8.02,noChange,11.351
+undefined,6,10,quit,23.275,noChange,23.884
+undefined,7,14,circle,3.374,noChange,5.773
+undefined,8,1,red,4.864,noChange,8.233
+undefined,9,0,square,5.015,noChange,7.581
+undefined,10,4,green,4.172,noChange,6.098
+undefined,11,9,triangle,2.426,noChange,5.034
+undefined,12,5,red,2.47,noChange,3.781
+undefined,13,3,green,1.903,noChange,3.829
+undefined,14,7,circle,3.246,noChange,6.251
+subjId,trialIndex,exptId,decision,signalerEndItem,decisionTime,feedbackTime
+undefined,0,2,red,undefined,1.928,5.959
+undefined,1,9,square,undefined,3.625,5.461
+undefined,2,1,quit,undefined,0.806,1.594
+undefined,3,6,purple,undefined,0.934,3.813
+undefined,4,7,move,purple circle,1.503,5.611
+undefined,5,0,quit,purple circle,1.037,1.939
+undefined,6,10,quit,purple circle,1.1,1.809
+undefined,7,8,quit,purple circle,0.764,1.444
+undefined,8,4,quit,purple circle,0.706,1.331
+undefined,9,12,quit,purple circle,0.605,1.228
+undefined,10,13,quit,purple circle,0.647,1.425
+undefined,11,5,quit,purple circle,0.993,1.817
+undefined,12,14,quit,purple circle,0.765,1.555
+undefined,13,3,quit,purple circle,0.764,1.509
+undefined,14,11,quit,purple circle,0.744,1.445
+subjId,trialIndex,exptId,decision,signal,signalerEndItem,decisionTime,feedbackTime
+undefined,0,7,say,N/A,undefined,9.124,11.756
+undefined,1,13,say,N/A,undefined,0.984,4.282
+undefined,2,10,quit,N/A,undefined,26.709,27.769
+undefined,3,4,say,N/A,undefined,4.345,14.403
+undefined,4,6,say,N/A,undefined,3.792,7.069
+undefined,5,3,say,N/A,undefined,4.312,6.368
+undefined,6,5,say,N/A,undefined,1.279,2.544
+undefined,7,11,say,N/A,undefined,3.15,5.972
+undefined,8,9,say,N/A,undefined,1.937,4.255
+undefined,9,2,say,N/A,undefined,2.7,4.227
+undefined,10,12,say,N/A,undefined,3.036,5.37
+undefined,11,1,say,N/A,undefined,1.989,5.37
+undefined,12,14,say,N/A,undefined,3.327,9.027
+undefined,13,8,say,N/A,undefined,2.386,5.781
+undefined,14,0,say,N/A,undefined,16.51,21.845
+subjId,trialIndex,exptId,decision,signal,signalerEndItem,decisionTime,feedbackTime
+undefined,0,11,quit,N/A,noChange,2.375,3.783
+undefined,1,3,say,green,noChange,3.652,5.422
+undefined,2,9,say,triangle,noChange,3.513,5.903
+undefined,3,7,say,green,noChange,1.863,4.837
+undefined,4,1,say,red,noChange,3.5,6.747
+undefined,5,6,say,triangle,noChange,31.133,33.724
+undefined,6,8,say,red,noChange,3.636,5.592
+undefined,7,13,say,square,noChange,4.142,7.636
+undefined,8,14,say,circle,noChange,4.531,7.066
+undefined,9,5,say,red,noChange,1.783,3.285
+undefined,10,12,say,purple,noChange,2.958,5.475
+undefined,11,4,say,triangle,noChange,2.918,8.758
+undefined,12,2,move,triangle,purple circle,4.834,8.346
+undefined,13,0,say,square,purple circle,4.7,7.066
+undefined,14,10,move,square,red circle,6.848,9.912
+subjId,trialIndex,exptId,decision,signal,signalerEndItem,decisionTime,feedbackTime
+undefined,0,14,say,circle,undefined,7.007,9.58
+undefined,1,0,say,square,undefined,3.519,6.118
+undefined,2,4,say,green,undefined,2.095,4.063
+undefined,3,8,say,red,undefined,2.955,4.917
+undefined,4,2,say,circle,undefined,2.821,4.253
+undefined,5,9,say,triangle,undefined,1.982,4.306
+undefined,6,6,say,red,undefined,1.993,5.543
+undefined,7,10,say,circle,undefined,9.145,12.974
+undefined,8,3,say,square,undefined,6.124,8.224
+undefined,9,12,say,purple,undefined,24.681,26.976
+undefined,10,11,say,circle,undefined,3.486,5.221
+undefined,11,1,say,red,undefined,3.054,6.422
+undefined,12,5,say,red,undefined,1.694,2.917
+undefined,13,13,say,green,undefined,2.559,6.013
+undefined,14,7,say,circle,undefined,3.358,6.253
+subjId,trialIndex,exptId,decision,signal,signalerEndItem,decisionTime,feedbackTime
+undefined,0,0,say,square,undefined,7.283,9.668
+undefined,1,2,say,purple,undefined,3.409,8.531
+undefined,2,1,quit,purple,noChange,2.581,3.306
+undefined,3,7,quit,purple,noChange,1.213,1.883
+undefined,4,11,quit,purple,noChange,2.614,3.193
+undefined,5,9,move,purple,purple triangle,1.952,6.103
+undefined,6,8,say,red,purple triangle,2.401,4.275
+undefined,7,10,say,green,purple triangle,1.427,6.828
+undefined,8,3,say,purple,purple triangle,2.196,4.535
+undefined,9,6,quit,purple,noChange,3.438,4.127
+undefined,10,14,quit,purple,noChange,1.045,1.647
+undefined,11,4,say,green,noChange,2,3.73
+undefined,12,12,move,green,purple square,3.052,6.215
+undefined,13,13,say,green,purple square,1.824,5.651
+undefined,14,5,say,red,purple square,1.733,3.466
+subjId,trialIndex,exptId,decision,signal,signalerEndItem,decisionTime,feedbackTime
+undefined,0,14,say,purple,noChange,2.01,3.655
+undefined,1,2,say,circle,noChange,4.107,5.466
+undefined,2,10,say,red,noChange,3.878,7.754
+undefined,3,3,say,green,noChange,3.256,5.008
+undefined,4,1,say,red,noChange,0.989,4.296
+undefined,5,11,say,green,noChange,1.137,3.953
+undefined,6,12,say,red,noChange,1.194,3.993
+undefined,7,13,say,green,noChange,1.145,4.689
+undefined,8,6,say,triangle,noChange,2.396,4.69
+undefined,9,8,say,triangle,noChange,1.732,5.056
+undefined,10,0,say,green,noChange,1.463,6.652
+undefined,11,9,say,purple,noChange,1.251,3.325
+undefined,12,5,quit,N/A,noChange,1.553,2.289
+undefined,13,7,quit,N/A,noChange,0.941,1.637
+undefined,14,4,quit,N/A,noChange,1.072,1.825
+subjId,trialIndex,exptId,decision,signal,signalerEndItem,decisionTime,feedbackTime
+undefined,0,14,say,purple,noChange,3.375,5.454
+undefined,1,11,say,green,noChange,1.619,4.476
+undefined,2,7,say,green,noChange,1.66,4.362
+undefined,3,4,say,triangle,noChange,2.176,7.502
+undefined,4,12,say,purple,noChange,5.735,8.322
+undefined,5,13,say,square,noChange,5.695,9.151
+undefined,6,1,move,N/A,red circle,3.392,6.259
+undefined,7,5,quit,N/A,noChange,0.891,1.562
+undefined,8,10,quit,N/A,noChange,0.711,1.407
+undefined,9,3,quit,N/A,noChange,0.622,1.318
+undefined,10,2,quit,N/A,noChange,0.752,1.579
+undefined,11,9,quit,N/A,noChange,0.768,1.382
+undefined,12,6,quit,N/A,noChange,1.604,2.284
+undefined,13,8,move,N/A,red triangle,1.209,3.478
+undefined,14,0,quit,N/A,noChange,1.268,2.014
+subjId,trialIndex,exptId,decision,signal,signalerEndItem,decisionTime,feedbackTime
+undefined,0,1,say,red,noChange,1.947,5.244
+undefined,1,7,say,green,noChange,1.095,4.189
+undefined,2,2,say,green,noChange,2.674,7.536
+undefined,3,9,quit,N/A,noChange,0.77,1.523
+undefined,4,0,move,N/A,green square,1.46,4.415
+undefined,5,14,quit,N/A,noChange,1.006,1.645
+undefined,6,4,say,triangle,noChange,2.044,3.715
+undefined,7,6,quit,N/A,noChange,0.965,1.644
+undefined,8,3,quit,N/A,noChange,0.81,1.506
+undefined,9,12,quit,N/A,noChange,0.737,1.326
+undefined,10,11,quit,N/A,noChange,0.695,1.4
+undefined,11,13,quit,N/A,noChange,0.768,1.423
+undefined,12,5,quit,N/A,noChange,0.712,1.432
+undefined,13,10,quit,N/A,noChange,1.171,1.899
+undefined,14,8,quit,N/A,noChange,0.949,1.555
+subjId,trialIndex,exptId,decision,signal,signalerEndItem,decisionTime,feedbackTime
+undefined,0,11,say,red,noChange,3.013,5.785
+undefined,1,13,say,square,noChange,3.566,7.326
+undefined,2,7,say,green,noChange,48.965,51.792
+undefined,3,12,quit,N/A,noChange,0.776,1.455
+undefined,4,1,quit,N/A,noChange,0.962,2.009
+undefined,5,3,quit,N/A,noChange,3.977,4.755
+undefined,6,2,say,circle,noChange,7.144,8.626
+undefined,7,5,say,red,noChange,5.448,289.025
+undefined,8,0,say,square,noChange,5.701,402.171
+undefined,9,4,say,triangle,noChange,2.572,4.602
+undefined,10,10,say,red,noChange,4.012,8.781
+undefined,11,6,say,triangle,noChange,14.02,15.723
+undefined,12,9,say,triangle,noChange,4.911,7.25
+undefined,13,8,quit,N/A,noChange,1.102,1.704
+undefined,14,14,quit,N/A,noChange,0.618,1.407
+subjId,trialIndex,exptId,decision,signal,signalerEndItem,decisionTime,feedbackTime
+undefined,0,11,say,red,noChange,3.013,5.785
+undefined,1,13,say,square,noChange,3.566,7.326
+undefined,2,7,say,green,noChange,48.965,51.792
+undefined,3,12,quit,N/A,noChange,0.776,1.455
+undefined,4,1,quit,N/A,noChange,0.962,2.009
+undefined,5,3,quit,N/A,noChange,3.977,4.755
+undefined,6,2,say,circle,noChange,7.144,8.626
+undefined,7,5,say,red,noChange,5.448,289.025
+undefined,8,0,say,square,noChange,5.701,402.171
+undefined,9,4,say,triangle,noChange,2.572,4.602
+undefined,10,10,say,red,noChange,4.012,8.781
+undefined,11,6,say,triangle,noChange,14.02,15.723
+undefined,12,9,say,triangle,noChange,4.911,7.25
+undefined,13,8,quit,N/A,noChange,1.102,1.704
+undefined,14,14,quit,N/A,noChange,0.618,1.407
+undefined,15,undefined,quit,N/A,noChange,0.618,1.952
+subjId,trialIndex,exptId,decision,signal,signalerEndCoordinate,signalerEndItem,decisionTime,feedbackTime
+undefined,0,11,say,green,4,0,noChange,2.556,4.791
+undefined,1,1,quit,N/A,4,0,noChange,0.826,1.545
+undefined,2,3,quit,N/A,4,0,noChange,0.84,1.57
+undefined,3,9,say,triangle,4,0,noChange,2.685,7.047
+undefined,4,14,quit,N/A,4,0,noChange,0.81,1.554
+undefined,5,10,quit,N/A,4,0,noChange,0.793,1.571
+undefined,6,13,quit,N/A,4,0,noChange,1.359,2.022
+undefined,7,7,quit,N/A,4,0,noChange,81.517,82.146
+undefined,8,6,say,red,4,0,noChange,1.56,4.272
+undefined,9,5,say,square,4,0,noChange,3.253,4.906
+undefined,10,8,quit,N/A,4,0,noChange,35.435,36.134
+undefined,11,0,say,green,4,0,noChange,1.61,3.372
+undefined,12,2,move,N/A,6,7,purple circle,1.806,4.844
+undefined,13,12,quit,N/A,4,0,noChange,0.938,1.715
+undefined,14,4,quit,N/A,4,0,noChange,0.712,1.35
+subjId,trialIndex,exptId,decision,signal,signalerEndCoordinate,signalerEndItem,decisionTime,feedbackTime
+undefined,0,14,say,red,(4,0),noChange,2.701,6.577
+undefined,1,13,say,green,(4,0),noChange,1.362,4.714
+undefined,2,7,say,green,(4,0),noChange,10.143,13.267
+undefined,3,12,say,purple,(4,0),noChange,1.827,3.943
+undefined,4,8,say,triangle,(4,0),noChange,2.748,4.654
+undefined,5,3,say,green,(4,0),noChange,4.068,5.805
+undefined,6,5,say,red,(4,0),noChange,1.528,2.921
+undefined,7,0,say,green,(4,0),noChange,3.337,5.025
+undefined,8,1,quit,N/A,(4,0),noChange,0.853,1.521
+undefined,9,11,quit,N/A,(4,0),noChange,1.623,2.504
+undefined,10,6,move,N/A,(7,8),red triangle,1.245,5.614
+undefined,11,9,move,N/A,(2,1),red circle,2.742,5.186
+undefined,12,10,move,N/A,(8,1),green circle,2.881,7.472
+undefined,13,4,say,square,(4,0),noChange,2.46,7.632
+undefined,14,2,quit,N/A,(4,0),noChange,0.911,1.62
+subjId,trialIndex,exptId,decision,signal,signalerEndCoordinate,signalerEndItem,receiverEndCoordinate,receiverEndItem,totalUtility,decisionTime,feedbackTime
+undefined,0,5,quit,N/A,(4,0),noChange,(4,7),noChange,0,0.95,2.199
+undefined,1,2,say,red,(4,0),noChange,(8,5),red triangle,-6,1.866,5.067
+undefined,2,13,say,green,(4,0),noChange,(0,9),green square,-4,2.584,6.162
+undefined,3,11,say,green,(4,0),noChange,(1,6),green circle,0,7.834,10.131
+undefined,4,4,quit,N/A,(4,0),noChange,(4,7),noChange,0,0.99,1.974
+undefined,5,3,move,N/A,(2,6),green square,(4,7),noChange,0,1.404,4.201
+undefined,6,12,move,N/A,(5,0),purple circle,(4,7),noChange,-1,2.622,4.959
+undefined,7,7,say,red,(4,0),noChange,(2,5),red triangle,-5,1.724,3.952
+undefined,8,14,quit,N/A,(4,0),noChange,(4,7),noChange,-5,1.039,1.718
+undefined,9,8,quit,N/A,(4,0),noChange,(4,7),noChange,-5,0.81,1.49
+undefined,10,10,quit,N/A,(4,0),noChange,(4,7),noChange,-5,0.973,1.997
+undefined,11,1,quit,N/A,(4,0),noChange,(4,7),noChange,-5,0.875,1.539
+undefined,12,0,quit,N/A,(4,0),noChange,(4,7),noChange,-5,0.948,1.612
+undefined,13,6,say,triangle,(4,0),noChange,(4,9),green triangle,-7,1.259,9.315
+undefined,14,9,quit,N/A,(4,0),noChange,(4,7),noChange,-7,0.701,1.438
+subjId,trialIndex,exptId,decision,signal,signalerEndCoordinate,signalerEndItem,receiverEndCoordinate,receiverEndItem,totalUtility,decisionTime,feedbackTime
+undefined,0,7,say,green,(4,0),noChange,(0,8),green circle,false,undefined,3,2.278,5.989
+undefined,1,10,say,red,(4,0),noChange,(8,7),red triangle,false,undefined,-1,17.033,19.954
+undefined,2,8,say,red,(4,0),noChange,(6,6),red triangle,false,undefined,4,10.717,12.419
+undefined,3,1,quit,N/A,(4,0),noChange,(4,7),noChange,false,undefined,4,0.951,1.698
+undefined,4,0,say,square,(4,0),noChange,(2,9),green square,false,undefined,8,5.32,7.611
+undefined,5,5,quit,N/A,(4,0),noChange,(4,7),noChange,false,undefined,8,0.925,1.7
+undefined,6,12,quit,N/A,(4,0),noChange,(4,7),noChange,false,undefined,8,0.791,1.488
+undefined,7,3,quit,N/A,(4,0),noChange,(4,7),noChange,false,undefined,8,1.091,1.742
+undefined,8,6,quit,N/A,(4,0),noChange,(4,7),noChange,false,undefined,8,0.787,1.483
+undefined,9,9,quit,N/A,(4,0),noChange,(4,7),noChange,false,undefined,8,0.636,1.238
+undefined,10,13,quit,N/A,(4,0),noChange,(4,7),noChange,false,undefined,8,0.756,1.31
+undefined,11,2,quit,N/A,(4,0),noChange,(4,7),noChange,false,undefined,8,0.822,1.846
+undefined,12,11,move,N/A,(1,6),green circle,(4,7),noChange,true,undefined,7,1.549,5.234
+undefined,13,14,move,N/A,(7,3),red square,(4,7),noChange,false,undefined,-1,2.515,6.58
+undefined,14,4,say,purple,(4,0),noChange,(5,6),purple triangle,false,undefined,-3,4.589,6.121
+subjId,trialIndex,exptId,decision,signal,signalerEndCoordinate,signalerEndItem,receiverEndCoordinate,receiverEndItem,totalUtility,decisionTime,feedbackTime
+undefined,0,7,say,green,(4,0),noChange,(0,8),green circle,false,undefined,3,2.278,5.989
+undefined,1,10,say,red,(4,0),noChange,(8,7),red triangle,false,undefined,-1,17.033,19.954
+undefined,2,8,say,red,(4,0),noChange,(6,6),red triangle,false,undefined,4,10.717,12.419
+undefined,3,1,quit,N/A,(4,0),noChange,(4,7),noChange,false,undefined,4,0.951,1.698
+undefined,4,0,say,square,(4,0),noChange,(2,9),green square,false,undefined,8,5.32,7.611
+undefined,5,5,quit,N/A,(4,0),noChange,(4,7),noChange,false,undefined,8,0.925,1.7
+undefined,6,12,quit,N/A,(4,0),noChange,(4,7),noChange,false,undefined,8,0.791,1.488
+undefined,7,3,quit,N/A,(4,0),noChange,(4,7),noChange,false,undefined,8,1.091,1.742
+undefined,8,6,quit,N/A,(4,0),noChange,(4,7),noChange,false,undefined,8,0.787,1.483
+undefined,9,9,quit,N/A,(4,0),noChange,(4,7),noChange,false,undefined,8,0.636,1.238
+undefined,10,13,quit,N/A,(4,0),noChange,(4,7),noChange,false,undefined,8,0.756,1.31
+undefined,11,2,quit,N/A,(4,0),noChange,(4,7),noChange,false,undefined,8,0.822,1.846
+undefined,12,11,move,N/A,(1,6),green circle,(4,7),noChange,true,undefined,7,1.549,5.234
+undefined,13,14,move,N/A,(7,3),red square,(4,7),noChange,false,undefined,-1,2.515,6.58
+undefined,14,4,say,purple,(4,0),noChange,(5,6),purple triangle,false,undefined,-3,4.589,6.121
+undefined,15,undefined,say,N/A,(4,0),noChange,(5,6),purple triangle,false,undefined,-3,4.589,2.788
+subjId,trialIndex,exptId,decision,signal,signalerEndCoordinate,signalerEndItem,receiverEndCoordinate,receiverEndItem,signalerAchievedGoal,receiverAchievedGoal,totalUtility,decisionTime,actionTime,feedbackTime
+undefined,0,10,say,red,(4,0),noChange,(8,7),red triangle,false,false,-4,5.567,1.521,6.141
+undefined,1,0,say,square,(4,0),noChange,(2,9),green square,false,true,0,5.18,1.5230000000000006,5.8759999999999994
+undefined,2,12,say,purple,(4,0),noChange,(7,6),purple square,false,true,4,18.637,1.5189999999999984,19.556
+undefined,3,4,move,N/A,(7,0),green square,(4,7),noChange,false,false,1,4.087,0.7000000000000002,5.18
+undefined,4,9,quit,N/A,(4,0),noChange,(4,7),noChange,false,false,1,1.252,0,2.275
+undefined,5,8,move,N/A,(6,6),red triangle,(4,7),noChange,true,false,1,2.294,1.444,3.385
+undefined,6,6,quit,N/A,(4,0),noChange,(4,7),noChange,false,false,1,2.151,0,2.825
+undefined,7,3,quit,N/A,(4,0),noChange,(4,7),noChange,false,false,1,1.143,0,1.807
+undefined,8,1,say,square,(4,0),noChange,(4,5),purple square,false,false,-1,1.186,0.5070000000000001,2.0709999999999997
+undefined,9,11,say,circle,(4,0),noChange,(5,7),purple circle,false,false,-2,1.259,0.0040000000000000036,2.566
+undefined,10,14,say,triangle,(4,0),noChange,(1,4),green triangle,false,false,-8,1.456,2.524,2.452
+undefined,11,5,quit,N/A,(4,0),noChange,(4,7),noChange,false,false,-8,0.743,0,1.481
+undefined,12,7,quit,N/A,(4,0),noChange,(4,7),noChange,false,false,-8,0.989,0,1.768
+undefined,13,13,quit,N/A,(4,0),noChange,(4,7),noChange,false,false,-8,0.858,0,1.53
+undefined,14,2,quit,N/A,(4,0),noChange,(4,7),noChange,false,false,-8,0.874,0,1.596
+subjId,trialIndex,exptId,decision,signal,signalerPath,signalerEndCoordinate,signalerEndItem,receiverEndCoordinate,receiverEndItem,signalerAchievedGoal,receiverAchievedGoal,totalUtility,decisionTime,actionTime,feedbackTime
+undefined,0,6,say,red,(4,0),noChange,(0,7),red circle,false,false,-4,13.752,1.5169999999999995,15.216000000000001
+undefined,1,7,say,green,(4,0),noChange,(0,8),green circle,false,true,-1,1.52,2.027,2.2379999999999995
+undefined,2,14,say,circle,(4,0),noChange,(2,9),purple circle,false,true,3,3.559,1.5229999999999997,4.394
+undefined,3,5,move,N/A,(5,0),red triangle,(4,7),noChange,false,false,2,1.504,0.6720000000000002,2.5349999999999997
+undefined,4,1,move,N/A,(0,5),red circle,(4,7),noChange,true,false,1,2.255,1.9649999999999999,3.082
+undefined,5,0,quit,N/A,(4,0),noChange,(4,7),noChange,false,false,1,1.308,0,2.021
+undefined,6,11,say,circle,(4,0),noChange,(5,7),purple circle,false,false,0,5.482,0.0030000000000001137,6.977
+undefined,7,4,say,green,(4,0),noChange,(1,7),green triangle,false,true,5,5.007,1.0140000000000002,5.818
+undefined,8,2,say,purple,(4,0),noChange,(6,7),purple circle,false,true,11,2.389,0.5090000000000003,3.143
+undefined,9,9,say,triangle,(4,0),noChange,(7,6),purple triangle,false,true,15,1.692,1.5200000000000002,2.2589999999999995
+undefined,10,3,say,square,(4,0),noChange,(2,6),green square,false,true,20,2.306,1.02,3.235
+undefined,11,8,say,red,(4,0),noChange,(6,6),red triangle,false,true,25,3.322,1.0149999999999997,4.0920000000000005
+undefined,12,13,quit,N/A,(4,0),noChange,(4,7),noChange,false,false,25,1.775,0,2.561
+undefined,13,10,quit,N/A,(4,0),noChange,(4,7),noChange,false,false,25,0.744,0,1.383
+undefined,14,12,quit,N/A,(4,0),noChange,(4,7),noChange,false,false,25,0.81,0,1.539
+subjId,trialIndex,exptId,decision,signal,signalerPath,signalerEndCoordinate,signalerEndItem,receiverEndCoordinate,receiverEndItem,signalerAchievedGoal,receiverAchievedGoal,totalUtility,decisionTime,actionTime,feedbackTime
+undefined,0,3,say,green,,(4,0),noChange,(3,7)(2,7)(2,6),(2,6),green square,false,true,5,3.07,1.0219999999999998,3.815
+undefined,1,9,say,triangle,,(4,0),noChange,(3,7)(2,7)(2,6)(4,6)(5,6)(6,6)(7,6),(7,6),purple triangle,false,true,9,1.841,1.5240000000000002,2.569
+undefined,2,14,say,circle,,(4,0),noChange,(3,7)(2,7)(2,6)(4,6)(5,6)(6,6)(7,6)(3,7)(2,7)(2,8)(2,9),(2,9),purple circle,false,true,13,2.83,1.5220000000000002,3.372
+undefined,3,1,say,red,,(4,0),noChange,(3,7)(2,7)(2,6)(4,6)(5,6)(6,6)(7,6)(3,7)(2,7)(2,8)(2,9)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5),(0,5),red circle,false,true,15,1.619,2.5310000000000006,2.191
+undefined,4,10,move,N/A,(4,1)(4,2)(4,3)(4,4)(3,4)(2,4)(1,4)(0,4),(0,4),red circle,(3,7)(2,7)(2,6)(4,6)(5,6)(6,6)(7,6)(3,7)(2,7)(2,8)(2,9)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5),(4,7),noChange,true,false,15,4.782,2.2889999999999997,6.341000000000001
+undefined,5,5,quit,N/A,(4,1)(4,2)(4,3)(4,4)(3,4)(2,4)(1,4)(0,4),(4,0),noChange,(3,7)(2,7)(2,6)(4,6)(5,6)(6,6)(7,6)(3,7)(2,7)(2,8)(2,9)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5),(4,7),noChange,false,false,15,2.02,0,2.798
+undefined,6,6,move,N/A,(4,1)(4,2)(4,3)(4,4)(3,4)(2,4)(1,4)(0,4)(4,1)(4,2),(4,2),purple triangle,(3,7)(2,7)(2,6)(4,6)(5,6)(6,6)(7,6)(3,7)(2,7)(2,8)(2,9)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5),(4,7),noChange,false,false,13,1.413,0.4119999999999999,2.345
+undefined,7,12,quit,N/A,(4,1)(4,2)(4,3)(4,4)(3,4)(2,4)(1,4)(0,4)(4,1)(4,2),(4,0),noChange,(3,7)(2,7)(2,6)(4,6)(5,6)(6,6)(7,6)(3,7)(2,7)(2,8)(2,9)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5),(4,7),noChange,false,false,13,0.876,0,1.567
+undefined,8,11,quit,N/A,(4,1)(4,2)(4,3)(4,4)(3,4)(2,4)(1,4)(0,4)(4,1)(4,2),(4,0),noChange,(3,7)(2,7)(2,6)(4,6)(5,6)(6,6)(7,6)(3,7)(2,7)(2,8)(2,9)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5),(4,7),noChange,false,false,13,0.708,0,1.405
+undefined,9,4,quit,N/A,(4,1)(4,2)(4,3)(4,4)(3,4)(2,4)(1,4)(0,4)(4,1)(4,2),(4,0),noChange,(3,7)(2,7)(2,6)(4,6)(5,6)(6,6)(7,6)(3,7)(2,7)(2,8)(2,9)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5),(4,7),noChange,false,false,13,0.835,0,1.514
+undefined,10,2,quit,N/A,(4,1)(4,2)(4,3)(4,4)(3,4)(2,4)(1,4)(0,4)(4,1)(4,2),(4,0),noChange,(3,7)(2,7)(2,6)(4,6)(5,6)(6,6)(7,6)(3,7)(2,7)(2,8)(2,9)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5),(4,7),noChange,false,false,13,1.612,0,2.284
+undefined,11,7,quit,N/A,(4,1)(4,2)(4,3)(4,4)(3,4)(2,4)(1,4)(0,4)(4,1)(4,2),(4,0),noChange,(3,7)(2,7)(2,6)(4,6)(5,6)(6,6)(7,6)(3,7)(2,7)(2,8)(2,9)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5),(4,7),noChange,false,false,13,0.768,0,1.571
+undefined,12,13,say,green,(4,1)(4,2)(4,3)(4,4)(3,4)(2,4)(1,4)(0,4)(4,1)(4,2),(4,0),noChange,(3,7)(2,7)(2,6)(4,6)(5,6)(6,6)(7,6)(3,7)(2,7)(2,8)(2,9)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7)(0,8)(0,9),(0,9),green square,false,true,15,2.282,2.5359999999999996,3.069000000000001
+undefined,13,0,quit,N/A,(4,1)(4,2)(4,3)(4,4)(3,4)(2,4)(1,4)(0,4)(4,1)(4,2),(4,0),noChange,(3,7)(2,7)(2,6)(4,6)(5,6)(6,6)(7,6)(3,7)(2,7)(2,8)(2,9)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7)(0,8)(0,9),(4,7),noChange,false,false,15,0.752,0,1.449
+undefined,14,8,quit,N/A,(4,1)(4,2)(4,3)(4,4)(3,4)(2,4)(1,4)(0,4)(4,1)(4,2),(4,0),noChange,(3,7)(2,7)(2,6)(4,6)(5,6)(6,6)(7,6)(3,7)(2,7)(2,8)(2,9)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7)(0,8)(0,9),(4,7),noChange,false,false,15,0.809,0,1.555
+subjId,trialIndex,exptId,decision,signal,signalerPath,signalerEndCoordinate,signalerEndItem,receiverEndCoordinate,receiverEndItem,signalerAchievedGoal,receiverAchievedGoal,totalUtility,decisionTime,actionTime,feedbackTime
+undefined,0,5,say,red,N/A,(4,0),noChange,(4,8)(5,8),(5,8),red square,false,true,6,1.956,0.5110000000000001,2.81
+undefined,1,11,say,circle,N/A,(4,0),noChange,(4,8)(5,8)(5,7),(5,7),purple circle,false,false,5,2.918,0.0029999999999996696,5.0809999999999995
+undefined,2,10,quit,N/A,N/A,(4,0),noChange,(4,8)(5,8)(5,7),(4,7),noChange,false,false,5,1.81,0,2.522
+undefined,3,2,move,N/A,(4,1),(4,1),red square,(4,8)(5,8)(5,7),(4,7),noChange,false,false,4,1.913,0.361,2.691
+undefined,4,4,say,triangle,(4,1),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7),(1,7),green triangle,false,true,9,3.663,1.0219999999999998,4.524000000000001
+undefined,5,1,say,red,(4,1),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5),(0,5),red circle,false,true,11,3.157,2.5359999999999996,3.846
+undefined,6,6,say,red,(4,1),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7),(0,7),red circle,false,false,7,4.923,1.5170000000000003,5.4959999999999996
+undefined,7,12,quit,N/A,(4,1),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7),(4,7),noChange,false,false,7,1.21,0,1.956
+undefined,8,8,move,N/A,(4,1)(4,1)(4,2)(4,3)(4,4)(4,5)(4,6)(5,6)(6,6),(6,6),red triangle,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7),(4,7),noChange,true,false,7,2.313,1.5069999999999997,3.0760000000000005
+undefined,9,14,quit,N/A,(4,1)(4,1)(4,2)(4,3)(4,4)(4,5)(4,6)(5,6)(6,6),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7),(4,7),noChange,false,false,7,0.858,0,1.579
+undefined,10,9,quit,N/A,(4,1)(4,1)(4,2)(4,3)(4,4)(4,5)(4,6)(5,6)(6,6),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7),(4,7),noChange,false,false,7,0.645,0,1.374
+undefined,11,7,quit,N/A,(4,1)(4,1)(4,2)(4,3)(4,4)(4,5)(4,6)(5,6)(6,6),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7),(4,7),noChange,false,false,7,0.679,0,1.318
+undefined,12,0,quit,N/A,(4,1)(4,1)(4,2)(4,3)(4,4)(4,5)(4,6)(5,6)(6,6),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7),(4,7),noChange,false,false,7,1.006,0,1.694
+undefined,13,3,say,green,(4,1)(4,1)(4,2)(4,3)(4,4)(4,5)(4,6)(5,6)(6,6),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7)(4,6)(3,6)(2,6),(2,6),green square,false,true,12,2.969,1.0100000000000002,3.647
+undefined,14,13,say,square,(4,1)(4,1)(4,2)(4,3)(4,4)(4,5)(4,6)(5,6)(6,6),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7)(4,6)(3,6)(2,6)(3,7)(2,7)(1,7)(0,7)(0,8)(0,9),(0,9),green square,false,true,14,3.484,2.5380000000000003,4.269
+subjId,trialIndex,exptId,decision,signal,signalerPath,signalerEndCoordinate,signalerEndItem,receiverEndCoordinate,receiverEndItem,signalerAchievedGoal,receiverAchievedGoal,totalUtility,decisionTime,actionTime,feedbackTime
+undefined,0,5,say,red,N/A,(4,0),noChange,(4,8)(5,8),(5,8),red square,false,true,6,1.956,0.5110000000000001,2.81
+undefined,1,11,say,circle,N/A,(4,0),noChange,(4,8)(5,8)(5,7),(5,7),purple circle,false,false,5,2.918,0.0029999999999996696,5.0809999999999995
+undefined,2,10,quit,N/A,N/A,(4,0),noChange,(4,8)(5,8)(5,7),(4,7),noChange,false,false,5,1.81,0,2.522
+undefined,3,2,move,N/A,(4,1),(4,1),red square,(4,8)(5,8)(5,7),(4,7),noChange,false,false,4,1.913,0.361,2.691
+undefined,4,4,say,triangle,(4,1),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7),(1,7),green triangle,false,true,9,3.663,1.0219999999999998,4.524000000000001
+undefined,5,1,say,red,(4,1),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5),(0,5),red circle,false,true,11,3.157,2.5359999999999996,3.846
+undefined,6,6,say,red,(4,1),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7),(0,7),red circle,false,false,7,4.923,1.5170000000000003,5.4959999999999996
+undefined,7,12,quit,N/A,(4,1),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7),(4,7),noChange,false,false,7,1.21,0,1.956
+undefined,8,8,move,N/A,(4,1)(4,1)(4,2)(4,3)(4,4)(4,5)(4,6)(5,6)(6,6),(6,6),red triangle,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7),(4,7),noChange,true,false,7,2.313,1.5069999999999997,3.0760000000000005
+undefined,9,14,quit,N/A,(4,1)(4,1)(4,2)(4,3)(4,4)(4,5)(4,6)(5,6)(6,6),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7),(4,7),noChange,false,false,7,0.858,0,1.579
+undefined,10,9,quit,N/A,(4,1)(4,1)(4,2)(4,3)(4,4)(4,5)(4,6)(5,6)(6,6),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7),(4,7),noChange,false,false,7,0.645,0,1.374
+undefined,11,7,quit,N/A,(4,1)(4,1)(4,2)(4,3)(4,4)(4,5)(4,6)(5,6)(6,6),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7),(4,7),noChange,false,false,7,0.679,0,1.318
+undefined,12,0,quit,N/A,(4,1)(4,1)(4,2)(4,3)(4,4)(4,5)(4,6)(5,6)(6,6),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7),(4,7),noChange,false,false,7,1.006,0,1.694
+undefined,13,3,say,green,(4,1)(4,1)(4,2)(4,3)(4,4)(4,5)(4,6)(5,6)(6,6),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7)(4,6)(3,6)(2,6),(2,6),green square,false,true,12,2.969,1.0100000000000002,3.647
+undefined,14,13,say,square,(4,1)(4,1)(4,2)(4,3)(4,4)(4,5)(4,6)(5,6)(6,6),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7)(4,6)(3,6)(2,6)(3,7)(2,7)(1,7)(0,7)(0,8)(0,9),(0,9),green square,false,true,14,3.484,2.5380000000000003,4.269
+undefined,15,undefined,say,N/A,(4,1)(4,1)(4,2)(4,3)(4,4)(4,5)(4,6)(5,6)(6,6),(4,0),noChange,(4,8)(5,8)(5,7)(3,7)(2,7)(1,7)(3,7)(2,7)(1,7)(0,7)(0,6)(0,5)(3,7)(2,7)(1,7)(0,7)(4,6)(3,6)(2,6)(3,7)(2,7)(1,7)(0,7)(0,8)(0,9),(0,9),green square,false,true,14,3.484,-1.865,4.214
+subjId,trialIndex,exptId,decision,signal,signalerPath,signalerEndCoordinate,signalerEndItem,receiverEndCoordinate,receiverEndItem,signalerAchievedGoal,receiverAchievedGoal,totalUtility,decisionTime,actionTime,feedbackTime
+undefined,0,9,say,triangle,N/A,(4,0),noChange,(5,7)(6,7)(7,7)(7,6),(7,6),purple triangle,false,true,4,1.988,1.521,2.6180000000000003
+undefined,1,13,say,square,N/A,(4,0),noChange,(3,7)(2,7)(1,7)(0,7)(0,8)(0,9),(0,9),green square,false,true,6,2.232,2.5299999999999994,2.8630000000000004
+undefined,2,2,say,purple,N/A,(4,0),noChange,(5,7)(6,7),(6,7),purple circle,false,true,12,1.849,0.5080000000000002,2.646
+undefined,3,12,move,N/A,(5,0),(5,0),purple circle,N/A,(4,7),noChange,false,false,11,2.655,0.375,3.965
+undefined,4,7,say,circle,N/A,(4,0),noChange,(3,7)(2,7)(1,7)(0,7)(0,8),(0,8),green circle,false,true,14,4.261,2.032,4.897
+undefined,5,1,move,N/A,(4,1)(4,2)(4,3)(4,4)(4,5)(3,5)(2,5)(1,5)(0,5),(0,5),red circle,N/A,(4,7),noChange,true,false,13,1.999,1.625,3.3760000000000003
+undefined,6,11,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,13,1.442,0.001000000000000112,2.043
+undefined,7,4,say,triangle,N/A,(4,0),noChange,(3,7)(2,7)(1,7),(1,7),green triangle,false,true,18,3.475,1.0139999999999998,4.308
+undefined,8,5,say,triangle,N/A,(4,0),noChange,(5,7)(6,7)(7,7)(8,7)(8,6)(8,5)(8,4)(8,3)(8,2)(8,1),(8,1),green triangle,false,false,8,1.349,4.548,2.0949999999999998
+undefined,9,3,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,8,0.724,0,1.453
+undefined,10,10,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,8,0.726,0,1.311
+undefined,11,0,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,8,0.874,0,1.558
+undefined,12,6,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,8,0.614,0,1.362
+undefined,13,8,move,N/A,(4,1)(5,1),(5,1),green square,N/A,(4,7),noChange,false,false,6,1.68,0.44699999999999984,2.7670000000000003
+undefined,14,14,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,6,1.404,0,2.256
+subjId,trialIndex,exptId,decision,signal,signalerPath,signalerEndCoordinate,signalerEndItem,receiverEndCoordinate,receiverEndItem,signalerAchievedGoal,receiverAchievedGoal,totalUtility,decisionTime,actionTime,feedbackTime
+undefined,0,9,say,triangle,N/A,(4,0),noChange,(5,7)(6,7)(7,7)(7,6),(7,6),purple triangle,false,true,4,13.125,1.516,14.19
+undefined,1,6,say,green,N/A,(4,0),noChange,(4,8)(4,9),(4,9),green triangle,false,false,2,2.276,0.5070000000000001,3.334
+undefined,2,11,move,N/A,(4,1)(4,2)(3,2)(2,2),(2,2),green square,N/A,(4,7),noChange,false,false,-2,2.098,1.2000000000000002,3.4639999999999995
+undefined,3,4,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,-2,2.973,0,3.94
+undefined,4,1,move,N/A,(4,1)(4,2)(4,3)(4,4)(4,5)(3,5)(2,5)(1,5)(0,5),(0,5),red circle,N/A,(4,7),noChange,true,false,-3,1.456,2.6149999999999998,2.855
+undefined,5,8,say,red,N/A,(4,0),noChange,(4,6)(5,6)(6,6),(6,6),red triangle,false,true,2,9.303,1.013,10.72
+undefined,6,13,say,square,N/A,(4,0),noChange,(3,7)(2,7)(1,7)(0,7)(0,8)(0,9),(0,9),green square,false,true,4,2.326,2.528,10.932
+undefined,7,3,move,N/A,(4,1)(4,2)(4,3)(3,3)(2,3)(1,3)(1,4)(1,5)(1,6)(1,7)(1,8)(2,8)(3,8)(4,8)(5,8)(6,8)(6,7)(6,6)(5,6)(4,6)(3,6)(2,6),(2,6),green square,N/A,(4,7),noChange,true,false,-10,4.602,5.584999999999999,6.192
+undefined,8,12,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,-10,1.397,0,2.155
+undefined,9,14,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,-10,0.65,0,1.661
+undefined,10,5,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,-10,0.628,0,1.554
+undefined,11,7,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,-10,1.196,0,2.469
+undefined,12,10,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,-10,7.935,0,8.855
+undefined,13,2,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,-10,1.517,0,2.748
+undefined,14,0,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,-10,0.982,0,1.941
+subjId,trialIndex,exptId,decision,signal,signalerPath,signalerEndCoordinate,signalerEndItem,receiverEndCoordinate,receiverEndItem,signalerAchievedGoal,receiverAchievedGoal,totalUtility,decisionTime,actionTime,feedbackTime
+undefined,0,9,say,purple,N/A,(4,0),noChange,(4,6)(5,6)(6,6)(7,6),(7,6),purple triangle,false,true,0.2,2.153,1.533,134.454
+undefined,1,0,say,purple,N/A,(4,0),noChange,(3,7)(2,7)(1,7)(0,7)(0,6),(0,6),purple circle,false,false,-0.04999999999999999,2.771,2.0490000000000004,5.127
+undefined,2,6,say,green,N/A,(4,0),noChange,(4,8)(4,9),(4,9),green triangle,false,false,-0.15,1.314,0.5149999999999999,5.293
+undefined,3,11,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,-0.15,0.769,0,1.457
+undefined,4,1,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,-0.15,0.631,0,1.351
+undefined,5,12,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,-0.15,0.723,0,1.431
+undefined,6,10,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,-0.15,0.725,0,1.567
+undefined,7,2,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,-0.15,0.798,0,1.518
+undefined,8,5,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,-0.15,0.681,0,1.367
+undefined,9,8,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,-0.15,0.769,0,1.439
+undefined,10,4,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,-0.15,0.773,0,1.513
+undefined,11,3,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,-0.15,0.795,0,1.567
+undefined,12,13,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,-0.15,0.778,0,1.531
+undefined,13,14,say,green,N/A,(4,0),noChange,(4,6)(4,5)(3,5)(2,5)(1,5)(0,5),(0,5),green square,false,false,-0.44999999999999996,1.469,2.545,3.686
+undefined,14,7,say,green,N/A,(4,0),noChange,(3,7)(2,7)(1,7)(0,7)(0,8),(0,8),green circle,false,true,-0.29999999999999993,2.329,2.039,3.7319999999999998
+subjId,trialIndex,exptId,decision,signal,signalerPath,signalerEndCoordinate,signalerEndItem,receiverEndCoordinate,receiverEndItem,signalerAchievedGoal,receiverAchievedGoal,totalUtility,decisionTime,actionTime,feedbackTime
+undefined,0,7,say,green,N/A,(4,0),noChange,(4,8)(3,8)(2,8)(1,8)(0,8),(0,8),green circle,false,true,0.15,2.204,2.03,4.852
+undefined,1,3,say,green,N/A,(4,0),noChange,(4,6)(3,6)(2,6),(2,6),green square,false,true,0.4,4.633,1.0119999999999996,76.59
+undefined,2,14,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.4,0.948,0,2.035
+undefined,3,9,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.4,0.734,0,1.543
+undefined,4,2,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.4,0.751,0,1.51
+undefined,5,6,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.4,0.759,0,1.543
+undefined,6,1,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.4,0.686,0,1.519
+undefined,7,5,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.4,0.887,0,1.71
+undefined,8,4,say,green,N/A,(4,0),noChange,(3,7)(2,7)(1,7),(1,7),green triangle,false,true,0.65,1.23,1.02,1.9700000000000002
+undefined,9,8,say,triangle,N/A,(4,0),noChange,(4,6)(5,6)(6,6),(6,6),red triangle,false,true,0.9,7.043,1.0140000000000002,9.571000000000002
+undefined,10,12,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.9,0.765,0,1.559
+undefined,11,11,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.9,0.67,0,1.623
+undefined,12,0,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.9,0.813,0,1.606
+undefined,13,13,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.9,0.991,0,1.776
+undefined,14,10,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.9,0.854,0,2.15
+subjId,trialIndex,exptId,decision,signal,signalerPath,signalerEndCoordinate,signalerEndItem,receiverEndCoordinate,receiverEndItem,signalerAchievedGoal,receiverAchievedGoal,totalUtility,decisionTime,actionTime,feedbackTime
+undefined,0,7,say,green,N/A,(4,0),noChange,(3,7)(2,7)(1,7)(0,7)(0,8),(0,8),green circle,false,true,0.15,3.45,2.032,4.772
+undefined,1,6,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.15,6.361,0,7.586
+undefined,2,0,say,square,N/A,(4,0),noChange,(3,7)(2,7)(2,8)(2,9),(2,9),green square,false,true,0.35,5.762,1.5280000000000005,7.093999999999999
+undefined,3,12,say,purple,N/A,(4,0),noChange,(4,6)(5,6)(6,6)(7,6),(7,6),purple square,false,true,0.55,4.73,1.5329999999999995,6.517000000000001
+undefined,4,14,say,circle,N/A,(4,0),noChange,(4,8)(4,9)(3,9)(2,9),(2,9),purple circle,false,true,0.75,4.002,1.529,5.015
+undefined,5,3,say,square,N/A,(4,0),noChange,(3,7)(2,7)(2,6),(2,6),green square,false,true,1,6.924,1.024,8.170000000000002
+undefined,6,11,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,1,6.833,0,8.025
+undefined,7,4,say,green,N/A,(4,0),noChange,(3,7)(2,7)(1,7),(1,7),green triangle,false,true,1.25,4.345,1.0230000000000006,5.459999999999999
+undefined,8,5,say,red,N/A,(4,0),noChange,(5,7)(5,8),(5,8),red square,false,true,1.55,2.585,0.5129999999999999,3.604
+undefined,9,13,say,square,N/A,(4,0),noChange,(4,8)(4,9)(3,9)(2,9)(1,9)(0,9),(0,9),green square,false,true,1.65,4.91,2.542,6.414
+undefined,10,10,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,1.65,12.689,0,13.695
+undefined,11,2,say,circle,N/A,(4,0),noChange,(5,7)(6,7),(6,7),purple circle,false,true,1.95,6.177,0.5130000000000008,7.534999999999999
+undefined,12,1,say,red,N/A,(4,0),noChange,(3,7)(2,7)(1,7)(0,7)(0,6)(0,5),(0,5),red circle,false,true,2.05,3.552,2.549,4.816000000000001
+undefined,13,9,say,triangle,N/A,(4,0),noChange,(4,6)(5,6)(6,6)(7,6),(7,6),purple triangle,false,true,2.25,8.038,1.5169999999999995,15.429000000000002
+undefined,14,8,say,red,N/A,(4,0),noChange,(5,7)(6,7)(6,6),(6,6),red triangle,false,true,2.5,6.822,1.0149999999999997,52.539
+subjId,trialIndex,exptId,decision,signal,signalerPath,signalerEndCoordinate,signalerEndItem,receiverEndCoordinate,receiverEndItem,signalerAchievedGoal,receiverAchievedGoal,totalUtility,decisionTime,actionTime,feedbackTime
+undefined,0,3,say,green,N/A,(4,0),noChange,(4,6)(3,6)(2,6),(2,6),green square,false,true,0.25,6.762,1.0370000000000008,11.331
+undefined,1,1,say,circle,N/A,(4,0),noChange,(4,6)(4,5)(3,5)(2,5)(1,5)(0,5),(0,5),red circle,false,true,0.35,6.196,2.5619999999999994,11.277000000000001
+undefined,2,12,say,purple,N/A,(4,0),noChange,(5,7)(6,7)(7,7)(7,6),(7,6),purple square,false,true,0.55,8.805,1.5350000000000001,11.342
+undefined,3,13,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.55,11.45,0,4419.198
+undefined,4,5,say,red,N/A,(4,0),noChange,(4,8)(5,8),(5,8),red square,false,true,0.85,4.095,0.5200000000000005,6.313999999999999
+undefined,5,9,say,triangle,N/A,(4,0),noChange,(5,7)(6,7)(7,7)(7,6),(7,6),purple triangle,false,true,1.05,6.318,1.5430000000000001,83.187
+undefined,6,11,say,green,N/A,(4,0),noChange,(4,6)(3,6)(2,6)(1,6),(1,6),green circle,false,true,1.25,7.928,1.532000000000001,9.745999999999999
+undefined,7,7,say,green,N/A,(4,0),noChange,(4,8)(3,8)(2,8)(1,8)(0,8),(0,8),green circle,false,true,1.4,6.986,2.0460000000000003,10.456
+undefined,8,8,say,red,N/A,(4,0),noChange,(4,6)(5,6)(6,6),(6,6),red triangle,false,true,1.65,4.677,1.0190000000000001,6.841
+undefined,9,10,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,1.65,35.183,0,37.119
+undefined,10,6,say,red,N/A,(4,0),noChange,(3,7)(2,7)(1,7)(0,7),(0,7),red circle,false,false,1.45,15.779,1.529,18.931
+undefined,11,0,say,square,N/A,(4,0),noChange,(3,7)(2,7)(2,8)(2,9),(2,9),green square,false,true,1.65,5.459,1.5330000000000004,7.323999999999999
+undefined,12,2,say,circle,N/A,(4,0),noChange,(5,7)(6,7),(6,7),purple circle,false,true,1.95,7.511,0.512999999999999,9.571000000000002
+undefined,13,14,say,circle,N/A,(4,0),noChange,(3,7)(2,7)(2,8)(2,9),(2,9),purple circle,false,true,2.15,4.388,1.5380000000000003,6.202
+undefined,14,4,say,green,N/A,(4,0),noChange,(3,7)(2,7)(1,7),(1,7),green triangle,false,true,2.4,25.908,1.0299999999999976,28.28
+subjId,trialIndex,exptId,decision,signal,signalerPath,signalerEndCoordinate,signalerEndItem,receiverEndCoordinate,receiverEndItem,signalerAchievedGoal,receiverAchievedGoal,totalUtility,decisionTime,actionTime,feedbackTime
+undefined,0,6,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0,3.507,0,4.506
+undefined,1,13,say,square,N/A,(4,0),noChange,(3,7)(2,7)(1,7)(0,7)(0,8)(0,9),(0,9),green square,false,true,0.1,4.13,2.5440000000000005,5.3229999999999995
+undefined,2,11,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.1,5.259,0,6.304
+undefined,3,8,say,red,N/A,(4,0),noChange,(5,7)(6,7)(6,6),(6,6),red triangle,false,true,0.35,6.291,1.0259999999999998,7.284000000000001
+undefined,4,10,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.35,7.867,0,8.72
+undefined,5,14,say,circle,N/A,(4,0),noChange,(3,7)(2,7)(2,8)(2,9),(2,9),purple circle,false,true,0.55,5.447,1.5300000000000002,6.409
+undefined,6,1,say,red,N/A,(4,0),noChange,(4,6)(4,5)(3,5)(2,5)(1,5)(0,5),(0,5),red circle,false,true,0.65,3.018,2.54,8.02
+undefined,7,5,say,red,N/A,(4,0),noChange,(4,8)(5,8),(5,8),red square,false,true,0.95,3.328,0.5150000000000001,4.699
+undefined,8,9,move,N/A,(5,0)(6,0)(7,0)(7,1)(7,2)(7,3)(7,4)(7,5)(7,6),(7,6),purple triangle,N/A,(4,7),noChange,true,false,0.9,3.517,2.8160000000000003,7.203999999999999
+undefined,9,4,say,green,N/A,(4,0),noChange,(3,7)(2,7)(1,7),(1,7),green triangle,false,true,1.15,7.338,1.0179999999999998,8.927
+undefined,10,0,say,square,N/A,(4,0),noChange,(3,7)(2,7)(2,8)(2,9),(2,9),green square,false,true,1.35,3.913,1.5219999999999998,5.3260000000000005
+undefined,11,2,say,circle,N/A,(4,0),noChange,(5,7)(6,7),(6,7),purple circle,false,true,1.65,3.587,0.5139999999999998,4.654
+undefined,12,3,say,green,N/A,(4,0),noChange,(3,7)(2,7)(2,6),(2,6),green square,false,true,1.9,1.974,1.0210000000000001,3.016
+undefined,13,12,say,purple,N/A,(4,0),noChange,(4,6)(5,6)(6,6)(7,6),(7,6),purple square,false,true,2.1,4.108,1.5230000000000006,5.177999999999999
+undefined,14,7,say,green,N/A,(4,0),noChange,(4,8)(3,8)(2,8)(1,8)(0,8),(0,8),green circle,false,true,2.25,2.495,2.0300000000000002,3.6899999999999995
+subjId,trialIndex,exptId,decision,signal,signalerPath,signalerEndCoordinate,signalerEndItem,receiverEndCoordinate,receiverEndItem,signalerAchievedGoal,receiverAchievedGoal,totalUtility,decisionTime,actionTime,feedbackTime
+undefined,0,0,say,green,N/A,(4,0),noChange,(3,7)(3,8),(3,8),green circle,false,false,0,3.687,0.5110000000000006,6.856
+undefined,1,3,say,purple,N/A,(4,0),noChange,(3,7)(3,6)(3,5),(3,5),purple circle,false,false,0,2.152,1.02,3.3619999999999997
+undefined,2,1,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0,0.732,0,1.62
+undefined,3,12,say,green,N/A,(4,0),noChange,(3,7)(3,8),(3,8),green square,false,false,0,1.069,0.5170000000000001,2.6369999999999996
+undefined,4,8,say,red,N/A,(4,0),noChange,(4,6)(5,6)(6,6),(6,6),red triangle,false,true,0.25,0.927,1.009,2.109
+undefined,5,13,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.25,0.798,0,1.543
+undefined,6,5,say,purple,N/A,(4,0),noChange,(5,7)(6,7)(7,7)(7,6)(7,5)(7,4),(7,4),purple square,false,false,0,1.222,2.529,2.6660000000000004
+undefined,7,9,say,triangle,N/A,(4,0),noChange,(5,7)(6,7)(7,7)(7,6),(7,6),purple triangle,false,true,0.2,2.587,1.5209999999999995,3.5140000000000007
+undefined,8,14,say,purple,N/A,(4,0),noChange,(3,7)(2,7)(2,8)(2,9),(2,9),purple circle,false,true,0.4,2.699,1.5250000000000004,4.146999999999999
+undefined,9,10,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.4,28.913,0,29.678
+undefined,10,2,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.4,0.834,0,1.651
+undefined,11,6,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.4,0.806,0,1.38
+undefined,12,7,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.4,0.758,0,1.457
+undefined,13,11,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.4,1.621,0,2.253
+undefined,14,4,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.4,0.822,0,1.769
+subjId,trialIndex,exptId,decision,signal,signalerPath,signalerEndCoordinate,signalerEndItem,receiverEndCoordinate,receiverEndItem,signalerAchievedGoal,receiverAchievedGoal,totalUtility,decisionTime,actionTime,feedbackTime
+undefined,0,14,say,purple,N/A,(4,0),noChange,(4,8)(4,9)(3,9)(2,9),(2,9),purple circle,false,true,0.2,2.342,1.5219999999999998,3.1
+undefined,1,3,say,square,N/A,(4,0),noChange,(3,7)(2,7)(2,6),(2,6),green square,false,true,0.45,3.764,1.0180000000000002,5.007
+undefined,2,6,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.45,5.929,0,6.827
+undefined,3,10,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.45,5.291,0,6.062
+undefined,4,9,say,triangle,N/A,(4,0),noChange,(4,6)(5,6)(6,6)(7,6),(7,6),purple triangle,false,true,0.65,2.609,1.5179999999999998,3.266
+undefined,5,5,say,red,N/A,(4,0),noChange,(4,8)(5,8),(5,8),red square,false,true,0.95,1.669,0.5089999999999999,2.535
+undefined,6,0,say,square,N/A,(4,0),noChange,(4,8)(4,9)(3,9)(2,9),(2,9),green square,false,true,1.15,4.523,1.5180000000000007,5.251999999999999
+undefined,7,12,say,purple,N/A,(4,0),noChange,(5,7)(6,7)(7,7)(7,6),(7,6),purple square,false,true,1.35,2.9,1.5290000000000004,3.586
+undefined,8,1,say,red,N/A,(4,0),noChange,(3,7)(2,7)(1,7)(0,7)(0,6)(0,5),(0,5),red circle,false,true,1.45,2.293,2.5329999999999995,3.0970000000000004
+undefined,9,11,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,1.45,6.979,0,7.889
+undefined,10,7,say,green,N/A,(4,0),noChange,(4,8)(3,8)(2,8)(1,8)(0,8),(0,8),green circle,false,true,1.6,3.537,2.032,4.424
+undefined,11,13,say,square,N/A,(4,0),noChange,(3,7)(2,7)(1,7)(0,7)(0,8)(0,9),(0,9),green square,false,true,1.7,3.338,2.534,4.171
+undefined,12,4,say,green,N/A,(4,0),noChange,(3,7)(2,7)(1,7),(1,7),green triangle,false,true,1.95,1.735,1.0159999999999998,2.564
+undefined,13,8,say,red,N/A,(4,0),noChange,(4,6)(5,6)(6,6),(6,6),red triangle,false,true,2.2,2.021,1.0110000000000001,2.843
+undefined,14,2,say,purple,N/A,(4,0),noChange,(5,7)(6,7),(6,7),purple circle,false,true,2.5,2.012,0.512,2.864
+subjId,trialIndex,exptId,decision,signal,signalerPath,signalerEndCoordinate,signalerEndItem,receiverEndCoordinate,receiverEndItem,signalerAchievedGoal,receiverAchievedGoal,totalUtility,decisionTime,actionTime,feedbackTime
+undefined,0,12,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0,2.979,0,3.655
+undefined,1,13,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0,0.464,0,1.063
+undefined,2,4,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0,0.444,0,1.4
+undefined,3,14,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0,0.545,0,1.222
+undefined,4,3,say,green,N/A,(4,0),noChange,(4,6)(3,6)(2,6),(2,6),green square,false,true,0.25,2.863,1.012,3.77
+undefined,5,2,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.25,0.519,0,1.29
+undefined,6,11,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.25,0.57,0,1.438
+undefined,7,8,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.25,2.288,0,2.978
+undefined,8,6,say,purple,N/A,(4,0),noChange,(4,8)(3,8)(2,8)(1,8)(0,8),(0,8),purple circle,false,false,0,2.513,2.029,4.183
+undefined,9,1,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0,0.892,0,2.399
+undefined,10,5,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0,0.855,0,2.069
+undefined,11,7,say,green,N/A,(4,0),noChange,(4,8)(3,8)(2,8)(1,8)(0,8),(0,8),green circle,false,true,0.15,3.205,2.0250000000000004,4.361
+undefined,12,10,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.15,0.748,0,1.367
+undefined,13,9,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.15,0.608,0,1.148
+undefined,14,0,quit,N/A,N/A,(4,0),noChange,N/A,(4,7),noChange,false,false,0.15,0.538,0,1.124

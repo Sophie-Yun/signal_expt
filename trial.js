@@ -4,7 +4,9 @@ class trialObject {
             subj: false,
             step: 0,
             totalScore: 0,
-            gridCreated: false,
+            nextButCreated: false,
+            signalerMoved: false,
+            receiverMoved: false,
             reached: false,
             allowMove: false,
             pathIndex: 0,
@@ -22,6 +24,8 @@ class trialObject {
             isSanityCheck: false,
             isPracTrial: false,
             isExptTrial: false,
+            consecutiveQuitNum: 0,
+            consecutiveQuickDecisionNum: 0,
             startTime: 0,
             signal: "N/A",
             gridArray: [
@@ -65,18 +69,8 @@ class trialObject {
     
     next(){
         if(this.isTryMove || this.isTrySay) {
-            this.step = 0;
             $(".tryExptInstr").show();
             this.end();
-            /*
-            this.trialIndex++;
-            if(this.trialIndex >= this.trialN) {
-                this.end();
-            } else {
-                this.step = 0;
-                this.buttonsCreated = false;
-                $("#tryExptInstr").show();
-            }*/
         } else if(this.isSanityCheck) { 
             this.trialIndex++;
             if (this.sanitySayFails == 3 || this.sanityQuitFails == 3 || this.sanityMoveFails == 3) {
@@ -125,7 +119,6 @@ class trialObject {
                 $("#sanityCheckInstr").show();
                 this.move();
             }
-            console.log(this.inputData[this.randomizedTrialList[this.trialIndex]])
 
         } else if(this.isPracTrial) {
             this.trialIndex++;
@@ -151,7 +144,7 @@ class trialObject {
                 this.exptReceiverPath, this.receiverEndCoordinate, this.receiverEndItem,
                 this.signalerAchievedGoal, this.receiverAchievedGoal,
                 this.totalUtility,
-                this.decisionTime, this.actionTime, this.feedbackTime];
+                this.decisionTime, this.actionTime, this.feedbackTime, this.responseWarningPopup, this.quitWarningPopup];
             this.exptDataToSave += LIST_TO_FORMATTED_STRING(dataList);
             this.startTime = Date.now();
             this.trialIndex++;
@@ -193,6 +186,8 @@ class trialObject {
             this.saveExptData();
             $("#exptPage").hide();
             NEXT_INSTR();
+            $("#instrBackBut").hide();
+            $("#instrPage").show();
         }
     }
     move() {
@@ -335,14 +330,13 @@ function CREATE_RECEIVER_PATH_DICT(obj) {
 }
 
 function SET_RECEIVER_SIGNALER_LOCATION(obj) {
-    //var receiverFromCSV, signalerFromCSV;
-        if (obj.isPracTrial)  {  
-            obj.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.trialIndex]["receiverLocation"][0], obj.inputData[obj.trialIndex]["receiverLocation"][1]); 
-            obj.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.trialIndex]["signalerLocation"][0], obj.inputData[obj.trialIndex]["signalerLocation"][1]);
-        } else if (obj.isExptTrial || obj.isSanityCheck) {
-            obj.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"][0], obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"][1]); 
-            obj.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalerLocation"][0], obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalerLocation"][1]);
-        }
+    if (obj.isPracTrial)  {  
+        obj.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.trialIndex]["receiverLocation"][0], obj.inputData[obj.trialIndex]["receiverLocation"][1]); 
+        obj.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.trialIndex]["signalerLocation"][0], obj.inputData[obj.trialIndex]["signalerLocation"][1]);
+    } else if (obj.isExptTrial || obj.isSanityCheck) {
+        obj.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"][0], obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"][1]); 
+        obj.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalerLocation"][0], obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalerLocation"][1]);
+    }
 }
 
     
@@ -403,8 +397,8 @@ function TRIAL_SET_UP (obj) {
         }
     }
 
-    signalerMoved = false;
-    receiverMoved = false;
+    obj.signalerMoved = false;
+    obj.receiverMoved = false;
 
     CREATE_RECEIVER_PATH_DICT(obj);
 }
@@ -417,9 +411,11 @@ function UPDATE_RESULT_IN_OBJ(obj,reward) {
 
 function MOVE(obj) {
     var arrowClicked = false; //to prevent clicking on ENTER before arrow keys
+    DISABLE_DEFAULT_KEYS();
     document.onkeydown = function(e) {
         if(obj.allowMove) {
             if(e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40) {// arrow keys
+                obj.consecutiveQuitNum = 0;
                 if(!obj.decisionRecorded) {
                     RECORD_DECISION_DATA(obj, "move");
                     RECORD_SIGNAL_DATA(obj);
@@ -427,9 +423,8 @@ function MOVE(obj) {
                 arrowClicked = true;
                 CHANGE_IN_TRIAL_INSTR("do");
                 UPDATE_STEPS(obj);
-                UPDATE_GAME_BOARD(obj, e.keyCode);
+                UPDATE_GAME_GRID(obj, e.keyCode);
             } else if (e.keyCode == 13) { // ENTER key
-                e.preventDefault();
                 if(arrowClicked){
                     if(obj.signalerLocation[0] == obj.goalCoord[0] && obj.signalerLocation[1] == obj.goalCoord[1]){ //reached
                         RECORD_ACTION_TIME(obj);
@@ -456,8 +451,6 @@ function MOVE(obj) {
                     alert("Please use arrow keys on your keyboard to move.");
             } else
                 alert("Please use arrow keys on your keyboard to move.");
-        } else {
-            alert("You are not allowed to move by yourself right now. Please follow the instructions.")
         }
     }
 };
@@ -468,40 +461,47 @@ function CONVERT_STR_TO_ARRAY(input) {
 }
 
 function RECEIVER_WALK(obj, signal) {
+    obj.consecutiveQuitNum = 0;
+    DISABLE_DEFAULT_KEYS();
     RECORD_DECISION_DATA(obj, "say");
     RECORD_SIGNAL_DATA(obj, signal);
+    obj.allowMove = false;
 
     var path = obj.receiverPath[signal];
     var stepOnGrid = path[obj.pathIndex];
     CHANGE_IN_TRIAL_INSTR("say");
     UPDATE_STEPS(obj);
-    UPDATE_GAME_BOARD(obj, stepOnGrid);
+    UPDATE_GAME_GRID(obj, stepOnGrid);
         if(obj.pathIndex == path.length - 1) {
-            if(obj.receiverLocation[0] == obj.goalCoord[0] && obj.receiverLocation[1] == obj.goalCoord[1]) {
-                RECORD_ACTION_TIME(obj);
-                RECORD_SIGNALER_END_LOCATION(obj);
-                RECORD_RECEIVER_END_LOCATION(obj, obj.receiverLocation);
-                RECORD_SIGNALER_ACHIEVED(obj);
-                RECORD_RECEIVER_ACHIEVED(obj, "achieved");
-                UPDATE_RESULT_IN_OBJ(obj, REWARD);
-                SHOW_WIN_RESULT_BOX_FOR_SAY(obj, true);
-                obj.step = 0;
-                obj.pathIndex = 0;
-            } else {
-                RECORD_ACTION_TIME(obj);
-                RECORD_SIGNALER_END_LOCATION(obj);
-                RECORD_RECEIVER_END_LOCATION(obj, obj.receiverLocation);
-                RECORD_SIGNALER_ACHIEVED(obj);
-                RECORD_RECEIVER_ACHIEVED(obj);
-                UPDATE_RESULT_IN_OBJ(obj, 0);
-                SHOW_WIN_RESULT_BOX_FOR_SAY(obj, false);
-                obj.step = 0;  
-                obj.pathIndex = 0;      
-            }           
+            setTimeout(RECEIVER_ARRIVE, 1000, obj);
         } else {
             obj.pathIndex++;
             setTimeout(RECEIVER_WALK, RECEIVER_MOVE_SPEED * 1000, obj, signal);
         }  
+}
+
+function RECEIVER_ARRIVE(obj) {
+    if(obj.receiverLocation[0] == obj.goalCoord[0] && obj.receiverLocation[1] == obj.goalCoord[1]) {
+        RECORD_ACTION_TIME(obj);
+        RECORD_SIGNALER_END_LOCATION(obj);
+        RECORD_RECEIVER_END_LOCATION(obj, obj.receiverLocation);
+        RECORD_SIGNALER_ACHIEVED(obj);
+        RECORD_RECEIVER_ACHIEVED(obj, "achieved");
+        UPDATE_RESULT_IN_OBJ(obj, REWARD);
+        SHOW_WIN_RESULT_BOX_FOR_SAY(obj, true);
+        obj.step = 0;
+        obj.pathIndex = 0;
+    } else {
+        RECORD_ACTION_TIME(obj);
+        RECORD_SIGNALER_END_LOCATION(obj);
+        RECORD_RECEIVER_END_LOCATION(obj, obj.receiverLocation);
+        RECORD_SIGNALER_ACHIEVED(obj);
+        RECORD_RECEIVER_ACHIEVED(obj);
+        UPDATE_RESULT_IN_OBJ(obj, 0);
+        SHOW_WIN_RESULT_BOX_FOR_SAY(obj, false);
+        obj.step = 0;  
+        obj.pathIndex = 0;      
+    }           
 }
 
 function SUCCESS(){
@@ -531,7 +531,6 @@ function NEXT_TRIAL(obj) {
         obj.next()
         $("#instrText").show();
         $("#instrNextBut").show();
-        $("#instrBackBut").css("position", "absolute");
     } else if(obj.isSanityCheck){
         RESET_GAMEBOARD();
         SANITY_CHECK_INSTR_APPEAR();
@@ -560,59 +559,17 @@ function NEXT_TRIAL(obj) {
                          
 */
 
-
-function RESET_TRYMOVE_SIGNALER() {
-    if(tryMove.gridCreated) {
-        if(tryMove.signalerLocation[0] != 9 || tryMove.signalerLocation[1] != 4){
-            REMOVE_PREVIOUS(tryMove.signalerLocation);
-            tryMove.signalerLocation = [9, 4];//row, col
-            NEW_SIGNALER_POSITION(tryMove.signalerLocation);
-        } 
-    }
-}
-
-function RESET_TRYMOVE_RECEIVER() {
-    if(tryMove.gridCreated) {
-        if(tryMove.receiverLocation[0] != 2 || tryMove.receiverLocation[1] != 4){
-            REMOVE_PREVIOUS(tryMove.receiverLocation);
-            tryMove.receiverLocation = [2, 4];//row, col
-            NEW_RECEIVER_POSITION(tryMove.receiverLocation);
-            console.log("receivertryMove");
-        } 
-    }
-}
-
-function RESET_GAMEBOARD() {
-    TRY_EXPT_INSTR_APPEAR();
-    SANITY_CHECK_INSTR_APPEAR();
-    PRACTICE_EXPT_INSTR_APPEAR();
-    EXPT_INSTR_APPEAR();
-    $(".tryDecision").html("");
-    $("#sanityCheckDecision").html("");
-    $("#practiceDecision").html("");
-    $("#decision").html("");
-    $(".tryResult").hide();
-    $("#sanityCheckResult").hide();
-    $("#practiceResult").hide();
-    $("#result").hide();
-}
-
 function TRY_GRID_SETUP(obj) {
-   if(!obj.gridCreated) {
-        $(".gridItem").remove();
-        $(".gridEmpty").remove();
-        obj.gridArray[obj.receiverLocation[0]][obj.receiverLocation[1]] = SHAPE_DIR + "receiver.png";
-        obj.gridArray[obj.signalerLocation[0]][obj.signalerLocation[1]] = SHAPE_DIR + "signaler.png";
-        CREATE_GRID(obj);
-        obj.gridCreated = true;
-    }
+    $(".gridItem").remove();
+    $(".gridEmpty").remove();
+    obj.gridArray[obj.receiverLocation[0]][obj.receiverLocation[1]] = SHAPE_DIR + "receiver.png";
+    obj.gridArray[obj.signalerLocation[0]][obj.signalerLocation[1]] = SHAPE_DIR + "signaler.png";
+    CREATE_GRID(obj);
 }
 
 function TRY_SCOREBOARD_SETUP(obj) {
-    $(".tryStep").html(obj.step);
     $("#tryMoveGoal").attr("src", PIC_DICT["red circle"]);
     $("#trySayGoal").attr("src", PIC_DICT["red circle"]);
-    $(".tryScore").html(obj.totalScore);
 }
 
 function TRY_MOVE_GAMEBOARD_SETUP() {
@@ -629,13 +586,12 @@ function TRY_SAY_GAMEBOARD_SETUP() {
 
 function TRY_MOVE() {
     tryMove.isTryMove = true;
-    tryMove.step = 0;
+    tryMove.signalerMoved = false;
     tryMove.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(practice.inputData[0]["signalerLocation"][0], practice.inputData[0]["signalerLocation"][1]);
     tryMove.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(practice.inputData[0]["receiverLocation"][0], practice.inputData[0]["receiverLocation"][1]);
     if(!tryMove.reached)
         $("#instrNextBut").hide();
     CREATE_EXPT_BUTTONS(tryMove);
-    $("#tryMoveInfo").css("opacity", 0);
     tryMove.gridArray = [
             [,,,,,,,,],
             [,,,,,,,,],
@@ -651,21 +607,20 @@ function TRY_MOVE() {
     tryMove.goalCoord=[3,7];
     TRY_GRID_SETUP(tryMove);
     TRY_SCOREBOARD_SETUP(tryMove);
+    HIDE_COST_IN_TRY_SCOREBOARD();
     TRY_MOVE_GAMEBOARD_SETUP();
-    trySay.gridCreated = false;
     tryMove.move();
 }
 
 function TRY_SAY(){
     trySay.isTrySay = true;
-    //if (trySay.totalScore == 0)
-    trySay.totalScore = tryMove.totalScore;
+    trySay.receiverMoved = false;
+    trySay.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(practice.inputData[0]["receiverLocation"][0], practice.inputData[0]["receiverLocation"][1]);
+    trySay.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(practice.inputData[0]["signalerLocation"][0], practice.inputData[0]["signalerLocation"][1]);
     if(!trySay.reached)
         $("#instrNextBut").hide();
     CREATE_EXPT_BUTTONS(trySay);
-    $("#trySayInfo").css("opacity", 0);
-    trySay.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(practice.inputData[0]["receiverLocation"][0], practice.inputData[0]["receiverLocation"][1]);
-    trySay.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(practice.inputData[0]["signalerLocation"][0], practice.inputData[0]["signalerLocation"][1]);
+    
     trySay.gridArray = [
         [,,,,,,,,],
         [,,,,,,,,],
@@ -682,20 +637,22 @@ function TRY_SAY(){
     var trySayOptions = ["red", "circle", "green"];
     CREATE_SIGNAL_BUTTONS(trySay, trySayOptions);
     TRY_GRID_SETUP(trySay);
-    tryMove.gridCreated = false;
     TRY_SCOREBOARD_SETUP(trySay);
+    HIDE_COST_IN_TRY_SCOREBOARD();
     TRY_SAY_GAMEBOARD_SETUP();
-    document.onkeydown = function (e) {
-        alert("Please click on one of the buttons to send the signal.");
-    }
 }
 
 
 
 /*
-
-SANITY CHECK
-
+  #####     #    #     # ### ####### #     #     #####  #     # #######  #####  #    # 
+ #     #   # #   ##    #  #     #     #   #     #     # #     # #       #     # #   #  
+ #        #   #  # #   #  #     #      # #      #       #     # #       #       #  #   
+  #####  #     # #  #  #  #     #       #       #       ####### #####   #       ###    
+       # ####### #   # #  #     #       #       #       #     # #       #       #  #   
+ #     # #     # #    ##  #     #       #       #     # #     # #       #     # #   #  
+  #####  #     # #     # ###    #       #        #####  #     # #######  #####  #    # 
+                                                                                       
 */
 
 function SANITY_CHECK_GAMEBOARD_SETUP() {
@@ -741,12 +698,6 @@ function START_SANITY_CHECK_TRIAL() {
     sanityCheck.move();
 }
 
-function NEXT_INSTR() {
-    instr.next();
-    //SHOW_INSTR();
-}
-
-
 /*
  ######  ######     #     #####  ####### ###  #####  ####### 
  #     # #     #   # #   #     #    #     #  #     # #       
@@ -780,7 +731,6 @@ function START_PRACTICE_TRIAL() {
 
 function NEXT_INSTR() {
     instr.next();
-    SHOW_INSTR();
 }
 
 /*                           
@@ -820,3 +770,4 @@ function START_EXPT(){
     expt.exptReceiverPath = "N/A",
     $("#exptPage").show();
 }
+

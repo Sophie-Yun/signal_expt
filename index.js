@@ -21,6 +21,8 @@ const PRAC_TRIAL_DICT = {};
 const REWARD = 0.4;
 const STEP_COST = 0.05;
 const MAX_BONUS = 8;
+const CONSECUTIVE_QUIT_MAX = 3;
+const CONSECUTIVE_FAST_DECISION_MAX = 3;
 
 //temporary variables:
 const BARRIER = {
@@ -32,12 +34,9 @@ const BARRIER = {
 
 var chooseSay = false;
 var allowWalk = false;
-
 var qAttemptNum = 0;
 var trial;
 var reward;
-var signalerMoved;
-var receiverMoved;
 var startTime;
 var trialNum = 0;
 var trialObj = {};
@@ -58,6 +57,27 @@ var instr, subj, tryMove, trySay, practice, expt;
  #     # #          #    #     # #       
   #####  #######    #     #####  #                                      
 */
+var images = new Array()
+function preload() {
+    for (i = 0; i < preload.arguments.length; i++) {
+        images[i] = new Image()
+        images[i].src = preload.arguments[i]
+    }
+}
+preload(
+    "shape/greenCircle.png",
+    "shape/greenSquare.png",
+    "shape/greenTriangle.png",
+    "shape/purpleCircle.png",
+    "shape/purpleSquare.png",
+    "shape/purpleTriangle.png",
+    "shape/redCircle.png",
+    "shape/redSquare.png",
+    "shape/redTriangle.png",
+    "shape/receiver.png",
+    "shape/signaler.png",
+    "exampleGrid.png",
+)
 
 const PIC_DICT = {
     "green circle": SHAPE_DIR + "greenCircle.png",
@@ -159,7 +179,7 @@ $(document).ready(function() {
     //} else if (subj.id !== null){
     } else {
         //fetches CSV from file into a string
-        fetch("sanityTrials_Set1_20210222.csv")
+        fetch("sanityTrials_Set1_20210308.csv")
             .then(response => response.text())
             .then(textString => {
                 SANITY_CHECK_INPUT_DATA = PARSE_CSV(textString)
@@ -188,7 +208,6 @@ $(document).ready(function() {
                         console.log(sanityCheck.inputData);
                         console.log(practice.inputData);       
                         console.log(expt.inputData);           
-                        DISABLE_DEFAULT_KEYS();
                         });
                     });
                 });
@@ -226,7 +245,9 @@ const TRIAL_TITLES = [
     "totalUtility", 
     "decisionTime", 
     "actionTime", 
-    "feedbackTime"];
+    "feedbackTime",
+    "responseWarningPopup",
+    "quitWarningPopup"];
     
 var sanity_check_options= {
     subj: 'pre-define', // assign after subj is created
@@ -263,13 +284,5 @@ var trial_options = {
     //updateFunc: TRIAL_UPDATE,
     //trialFunc: TRIAL,
     //endExptFunc: END_EXPT
-}
-
-
-function SHOW_BLOCK() {
-    $("#instrPage").hide();
-    $("#expBut").hide();
-    $("#trialPage").show();
-    subj.detectVisibilityStart();
 }
 
