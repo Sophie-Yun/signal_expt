@@ -50,10 +50,6 @@ class trialObject {
         this.receiverPath = { "red": ["right","right","right","down"],
                             "green": ["right","down","down","down","down","down","down"],
                         "circle": ["right","right","right","down"]};
-        this.barrier = {
-            "up": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(BARRIER["up"]),
-            "down": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(BARRIER["down"])
-        }
 
         this.receiverPathNum = 0;
 
@@ -66,13 +62,14 @@ class trialObject {
         this.sanitySayAttempts = 0;
         this.sanityQuitAttempts = 0;
     }
-    
+
     next(){
         if(this.isTryMove || this.isTrySay) {
             $(".tryExptInstr").show();
             this.end();
-        } else if(this.isSanityCheck) { 
+        } else if(this.isSanityCheck) {
             this.trialIndex++;
+            this.trialIndexOnInterface++;
             if (this.sanitySayFails == 3 || this.sanityQuitFails == 3 || this.sanityMoveFails == 3) {
                 // TODO: drop participant
             }
@@ -138,9 +135,9 @@ class trialObject {
             this.feedbackTime = (currentTime - this.startTime) / 1000 - this.actionTime; // in second
             this.exptId = this.randomizedTrialList[this.trialIndex];
             this.totalUtility = this.totalScore;
-            var dataList = [this.subjId, this.trialIndex, this.exptId, 
-                this.decision, this.signal, 
-                this.exptSignalerPath, this.signalerEndCoordinate, this.signalerEndItem, 
+            var dataList = [this.subjId, this.trialIndex, this.exptId,
+                this.decision, this.signal,
+                this.exptSignalerPath, this.signalerEndCoordinate, this.signalerEndItem,
                 this.exptReceiverPath, this.receiverEndCoordinate, this.receiverEndItem,
                 this.signalerAchievedGoal, this.receiverAchievedGoal,
                 this.totalUtility,
@@ -210,14 +207,18 @@ class trialObject {
 }
 
 function CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(str){
-    var listOfString = str.match(/\d, \d/g);
-    var resultList = [];
-    for(var i = 0; i < listOfString.length; i++){
-        var csvCoord = listOfString[i].match(/\d/g);
-        var arrayCoord = CONVERT_CSV_COORD_TO_ARRAY_COORD(csvCoord[0], csvCoord[1]);
-        resultList.push(arrayCoord);
+    if(str != "" && str != null) {
+        var listOfString = str.match(/\d, \d/g);
+        var resultList = [];
+        console.log(str);
+        console.log(listOfString);
+        for(var i = 0; i < listOfString.length; i++){
+            var csvCoord = listOfString[i].match(/\d/g);
+            var arrayCoord = CONVERT_CSV_COORD_TO_ARRAY_COORD(csvCoord[0], csvCoord[1]);
+            resultList.push(arrayCoord);
+        }
+        return resultList;
     }
-    return resultList;
 }
 
 function CONVERT_CSV_COORD_TO_ARRAY_COORD(inputCol, inputRow) {
@@ -326,20 +327,30 @@ function CREATE_RECEIVER_PATH_DICT(obj) {
         }
         obj.receiverPath = receiverPathsList;
     }
-    
+
 }
 
 function SET_RECEIVER_SIGNALER_LOCATION(obj) {
-    if (obj.isPracTrial)  {  
-        obj.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.trialIndex]["receiverLocation"][0], obj.inputData[obj.trialIndex]["receiverLocation"][1]); 
+    if (obj.isPracTrial)  {
+        obj.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.trialIndex]["receiverLocation"][0], obj.inputData[obj.trialIndex]["receiverLocation"][1]);
         obj.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.trialIndex]["signalerLocation"][0], obj.inputData[obj.trialIndex]["signalerLocation"][1]);
     } else if (obj.isExptTrial || obj.isSanityCheck) {
-        obj.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"][0], obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"][1]); 
+        obj.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"][0], obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"][1]);
         obj.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalerLocation"][0], obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalerLocation"][1]);
     }
 }
 
-    
+function SET_BARRIER(obj) {
+    if (obj.isSanityCheck) {
+        obj.barrier = {
+            "up": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.trialIndex].barrierDict.up),
+            "down": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.trialIndex].barrierDict.down),
+            "left": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.trialIndex].barrierDict.left),
+            "right": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.trialIndex].barrierDict.right)
+        }
+    }
+}
+
 function TRIAL_SET_UP (obj) {
     $(".gridItem").remove();
     $(".gridEmpty").remove();
@@ -358,18 +369,15 @@ function TRIAL_SET_UP (obj) {
     ];
 
     SET_RECEIVER_SIGNALER_LOCATION(obj);
+    SET_BARRIER(obj);
 
     obj.gridArray[obj.receiverLocation[0]][obj.receiverLocation[1]] = SHAPE_DIR + "receiver.png";
     obj.gridArray[obj.signalerLocation[0]][obj.signalerLocation[1]] = SHAPE_DIR + "signaler.png";
 
     if (obj.isSanityCheck) {
-        /*
-        obj.signalSpace = obj.inputData[obj.trialIndex].signalSpace;
-        obj.gridString = obj.inputData[obj.trialIndex].targetDictionary;
-        */
         obj.signalSpace = obj.inputData[obj.randomizedTrialList[obj.trialIndex]].signalSpace;
         obj.gridString= obj.inputData[obj.randomizedTrialList[obj.trialIndex]].targetDictionary;
-        $("#sanityCheckRound").html(obj.trialIndex + 1);
+        $("#sanityCheckRound").html(obj.trialIndexOnInterface + 1);
     } else if (obj.isPracTrial) {
         obj.signalSpace = obj.inputData[obj.trialIndex].signalSpace;
         obj.gridString = obj.inputData[obj.trialIndex].targetDictionary;
@@ -381,7 +389,7 @@ function TRIAL_SET_UP (obj) {
 
     var coordinates = Object.keys(obj.gridString);
     var shape = Object.values(obj.gridString);
-   
+
     for (var i = 0; i < shape.length; i++) {
         var coordFromCSV = coordinates[i].split(",");
         var coordInArray = CONVERT_CSV_COORD_TO_ARRAY_COORD(coordFromCSV[0], coordFromCSV[1])
@@ -447,7 +455,7 @@ function MOVE(obj) {
                         SHOW_WIN_RESULT_BOX_FOR_MOVE(obj, false);
                         obj.step = 0;
                     }
-                } else 
+                } else
                     alert("Please use arrow keys on your keyboard to move.");
             } else
                 alert("Please use arrow keys on your keyboard to move.");
@@ -461,26 +469,47 @@ function CONVERT_STR_TO_ARRAY(input) {
 }
 
 function RECEIVER_WALK(obj, signal) {
+    if(obj.isTrySay) {
+        $("#instrBackBut").css({
+            "cursor": "auto",
+            "pointer-events": "none"
+        });
+    }
     obj.consecutiveQuitNum = 0;
     DISABLE_DEFAULT_KEYS();
     RECORD_DECISION_DATA(obj, "say");
     RECORD_SIGNAL_DATA(obj, signal);
+    CHANGE_IN_TRIAL_INSTR("say");
     obj.allowMove = false;
 
+    var randUni = Math.random();
+    var randExpo = - (1/EXPONENTIAL_RATE) * Math.log(randUni);
+    setTimeout(RECEIVER_WALK_AFTER_WAIT, randExpo * 1000, obj, signal);
+    console.log(randExpo * 1000);
+}
+
+function RECEIVER_WALK_AFTER_WAIT(obj, signal) {
     var path = obj.receiverPath[signal];
     var stepOnGrid = path[obj.pathIndex];
-    CHANGE_IN_TRIAL_INSTR("say");
+
     UPDATE_STEPS(obj);
     UPDATE_GAME_GRID(obj, stepOnGrid);
-        if(obj.pathIndex == path.length - 1) {
-            setTimeout(RECEIVER_ARRIVE, 1000, obj);
-        } else {
-            obj.pathIndex++;
-            setTimeout(RECEIVER_WALK, RECEIVER_MOVE_SPEED * 1000, obj, signal);
-        }  
+
+    if(obj.pathIndex == path.length - 1) {
+        setTimeout(RECEIVER_ARRIVE, 1000, obj);
+    } else {
+        obj.pathIndex++;
+        setTimeout(RECEIVER_WALK_AFTER_WAIT, RECEIVER_MOVE_SPEED * 1000, obj, signal);
+    }
 }
 
 function RECEIVER_ARRIVE(obj) {
+    if(obj.isTrySay) {
+        $("#instrBackBut").css({
+            "cursor": "pointer",
+            "pointer-events": "revert"
+        });
+    }
     if(obj.receiverLocation[0] == obj.goalCoord[0] && obj.receiverLocation[1] == obj.goalCoord[1]) {
         RECORD_ACTION_TIME(obj);
         RECORD_SIGNALER_END_LOCATION(obj);
@@ -499,9 +528,9 @@ function RECEIVER_ARRIVE(obj) {
         RECORD_RECEIVER_ACHIEVED(obj);
         UPDATE_RESULT_IN_OBJ(obj, 0);
         SHOW_WIN_RESULT_BOX_FOR_SAY(obj, false);
-        obj.step = 0;  
-        obj.pathIndex = 0;      
-    }           
+        obj.step = 0;
+        obj.pathIndex = 0;
+    }
 }
 
 function SUCCESS(){
@@ -543,20 +572,20 @@ function NEXT_TRIAL(obj) {
         RESET_GAMEBOARD();
         EXPT_INSTR_APPEAR();
         obj.next()
-    } 
+    }
 }
 
 
 
 /*
- ####### ######  #     # 
-    #    #     #  #   #  
-    #    #     #   # #   
-    #    ######     #    
-    #    #   #      #    
-    #    #    #     #    
-    #    #     #    #    
-                         
+ ####### ######  #     #
+    #    #     #  #   #
+    #    #     #   # #
+    #    ######     #
+    #    #   #      #
+    #    #    #     #
+    #    #     #    #
+
 */
 
 function TRY_GRID_SETUP(obj) {
@@ -604,6 +633,12 @@ function TRY_MOVE() {
             [,,,,,,,,],
             [,,,,,,,,]
         ];
+    this.barrier = {
+        "up": "(4, 2), (5, 2), (6, 2), (7, 2)",
+        "down": "(4, 3), (5, 3), (6, 3), (7, 3)",
+        "left": "",
+        "right": ""
+    }
     tryMove.goalCoord=[3,7];
     TRY_GRID_SETUP(tryMove);
     TRY_SCOREBOARD_SETUP(tryMove);
@@ -620,7 +655,7 @@ function TRY_SAY(){
     if(!trySay.reached)
         $("#instrNextBut").hide();
     CREATE_EXPT_BUTTONS(trySay);
-    
+
     trySay.gridArray = [
         [,,,,,,,,],
         [,,,,,,,,],
@@ -645,14 +680,14 @@ function TRY_SAY(){
 
 
 /*
-  #####     #    #     # ### ####### #     #     #####  #     # #######  #####  #    # 
- #     #   # #   ##    #  #     #     #   #     #     # #     # #       #     # #   #  
- #        #   #  # #   #  #     #      # #      #       #     # #       #       #  #   
-  #####  #     # #  #  #  #     #       #       #       ####### #####   #       ###    
-       # ####### #   # #  #     #       #       #       #     # #       #       #  #   
- #     # #     # #    ##  #     #       #       #     # #     # #       #     # #   #  
-  #####  #     # #     # ###    #       #        #####  #     # #######  #####  #    # 
-                                                                                       
+  #####     #    #     # ### ####### #     #     #####  #     # #######  #####  #    #
+ #     #   # #   ##    #  #     #     #   #     #     # #     # #       #     # #   #
+ #        #   #  # #   #  #     #      # #      #       #     # #       #       #  #
+  #####  #     # #  #  #  #     #       #       #       ####### #####   #       ###
+       # ####### #   # #  #     #       #       #       #     # #       #       #  #
+ #     # #     # #    ##  #     #       #       #     # #     # #       #     # #   #
+  #####  #     # #     # ###    #       #        #####  #     # #######  #####  #    #
+
 */
 
 function SANITY_CHECK_GAMEBOARD_SETUP() {
@@ -667,6 +702,7 @@ function START_SANITY_CHECK_TRIAL() {
     $("#sanityCheckInfo").css("opacity", 1);
     sanityCheck.isSanityCheck = true;
     sanityCheck.trialN = sanityCheck.inputData.length;
+    sanityCheck.trialIndexOnInterface = sanityCheck.trialIndex;
 
     // random sampling for first trial; the following trials are handled in next()
     // idea: copy a random third trial of each type, remove that from object -- repeat for all three types
@@ -684,7 +720,7 @@ function START_SANITY_CHECK_TRIAL() {
     sanityCheck.inputData.splice(randomIndexDo, 1);
 
 
-    CREATE_RANDOM_LIST_FOR_EXPT(sanityCheck);  
+    CREATE_RANDOM_LIST_FOR_EXPT(sanityCheck);
 
     sanityCheck.inputData.push(conditionalCommunicateTrial, conditionalQuitTrial, conditionalDoTrial);
     sanityCheck.randomizedTrialList.push("6", "7", "8");
@@ -699,14 +735,14 @@ function START_SANITY_CHECK_TRIAL() {
 }
 
 /*
- ######  ######     #     #####  ####### ###  #####  ####### 
- #     # #     #   # #   #     #    #     #  #     # #       
- #     # #     #  #   #  #          #     #  #       #       
- ######  ######  #     # #          #     #  #       #####   
- #       #   #   ####### #          #     #  #       #       
- #       #    #  #     # #     #    #     #  #     # #       
- #       #     # #     #  #####     #    ###  #####  ####### 
-                                                             
+ ######  ######     #     #####  ####### ###  #####  #######
+ #     # #     #   # #   #     #    #     #  #     # #
+ #     # #     #  #   #  #          #     #  #       #
+ ######  ######  #     # #          #     #  #       #####
+ #       #   #   ####### #          #     #  #       #
+ #       #    #  #     # #     #    #     #  #     # #
+ #       #     # #     #  #####     #    ###  #####  #######
+
 */
 function PRACTICE_GAMEBOARD_SETUP() {
     $("#practiceSay").show();
@@ -733,15 +769,15 @@ function NEXT_INSTR() {
     instr.next();
 }
 
-/*                           
- ####### #     # ######  #######    
- #        #   #  #     #    #       
- #         # #   #     #    #       
- #####      #    ######     #       
- #         # #   #          #       
- #        #   #  #          #       
- ####### #     # #          #       
-                                    
+/*
+ ####### #     # ######  #######
+ #        #   #  #     #    #
+ #         # #   #     #    #
+ #####      #    ######     #
+ #         # #   #          #
+ #        #   #  #          #
+ ####### #     # #          #
+
 */
 
 function EXPT_GAMEBOARD_SETUP() {
@@ -756,7 +792,7 @@ function START_EXPT(){
     $("#exptPracticeInfo").css("opacity", 0);
     expt.isExptTrial = true;
     expt.trialN = expt.inputData.length;
-    CREATE_RANDOM_LIST_FOR_EXPT(expt);  
+    CREATE_RANDOM_LIST_FOR_EXPT(expt);
     TRIAL_SET_UP(expt);
     CREATE_GRID(expt);
     CREATE_SIGNAL_BUTTONS(expt, expt.signalSpace);

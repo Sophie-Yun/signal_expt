@@ -7,24 +7,28 @@ function DISABLE_DEFAULT_KEYS() {
     }
 }
 /*
-  #####     #    #     # #######     #####  ######  ### ######  
- #     #   # #   ##   ## #          #     # #     #  #  #     # 
- #        #   #  # # # # #          #       #     #  #  #     # 
- #  #### #     # #  #  # #####      #  #### ######   #  #     # 
- #     # ####### #     # #          #     # #   #    #  #     # 
- #     # #     # #     # #          #     # #    #   #  #     # 
-  #####  #     # #     # #######     #####  #     # ### ######  
-                                                                
+  #####     #    #     # #######     #####  ######  ### ######
+ #     #   # #   ##   ## #          #     # #     #  #  #     #
+ #        #   #  # # # # #          #       #     #  #  #     #
+ #  #### #     # #  #  # #####      #  #### ######   #  #     #
+ #     # ####### #     # #          #     # #   #    #  #     #
+ #     # #     # #     # #          #     # #    #   #  #     #
+  #####  #     # #     # #######     #####  #     # ### ######
+
 */
 
 function ADD_BARRIER(obj) {
-    for (var i = 0; i < obj.barrier["up"].length; i++) {
-        var coord = obj.barrier["up"][i];
-        $("#shape" + coord[0] + "v" + coord[1]).css("border-top", "black solid");
-    }
-    for (var i = 0; i < obj.barrier["down"].length; i++) {
-        var coord = obj.barrier["down"][i];
-        $("#shape" + coord[0] + "v" + coord[1]).css("border-bottom", "black solid");
+    if(obj.barrier["up"] == "" || obj.barrier["up"] == undefined)
+        return;
+    else {
+        for (var i = 0; i < obj.barrier["up"].length; i++) {
+            var coord = obj.barrier["up"][i];
+            $("#shape" + coord[0] + "v" + coord[1]).css("border-top", "black solid");
+        }
+        for (var i = 0; i < obj.barrier["down"].length; i++) {
+            var coord = obj.barrier["down"][i];
+            $("#shape" + coord[0] + "v" + coord[1]).css("border-bottom", "black solid");
+        }
     }
 }
 
@@ -32,12 +36,12 @@ function CREATE_GRID(obj) {
     var gridArray = obj.gridArray;
     var nrow = GRID_NROW;
     var ncol = GRID_NCOL;
-    var shapeId; 
+    var shapeId;
     if(obj.isTryMove) {
         for (var row = 0; row < nrow; row++) {
             for (var col = 0; col < ncol; col++) {
                 shapeId = "shape" + row + "v" + col;
-                
+
                 if (gridArray[row][col]!= null){
                     $("#tryMoveGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>")
                     $("#" + shapeId).append($("<img>", {class: "shape", src: gridArray[row][col]}));
@@ -52,7 +56,7 @@ function CREATE_GRID(obj) {
         for (var row = 0; row < nrow; row++) {
             for (var col = 0; col < ncol; col++) {
                 shapeId = "shape" + row + "v" + col;
-                
+
                 if (gridArray[row][col]!= null){
                     $("#trySayGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>")
                     $("#" + shapeId).append($("<img>", {class: "shape", src: gridArray[row][col]}));
@@ -66,7 +70,7 @@ function CREATE_GRID(obj) {
         for (var row = 0; row < nrow; row++) {
             for (var col = 0; col < ncol; col++) {
                 shapeId = "shape" + row + "v" + col;
-                
+
                 if (gridArray[row][col]!= null){
                     $("#sanityCheckGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>")
                     $("#" + shapeId).append($("<img>", {class: "shape", src: gridArray[row][col]}));
@@ -76,11 +80,12 @@ function CREATE_GRID(obj) {
                 }
             };
         };
+        ADD_BARRIER(obj);
     } else if (obj.isPracTrial) {
         for (var row = 0; row < nrow; row++) {
             for (var col = 0; col < ncol; col++) {
                 shapeId = "shape" + row + "v" + col;
-                
+
                 if (gridArray[row][col]!= null){
                     $("#practiceGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>")
                     $("#" + shapeId).append($("<img>", {class: "shape", src: gridArray[row][col]}));
@@ -94,7 +99,7 @@ function CREATE_GRID(obj) {
         for (var row = 0; row < nrow; row++) {
             for (var col = 0; col < ncol; col++) {
                 shapeId = "shape" + row + "v" + col;
-                
+
                 if (gridArray[row][col]!= null){
                     $("#gridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>")
                     $("#" + shapeId).append($("<img>", {class: "shape", src: gridArray[row][col]}));
@@ -105,13 +110,13 @@ function CREATE_GRID(obj) {
             };
         };
     }
-    
+
 }
 
 function REMOVE_PREVIOUS(actor) {
     if($("#shape"+ actor[0] + "v" + actor[1]).hasClass("gridEmpty"))
         $("#shape"+ actor[0] + "v" + actor[1] + " img").remove();
-    else 
+    else
         $(".top").remove();
 }
 
@@ -157,7 +162,14 @@ function MEET_UP_BARRIER(obj) {
         }
         return false
     }
-    else
+    else if (obj.isSanityCheck && obj.barrier["up"] != undefined) {
+        for (var i = 0; i < obj.barrier["up"].length; i++){
+            var coord = obj.barrier["up"][i];
+            if(obj.signalerLocation[0] == coord[0] && obj.signalerLocation[1] == coord[1])
+                return true
+        }
+        return false
+    }
         return false
 }
 function MEET_DOWN_BARRIER(obj) {
@@ -168,8 +180,14 @@ function MEET_DOWN_BARRIER(obj) {
                 return true
         }
         return false
+    }   else if (obj.isSanityCheck && obj.barrier["down"] != undefined) {
+        for (var i = 0; i < obj.barrier["down"].length; i++){
+            var coord = obj.barrier["down"][i];
+            if(obj.signalerLocation[0] == coord[0] && obj.signalerLocation[1] == coord[1])
+                return true
+        }
+        return false
     }
-    else
         return false
 }
 function MOVE_UP(obj) {
@@ -180,7 +198,7 @@ function MOVE_UP(obj) {
             obj.signalerLocation = [(obj.signalerLocation[0]-1), obj.signalerLocation[1]];
             RECORD_SIGNALER_PATH(obj);
             NEW_SIGNALER_POSITION(obj.signalerLocation);
-        }  
+        }
     }
 }
 
@@ -227,7 +245,7 @@ function RECEIVER_MOVE_LEFT(obj) {
 function RECEIVER_MOVE_UP(obj) {
     if(obj.receiverLocation[0]-1 >= 0){
         RECEIVER_FIRST_MOVE(obj);
-        REMOVE_PREVIOUS(obj.receiverLocation);                
+        REMOVE_PREVIOUS(obj.receiverLocation);
         obj.receiverLocation = [(obj.receiverLocation[0]-1), (obj.receiverLocation[1])];
         RECORD_RECEIVER_PATH(obj);
         NEW_RECEIVER_POSITION(obj.receiverLocation);
@@ -238,7 +256,7 @@ function RECEIVER_MOVE_RIGHT(obj) {
     if(obj.receiverLocation[1]+1 < GRID_NCOL){
         RECEIVER_FIRST_MOVE(obj);
         REMOVE_PREVIOUS(obj.receiverLocation);
-        obj.receiverLocation = [obj.receiverLocation[0], (obj.receiverLocation[1]+1)];  
+        obj.receiverLocation = [obj.receiverLocation[0], (obj.receiverLocation[1]+1)];
         RECORD_RECEIVER_PATH(obj);
         NEW_RECEIVER_POSITION(obj.receiverLocation);
     }
@@ -299,14 +317,14 @@ function RESET_GAMEBOARD() {
 }
 
 /*
-  #####     #    #     # #######    ######  #######    #    ######  ######  
- #     #   # #   ##   ## #          #     # #     #   # #   #     # #     # 
- #        #   #  # # # # #          #     # #     #  #   #  #     # #     # 
- #  #### #     # #  #  # #####      ######  #     # #     # ######  #     # 
- #     # ####### #     # #          #     # #     # ####### #   #   #     # 
- #     # #     # #     # #          #     # #     # #     # #    #  #     # 
-  #####  #     # #     # #######    ######  ####### #     # #     # ######  
-                                                                                                                                                
+  #####     #    #     # #######    ######  #######    #    ######  ######
+ #     #   # #   ##   ## #          #     # #     #   # #   #     # #     #
+ #        #   #  # # # # #          #     # #     #  #   #  #     # #     #
+ #  #### #     # #  #  # #####      ######  #     # #     # ######  #     #
+ #     # ####### #     # #          #     # #     # ####### #   #   #     #
+ #     # #     # #     # #          #     # #     # #     # #    #  #     #
+  #####  #     # #     # #######    ######  ####### #     # #     # ######
+
 */
 function CREATE_EXPT_BUTTONS(obj) {
     if(obj.isTryMove && !obj.nextButCreated) {
@@ -333,14 +351,14 @@ function CREATE_SIGNAL_BUTTONS(obj, availableSignals) {
     for (var i = 0; i < MAX_SAY_OPTION; i++) {
         if(obj.isTrySay || obj.isTryMove){
             $("#tryButOption" + i).css({
-                "border": "1px solid", 
+                "border": "1px solid",
                 "opacity": 0.2,
-                "background": "#bcbab8", 
+                "background": "#bcbab8",
                 "cursor": "auto",
                 "box-shadow": "none",
                 "pointer-events": "none"
             });
-            if(!obj.buttonsCreated)  
+            if(!obj.buttonsCreated)
                 $("#tryButOption" + i).click(function(){RECEIVER_WALK(obj,$(this).html())});
 
             for (var j = 0; j < availableSignals.length; j++) {
@@ -348,7 +366,7 @@ function CREATE_SIGNAL_BUTTONS(obj, availableSignals) {
                     $("#tryButOption" + i).css({
                         "border": "revert",
                         "opacity": 1,
-                        "background": "#9D8F8F", 
+                        "background": "#9D8F8F",
                         "box-shadow": "2px 2px 4px rgba(0, 0, 0, 0.25)",
                         "pointer-events": "revert",
                         "cursor": "pointer"
@@ -357,21 +375,21 @@ function CREATE_SIGNAL_BUTTONS(obj, availableSignals) {
             }
         } else if (obj.isSanityCheck) {
             $("#sanityCheckButOption" + i).css({
-                "border": "1px solid", 
+                "border": "1px solid",
                 "opacity": 0.2,
-                "background": "#bcbab8", 
+                "background": "#bcbab8",
                 "cursor": "auto",
                 "box-shadow": "none",
                 "pointer-events": "none"
             });
-            if(!obj.buttonsCreated)  
+            if(!obj.buttonsCreated)
                 $("#sanityCheckButOption" + i).click(function(){RECEIVER_WALK(obj,$(this).html())});
             for (var j = 0; j < availableSignals.length; j++) {
                 if (availableSignals[j] == $("#sanityCheckButOption" + i).html()) {
                     $("#sanityCheckButOption" + i).css({
                         "border": "revert",
                         "opacity": 1,
-                        "background": "#9D8F8F", 
+                        "background": "#9D8F8F",
                         "box-shadow": "2px 2px 4px rgba(0, 0, 0, 0.25)",
                         "pointer-events": "revert",
                         "cursor": "pointer"
@@ -380,21 +398,21 @@ function CREATE_SIGNAL_BUTTONS(obj, availableSignals) {
             }
         } else if (obj.isPracTrial) {
             $("#practiceButOption" + i).css({
-                "border": "1px solid", 
+                "border": "1px solid",
                 "opacity": 0.2,
-                "background": "#bcbab8", 
+                "background": "#bcbab8",
                 "cursor": "auto",
                 "box-shadow": "none",
                 "pointer-events": "none"
             });
-            if(!obj.buttonsCreated)  
+            if(!obj.buttonsCreated)
                 $("#practiceButOption" + i).click(function(){RECEIVER_WALK(obj,$(this).html())});
             for (var j = 0; j < availableSignals.length; j++) {
                 if (availableSignals[j] == $("#practiceButOption" + i).html()) {
                     $("#practiceButOption" + i).css({
                         "border": "revert",
                         "opacity": 1,
-                        "background": "#9D8F8F", 
+                        "background": "#9D8F8F",
                         "box-shadow": "2px 2px 4px rgba(0, 0, 0, 0.25)",
                         "pointer-events": "revert",
                         "cursor": "pointer"
@@ -402,22 +420,22 @@ function CREATE_SIGNAL_BUTTONS(obj, availableSignals) {
                 }
             }
         } else if (obj.isExptTrial) {
-            $("#butOption" + i).css({    
-                "border": "1px solid", 
+            $("#butOption" + i).css({
+                "border": "1px solid",
                 "opacity": 0.2,
-                "background": "#bcbab8", 
+                "background": "#bcbab8",
                 "cursor": "auto",
                 "box-shadow": "none",
                 "pointer-events": "none"
             });
-            if(!obj.buttonsCreated)  
-                $("#butOption" + i).click(function(){RECEIVER_WALK(obj,$(this).html())});    
+            if(!obj.buttonsCreated)
+                $("#butOption" + i).click(function(){RECEIVER_WALK(obj,$(this).html())});
             for (var j = 0; j < availableSignals.length; j++) {
                 if (availableSignals[j] == $("#butOption" + i).html()) {
                     $("#butOption" + i).css({
                         "border": "revert",
                         "opacity": 1,
-                        "background": "#9D8F8F", 
+                        "background": "#9D8F8F",
                         "box-shadow": "2px 2px 4px rgba(0, 0, 0, 0.25)",
                         "pointer-events": "revert",
                         "cursor": "pointer"
@@ -476,41 +494,43 @@ function CHANGE_IN_TRIAL_INSTR(decision) {
     EXPT_INSTR_FADE();
     if(decision == "do"){
         $(".tryDecision").html("Please hit ENTER when you land on the item.");
+        $("#sanityCheckDecision").html("Please hit ENTER when you land on the item.");
         $("#practiceDecision").html("Please hit ENTER when you land on the item.");
         $("#decision").html("Please hit ENTER when you land on the item.");
     } else if(decision == "say") {
         $(".tryDecision").html("<img class='shape' src='shape/receiver.png' />" + " is responding to your signal.");
+        $("#sanityCheckDecision").html("<img class='shape' src='shape/receiver.png' />" + " is responding to your signal.");
         $("#practiceDecision").html("<img class='shape' src='shape/receiver.png' />" + " is responding to your signal.");
         $("#decision").html("<img class='shape' src='shape/receiver.png' />" + " is responding to your signal.");
     }
 }
 
 /*
-  #####   #####  ####### ######  #######    ######  #######    #    ######  ######  
- #     # #     # #     # #     # #          #     # #     #   # #   #     # #     # 
- #       #       #     # #     # #          #     # #     #  #   #  #     # #     # 
-  #####  #       #     # ######  #####      ######  #     # #     # ######  #     # 
-       # #       #     # #   #   #          #     # #     # ####### #   #   #     # 
- #     # #     # #     # #    #  #          #     # #     # #     # #    #  #     # 
-  #####   #####  ####### #     # #######    ######  ####### #     # #     # ######  
-                                                                                    
+  #####   #####  ####### ######  #######    ######  #######    #    ######  ######
+ #     # #     # #     # #     # #          #     # #     #   # #   #     # #     #
+ #       #       #     # #     # #          #     # #     #  #   #  #     # #     #
+  #####  #       #     # ######  #####      ######  #     # #     # ######  #     #
+       # #       #     # #   #   #          #     # #     # ####### #   #   #     #
+ #     # #     # #     # #    #  #          #     # #     # #     # #    #  #     #
+  #####   #####  ####### #     # #######    ######  ####### #     # #     # ######
+
 */
 
 function SETUP_SCOREBOARD(obj) {
     if(obj.isTryMove) {
-        $("#tryMoveGoal").attr("src", obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]); 
+        $("#tryMoveGoal").attr("src", obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]);
     } else if (obj.isTrySay){
-        $("#trySayGoal").attr("src", obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]); 
+        $("#trySayGoal").attr("src", obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]);
     } else if (obj.isSanityCheck){
-        $("#sanityCheckGoalShape").attr("src", obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]); 
+        $("#sanityCheckGoalShape").attr("src", obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]);
         $("#sanityCheckTotalBonusBefore").html("$" + obj.totalScore.toFixed(2));
         $(".sanityCheckCost").html("-$" + obj.step.toFixed(2));
     } else if (obj.isPracTrial){
-        $("#practiceGoalShape").attr("src", obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]); 
+        $("#practiceGoalShape").attr("src", obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]);
         $("#practiceTotalBonusBefore").html("$" + obj.totalScore.toFixed(2));
         $(".practiceCost").html("-$" + obj.step.toFixed(2));
     } else if (obj.isExptTrial){
-        $("#goalShape").attr("src", obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]); 
+        $("#goalShape").attr("src", obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]);
         $("#exptTotalBonusBefore").html("$" + obj.totalScore.toFixed(2));
         $(".exptCost").html("-$" + obj.step.toFixed(2));
     }
@@ -531,14 +551,14 @@ function HIDE_COST_IN_TRY_SCOREBOARD() {
 }
 
 /*
- ######  #######  #####  #     # #       #######    ######  ####### #     # 
- #     # #       #     # #     # #          #       #     # #     #  #   #  
- #     # #       #       #     # #          #       #     # #     #   # #   
- ######  #####    #####  #     # #          #       ######  #     #    #    
- #   #   #             # #     # #          #       #     # #     #   # #   
- #    #  #       #     # #     # #          #       #     # #     #  #   #  
- #     # #######  #####   #####  #######    #       ######  ####### #     # 
-                                                                            
+ ######  #######  #####  #     # #       #######    ######  ####### #     #
+ #     # #       #     # #     # #          #       #     # #     #  #   #
+ #     # #       #       #     # #          #       #     # #     #   # #
+ ######  #####    #####  #     # #          #       ######  #     #    #
+ #   #   #             # #     # #          #       #     # #     #   # #
+ #    #  #       #     # #     # #          #       #     # #     #  #   #
+ #     # #######  #####   #####  #######    #       ######  ####### #     #
+
 */
 function GET_ROUND_BONUS_STRING(bonus){
     if (bonus >= 0)
@@ -571,13 +591,13 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
             $(".tryResultText").html("Sorry, you did not reach the target.<br><br>Good luck on your next round!");
         }
         $(".tryResult").show();
-    } else if (obj.isSanityCheck){ 
+    } else if (obj.isSanityCheck){
         trialStrategy = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["trialStrategy"];
         if (trialStrategy == "do") {
             if (!win) {
                 obj.sanityMoveFails++;
             }
-            obj.sanityMoveAttempts++; 
+            obj.sanityMoveAttempts++;
         } else if (trialStrategy == "quit") {
             obj.sanityQuitFails++;
             obj.sanityQuitAttempts++;
@@ -643,7 +663,7 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
             $(".tryResultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target.<br>Good luck on your next round!");
         }
         $(".tryResult").show();
-    } else if(obj.isSanityCheck){ 
+    } else if(obj.isSanityCheck){
         trialStrategy = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["trialStrategy"];
         if (trialStrategy == "do") {
             obj.sanityMoveFails++;
@@ -715,7 +735,7 @@ function SHOW_QUIT_RESULT(obj) {
     CHECK_CONSECUTIVE_QUIT(obj);
     CHANGE_IN_TRIAL_INSTR();
     DISABLE_DEFAULT_KEYS();
-    if(obj.isSanityCheck){ 
+    if(obj.isSanityCheck){
         trialStrategy = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["trialStrategy"];
         if (trialStrategy == "do") {
             obj.sanityMoveFails++;
@@ -759,7 +779,7 @@ function SHOW_QUIT_RESULT(obj) {
         RECORD_RECEIVER_END_LOCATION(obj);
         RECORD_RECEIVER_ACHIEVED(obj);
     }
-    
+
 };
 
 function CHECK_CONSECUTIVE_QUIT(obj) {
@@ -768,5 +788,5 @@ function CHECK_CONSECUTIVE_QUIT(obj) {
         alert("You have been quitting too often! Please do the future rounds more carefully.")
         obj.quitWarningPopup = true;
     } else
-        obj.quitWarningPopup = false; 
+        obj.quitWarningPopup = false;
 }

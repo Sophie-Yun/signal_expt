@@ -4,16 +4,37 @@ function BLOCK_MOBILE() {
     $("#instrPage").show();
 }
 
+function ALLOW_SHORTCUTS_FOR_TESTING() {
+    document.onkeydown = function(event) {
+        if(event.key == "s" || event.which == 83 || event.keyCode == 83) {
+            console.log("s");
+            instr.index = 15;
+            instr.next();
+        } else if (event.key == "p" || event.which == 80 || event.keyCode == 80) {
+            console.log("p");
+            instr.index = 17;
+            instr.next();
+        } else if (event.keyCode == "e" || event.which == 69 || event.keyCode == 69) {
+            console.log("e");
+            instr.index = 19;
+            instr.next();
+        } else if (event.keyCode == "d" || event.which == 68 || event.keyCode == 68) {
+            console.log("d");
+            instr.index = 21;
+            instr.next();
+        }
+    };
 
+}
 /*
- ### #     #  #####  ####### ######  
-  #  ##    # #     #    #    #     # 
-  #  # #   # #          #    #     # 
-  #  #  #  #  #####     #    ######  
-  #  #   # #       #    #    #   #  
-  #  #    ## #     #    #    #    #  
- ### #     #  #####     #    #     #  
-                                             
+ ### #     #  #####  ####### ######
+  #  ##    # #     #    #    #     #
+  #  # #   # #          #    #     #
+  #  #  #  #  #####     #    ######
+  #  #   # #       #    #    #   #
+  #  #    ## #     #    #    #    #
+ ### #     #  #####     #    #     #
+
 */
 class instrObject {
     constructor(options = {}) {
@@ -67,7 +88,7 @@ class instrObject {
                 this.funcDict[this.index]();
             }
             this.startTime = Date.now();
-        } else 
+        } else
             this.index = 0;
     }
 }
@@ -87,7 +108,7 @@ instr_text[8] = "After you send the signal, your partner will try their best to 
 instr_text[9] = "";
 instr_text[10] = "Nice! Now you know how to send a signal to your partner. <br><br> If you and your partner cooperate to reach the target efficiently, you will have a chance to accumulate an additional money reward at the end of the experiment."
 instr_text[11] = "In each round, if either you or your partner reaches the correct goal, you will both receive a bonus of $0.40. However, every step either of you takes costs $0.05."
-instr_text[12] = "Your additional money reward accumulates across rounds, but it will never drop below $0.00. You can earn up to $8.00. <br><br> You will see two sets of practice rounds before you can start to earn the money bonus.";
+instr_text[12] = "Your additional money reward accumulates across rounds, but it will never drop below $0.00. <br><br> You will see two sets of practice rounds before you can start to earn the money bonus.";
 instr_text[13] = "Some rounds might be difficult. If you decide that it is too costly for either of you to move towards the target, you have the option to QUIT this round. Neither of you will lose or receive money bonus if you choose to quit. <br><br>However, once you start an action, you cannot change your mind on that round.";
 instr_text[14] = "";
 instr_text[15] = "By clicking on the NEXT button, I am acknowledged and hereby accept the terms. I understand the task in this experiment.";
@@ -109,7 +130,7 @@ const INSTR_FUNC_DICT = {
     2: HIDE_EXAMPLE_GRID,
     3: SHOW_EXAMPLE_GRID,
     4: HIDE_EXAMPLE_GRID,
-    5: SHOW_INSTR, 
+    5: SHOW_INSTR,
     6: TRY_MOVE,
     7: SHOW_INSTR,
     8: SHOW_INSTR,
@@ -118,7 +139,7 @@ const INSTR_FUNC_DICT = {
     11: SHOW_INSTR,
     12: SHOW_INSTR,
     13: SHOW_INSTR,
-    14: SHOW_INSTR_QUESTION, 
+    14: SHOW_INSTR_QUESTION,
     15: SHOW_CONSENT,
     16: SHOW_INSTR,
     17: START_SANITY_CHECK_TRIAL,
@@ -155,7 +176,7 @@ function SHOW_INSTR() {
     HIDE_CONSENT();
     HIDE_INSTR_Q();
     RESET_INSTR();
-    RESET_GAMEBOARD(); 
+    RESET_GAMEBOARD();
     if (!instr.quizCorrect)
         RESET_INSTR_Q();
 }
@@ -197,6 +218,9 @@ function SUBMIT_INSTR_Q() {
         $("#instrQWarning").text("Correct! Please click on NEXT to proceed!");
         $("#instrQBut").hide();
         $("#instrNextBut").show();
+        $("#quizBox input").prop("disabled", true);
+        $("#quizBox label").css({"cursor": "auto",
+                                "pointer-events": "none"});
         instr.quizCorrect = true;
     } else {
         qAttemptNum++;
@@ -209,11 +233,6 @@ function RESET_INSTR_Q() {
     $("input[name='instrQ']").prop("checked", false);
 }
 
-var instr_options = {
-    text: instr_text,
-    funcDict: INSTR_FUNC_DICT,
-    qConditions: ['onlyQ'],
-};
 
 function BUFFER_ALL_IMG() {
     $("#buffer").attr("src", "exampleGrid.png");
@@ -221,25 +240,30 @@ function BUFFER_ALL_IMG() {
     $("#buffer").attr("src", "receiver.png");
     for (var i in PIC_DICT){
         $("#buffer").attr("src", PIC_DICT[i]);
-        console.log(i);
     }
 }
+
+var instr_options = {
+    text: instr_text,
+    funcDict: INSTR_FUNC_DICT,
+    qConditions: ['onlyQ'],
+};
+
+/*
+ ######  ####### ######  ######  ### ####### ####### ### #     #  #####
+ #     # #       #     # #     #  #  #       #        #  ##    # #     #
+ #     # #       #     # #     #  #  #       #        #  # #   # #
+ #     # #####   ######  ######   #  #####   #####    #  #  #  # #  ####
+ #     # #       #     # #   #    #  #       #        #  #   # # #     #
+ #     # #       #     # #    #   #  #       #        #  #    ## #     #
+ ######  ####### ######  #     # ### ####### #       ### #     #  #####
+
+*/
 
 function SHOW_DEBRIEFING_PAGE() {
     $("#questionsBox").show();
     $("#instrPage").hide();
 }
-
-/*
- ######  ####### ######  ######  ### ####### ####### ### #     #  #####  
- #     # #       #     # #     #  #  #       #        #  ##    # #     # 
- #     # #       #     # #     #  #  #       #        #  # #   # #       
- #     # #####   ######  ######   #  #####   #####    #  #  #  # #  #### 
- #     # #       #     # #   #    #  #       #        #  #   # # #     # 
- #     # #       #     # #    #   #  #       #        #  #    ## #     # 
- ######  ####### ######  #     # ### ####### #       ### #     #  #####  
-                                                                         
-*/
 
 function SUBMIT_DEBRIEFING_Q() {
     var serious = $("input[name='serious']:checked").val();

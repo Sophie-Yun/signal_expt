@@ -11,14 +11,14 @@ body {
 }
 
 /*
- ### #     #  #####  ####### ######  
-  #  ##    # #     #    #    #     # 
-  #  # #   # #          #    #     # 
-  #  #  #  #  #####     #    ######  
-  #  #   # #       #    #    #   #   
-  #  #    ## #     #    #    #    #  
- ### #     #  #####     #    #     # 
-                                     
+ ### #     #  #####  ####### ######
+  #  ##    # #     #    #    #     #
+  #  # #   # #          #    #     #
+  #  #  #  #  #####     #    ######
+  #  #   # #       #    #    #   #
+  #  #    ## #     #    #    #    #
+ ### #     #  #####     #    #     #
+
 */
 #instrBox {
     position: relative;
@@ -35,8 +35,8 @@ body {
 #examGrid {
     display: none;
     margin: auto;
-    margin-bottom: 60px; 
-    width: 200px; 
+    margin-bottom: 60px;
+    width: 200px;
     height: auto;
 }
 
@@ -52,14 +52,14 @@ body {
 
 
 /*
- ####### #     # ######  ####### 
- #        #   #  #     #    #    
- #         # #   #     #    #    
- #####      #    ######     #    
- #         # #   #          #    
- #        #   #  #          #    
- ####### #     # #          #    
-                                 
+ ####### #     # ######  #######
+ #        #   #  #     #    #
+ #         # #   #     #    #
+ #####      #    ######     #
+ #         # #   #          #
+ #        #   #  #          #
+ ####### #     # #          #
+
 */
 
 #tryMoveBox, #trySayBox, #sanityCheckBox, #practiceExptBox, #exptBox {
@@ -99,7 +99,6 @@ body {
 .tryVerticalAxis, #sanityCheckVerticalAxis, #practiceVerticalAxis, #verticalAxis {
     position: relative;
     display: inline-block;
-    top: 45px;
     letter-spacing: 3px;
 }
 
@@ -140,7 +139,7 @@ body {
 }
 
 .people {
-    
+
         max-width: 40px;
         height: 40px;
         padding: 5px;
@@ -158,11 +157,11 @@ body {
 
 .tryHorizontalAxis, #sanityCheckHorizontalAxis, #practiceHorizontalAxis, #horizontalAxis {
     position: absolute;
-    left: 6%;
+    left: 5%;
     top: 610px;
     letter-spacing: 17px;
 }
-  
+
 /* Left column */
 #tryMoveGridContainer, #trySayGridContainer, #sanityCheckGridContainer, #practiceGridContainer, #gridContainer {
     position: relative;
@@ -172,7 +171,7 @@ body {
     grid-gap: 2px;
     grid-template-columns: repeat(9, 50px);
     grid-template-rows: repeat(10, 50px);
-} 
+}
 /* Right column */
 .tryColumn.text, .column.text {
     margin-left: 20px;
@@ -296,14 +295,14 @@ body {
 }
 
 /*
- ######  #     # ####### ####### ####### #     # 
- #     # #     #    #       #    #     # ##    # 
- #     # #     #    #       #    #     # # #   # 
- ######  #     #    #       #    #     # #  #  # 
- #     # #     #    #       #    #     # #   # # 
- #     # #     #    #       #    #     # #    ## 
- ######   #####     #       #    ####### #     # 
-                                                 
+ ######  #     # ####### ####### ####### #     #
+ #     # #     #    #       #    #     # ##    #
+ #     # #     #    #       #    #     # # #   #
+ ######  #     #    #       #    #     # #  #  #
+ #     # #     #    #       #    #     # #   # #
+ #     # #     #    #       #    #     # #    ##
+ ######   #####     #       #    ####### #     #
+
 */
 
 .butNext, .butExpt {
@@ -313,7 +312,7 @@ body {
     outline: none;
     cursor: pointer;
     font-size: 16px;
-    padding: 10px 20px;                           
+    padding: 10px 20px;
 }
 
 .butNext:hover {
@@ -368,14 +367,14 @@ body {
 }
 
 /*
-                             
- ######  ####  #####  #    # 
- #      #    # #    # ##  ## 
- #####  #    # #    # # ## # 
- #      #    # #####  #    # 
- #      #    # #   #  #    # 
- #       ####  #    # #    # 
-                             
+
+ ######  ####  #####  #    #
+ #      #    # #    # ##  ##
+ #####  #    # #    # # ## #
+ #      #    # #####  #    #
+ #      #    # #   #  #    #
+ #       ####  #    # #    #
+
 */
 
 #quizBox {
@@ -396,9 +395,11 @@ body {
     border-radius: 8px;
     cursor: pointer;
 }
+
 .option:hover {
     background: gray;
 }
+
 .optionRadio {
     position: absolute;
     margin: 0;
@@ -407,6 +408,7 @@ body {
     transform: translateY(-50%);
     cursor: pointer;
 }
+
 .optionText {
     position: relative;
     left: 40px;

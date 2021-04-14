@@ -1,1 +1,0 @@
-# psych_expt

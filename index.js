@@ -9,7 +9,7 @@ const VISIT_FILE = "visit_" + EXPERIMENT_NAME + ".txt";
 const ATTRITION_FILE = 'attrition_' + EXPERIMENT_NAME + '.txt';
 const SAVING_DIR = FORMAL ? "data/formal":"data/testing";
 const SAVING_SCRIPT = 'save.php';
-const VIEWPORT_MIN_W = 1000; 
+const VIEWPORT_MIN_W = 1000;
 const VIEWPORT_MIN_H = 600;
 const GRID_NROW = 10;
 const GRID_NCOL = 9;
@@ -23,12 +23,7 @@ const STEP_COST = 0.05;
 const MAX_BONUS = 8;
 const CONSECUTIVE_QUIT_MAX = 3;
 const CONSECUTIVE_FAST_DECISION_MAX = 3;
-
-//temporary variables:
-const BARRIER = {
-    "up": "(4, 2), (5, 2), (6, 2), (7, 2)",
-    "down": "(4, 3), (5, 3), (6, 3), (7, 3)"
-}
+const EXPONENTIAL_RATE = 0.5;
 
 //end
 
@@ -49,13 +44,13 @@ var path;
 var instr, subj, tryMove, trySay, practice, expt;
 
 /*
-  #####  ####### ####### #     # ######  
- #     # #          #    #     # #     # 
- #       #          #    #     # #     # 
-  #####  #####      #    #     # ######  
-       # #          #    #     # #       
- #     # #          #    #     # #       
-  #####  #######    #     #####  #                                      
+  #####  ####### ####### #     # ######
+ #     # #          #    #     # #     #
+ #       #          #    #     # #     #
+  #####  #####      #    #     # ######
+       # #          #    #     # #
+ #     # #          #    #     # #
+  #####  #######    #     #####  #
 */
 var images = new Array()
 function preload() {
@@ -138,6 +133,19 @@ function PARSE_CSV(csvString) {
         if (tmp == null) tmp = lines[i].match(/quit/);
         if (tmp == null) tmp = lines[i].match(/do/)
         linesArray[i - 1]["trialStrategy"] = tmp;
+
+        tmp = lines[i].match(/{'up'.*}/g);
+        if (tmp != null){
+            linesArray[i - 1]["barrierDict"] = {
+                "up": tmp[0].match(/'([^']*)'/g)[1].substring(1, tmp[0].match(/'([^']*)'/g)[1].length - 1),
+                "down":  tmp[0].match(/'([^']*)'/g)[3].substring(1, tmp[0].match(/'([^']*)'/g)[3].length - 1),
+                "left":  tmp[0].match(/'([^']*)'/g)[5].substring(1, tmp[0].match(/'([^']*)'/g)[5].length - 1),
+                "right": tmp[0].match(/'([^']*)'/g)[7].substring(1, tmp[0].match(/'([^']*)'/g)[7].length - 1)
+            };
+        } else {
+            linesArray[i - 1]["barrierDict"] = tmp;
+        }
+
     }
     return linesArray;
 }
@@ -159,14 +167,14 @@ function CREATE_RANDOM_LIST_FOR_EXPT(obj) {
 
 
 /*
- ######  #######    #    ######  #     # 
- #     # #         # #   #     #  #   #  
- #     # #        #   #  #     #   # #   
- ######  #####   #     # #     #    #    
- #   #   #       ####### #     #    #    
- #    #  #       #     # #     #    #    
- #     # ####### #     # ######     #    
-                                         
+ ######  #######    #    ######  #     #
+ #     # #         # #   #     #  #   #
+ #     # #        #   #  #     #   # #
+ ######  #####   #     # #     #    #
+ #   #   #       ####### #     #    #
+ #    #  #       #     # #     #    #
+ #     # ####### #     # ######     #
+
 */
 
 
@@ -179,7 +187,7 @@ $(document).ready(function() {
     //} else if (subj.id !== null){
     } else {
         //fetches CSV from file into a string
-        fetch("sanityTrials_Set1_20210308.csv")
+        fetch("sanityTrials_wBarrier_20210405.csv")
             .then(response => response.text())
             .then(textString => {
                 SANITY_CHECK_INPUT_DATA = PARSE_CSV(textString)
@@ -199,19 +207,20 @@ $(document).ready(function() {
                         tryMove = new trialObject(trial_options);
                         trySay = new trialObject(trial_options);
                         sanityCheck = new trialObject(sanity_check_options);
-                        sanityCheck.inputData = SANITY_CHECK_INPUT_DATA; 
+                        sanityCheck.inputData = SANITY_CHECK_INPUT_DATA;
                         practice = new trialObject(practice_trial_options);
                         practice.inputData = PRACTICE_INPUT_DATA;
                         expt = new trialObject(trial_options);
                         expt.inputData = EXPT_INPUT_DATA;
                         instr.start();
+                        ALLOW_SHORTCUTS_FOR_TESTING();
                         console.log(sanityCheck.inputData);
-                        console.log(practice.inputData);       
-                        console.log(expt.inputData);           
+                        console.log(practice.inputData);
+                        console.log(expt.inputData);
                         });
                     });
                 });
-        
+
         //trial_options["subj"] = subj;
         //trial = new trialObject(trial_options);
         //$('#captchaBox').show();
@@ -220,14 +229,14 @@ $(document).ready(function() {
 
 
 /*
- ####### ######  ###    #    #       
-    #    #     #  #    # #   #       
-    #    #     #  #   #   #  #       
-    #    ######   #  #     # #       
-    #    #   #    #  ####### #       
-    #    #    #   #  #     # #       
-    #    #     # ### #     # ####### 
-                                     
+ ####### ######  ###    #    #
+    #    #     #  #    # #   #
+    #    #     #  #   #   #  #
+    #    ######   #  #     # #
+    #    #   #    #  ####### #
+    #    #    #   #  #     # #
+    #    #     # ### #     # #######
+
 */
 const TRIAL_TITLES = [
     "subjId",
@@ -240,15 +249,15 @@ const TRIAL_TITLES = [
     "signalerEndItem",
     "receiverEndCoordinate",
     "receiverEndItem",
-    "signalerAchievedGoal", 
-    "receiverAchievedGoal", 
-    "totalUtility", 
-    "decisionTime", 
-    "actionTime", 
+    "signalerAchievedGoal",
+    "receiverAchievedGoal",
+    "totalUtility",
+    "decisionTime",
+    "actionTime",
     "feedbackTime",
     "responseWarningPopup",
     "quitWarningPopup"];
-    
+
 var sanity_check_options= {
     subj: 'pre-define', // assign after subj is created
     //trialN: TRIAL_N,
