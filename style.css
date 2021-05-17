@@ -50,6 +50,11 @@ body {
     margin-bottom: 20px;
 }
 
+#rewardInInstrQuiz, #stepCostInInstrQuiz {
+    margin: 0px;
+    display: inline-block;
+}
+
 
 /*
  ####### #     # ######  #######
@@ -82,6 +87,10 @@ body {
 #tryMoveBoard .info, #trySayBoard .info, #sanityCheckScoreBoard .info, #practiceScoreBoard .info, #scoreBoard .info {
     display: inline-block;
     width: 235px;
+}
+
+.hiddenInfo {
+    opacity: 0;
 }
 
 #tryMoveBoard p, #trySayBoard p, #sanityCheckScoreBoard p, #practiceScoreBoard p, #scoreBoard p {
@@ -134,8 +143,9 @@ body {
 }
 
 .inlineShape {
-    height: 30px;
     position: relative;
+    height: 30px;
+    padding: 0px;
 }
 
 .people {
@@ -148,6 +158,32 @@ body {
 .gridItem, .gridEmpty{
     background-color: #f9f9f9;
     text-align: center;
+}
+
+.gridItem:hover .gridItemInfo {
+    display: block;
+}
+
+.gridItemInfo {
+    display: none;
+    position: relative;
+    z-index: 1;
+    left: 55px;
+    top: -40px;
+    height: 115px;
+    width: 160px;
+    padding-top: 10px;
+    border: solid grey 2px;
+    border-radius: 4px;
+    background-color: #e8e8e8;
+}
+
+.gridItemInfo p {
+    margin: 5px 0px;
+}
+
+.gridItemInfo img {
+    padding: 0px;
 }
 
 .tryColumn, .column {
@@ -194,6 +230,10 @@ body {
     top: 200px;
 }
 
+#tryMoveMoveBut, #sanityCheckMoveBut, #exptMoveBut {
+    margin: 0px 10px;
+}
+
 #sanityCheckQuit, #practiceQuit, #quit {
     position: absolute;
     top: 280px;
@@ -228,8 +268,7 @@ body {
 }
 
 #sanityCheckResult {
-    height: 530px;
-    width: 60%;
+    width: 40%;
 }
 
 #practiceResult, #result {
@@ -445,3 +484,28 @@ body {
     transform: translate(-50%, 0px);
     margin-bottom: 50px;
 }
+
+#rating label, #motivation label {
+    display: inline-block;
+    width: 19%;
+}
+
+#rating .optionText, #motivation .optionText {
+    left: 0px;
+    width: 100%;
+    text-align: center;
+}
+
+#rating .optionRadio, #motivation .optionRadio {
+    top: 150%;
+    left: 50px;
+}
+
+#uidPage {
+    display: none;
+    position: relative;
+    width: 60%;
+    left: 50%;
+    transform: translate(-50%, 100px);
+}
+

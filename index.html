@@ -7,27 +7,27 @@
     <link rel="stylesheet" href="style.css">
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.3/mobile-detect.min.js'></script>
-    <script src="record.js"></script>
-    <script src="trialInterface.js"></script>
-    <script src="trial.js"></script>
-    <script src="instruction.js"></script>
-    <script src="subject.js"></script>
-    <script src="index.js"></script>
+    <script src="js/record.js"></script>
+    <script src="js/trialInterface.js"></script>
+    <script src="js/trial.js"></script>
+    <script src="js/instruction.js"></script>
+    <script src="js/subject.js"></script>
+    <script src="js/index.js"></script>
 </head>
 <body>
     <!--==========INSTRUCTIONS==========-->
     <div class="pageBox" id="instrPage">
         <div id="instrBox">
             <p></p>
-            <embed id="consent" src="informedConsent.pdf"></iframe>
+            <embed id="consent" src="2021_5-5_informedConsent.pdf"></iframe>
             <p id="instrText"></p>
             <img id="examGrid" src="exampleGrid.png" alt="An error occurred when loading the picture.">
             <div class="pageBox" id="instrQBox">
                 <p id="instrQText">Which of the following is <b>not correct</b>?</p>
                 <div id="quizBox">
                 <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="walk"><div class="optionText">You can achieve the target by walking on your own.</div></div></label>
-                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="points"><div class="optionText">If either your partner or you reach the target, you get $0.40 as money bonus.</div></div></label>
-                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="costs"><div class="optionText">Each step taken by either your partner or you costs $0.05.</div></div></label>
+                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="points"><div class="optionText">If either your partner or you reach the target, you get $<p id="rewardInInstrQuiz"></p> as money bonus.</div></div></label>
+                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="costs"><div class="optionText">Each step taken by either your partner or you costs $<p id="stepCostInInstrQuiz"></p>.</div></div></label>
                 <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="several"><div class="optionText">You can send out multiple signals to your partner in each round.</div></div></label>
                 </div>
                 <div class='warning' id='instrQWarning'></div>
@@ -53,9 +53,9 @@
                         <p>Total Score: </p>
                         <p class="tryScore"></p>
                     </div>
-                    <div class="info hiddenInfo">
-                        <p>Cost: </p>
-                        <p></p>
+                    <div class="info">
+                        <p>Step: </p>
+                        <p id="tryMoveCost"></p>
                     </div>
             </div>
             <div class="tryColumn tryVerticalAxis">
@@ -76,7 +76,7 @@
                 <div class="tryExptInstr">
                     <div class="tryExptFade">
                         <div class="trySay">
-                            <p>Send one signal to <img class="shape" src="shape/receiver.png">:</p>
+                            <p>Send one signal to <img class="inlineShape" src="shape/receiver.png">:</p>
                             <button class="butExpt">red</button>
                             <button class="butExpt">green</button>
                             <button class="butExpt">purple</button>
@@ -85,7 +85,8 @@
                             <button class="butExpt">triangle</button>
                         </div>
                         <div class="tryDo">
-                            <p class="inlineImg">Use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</p>
+                            <p>Let <img class="inlineShape" src="shape/signaler.png"> walk: </p>
+                            <button class="butExpt" id="tryMoveMoveBut">Go</button>
                         </div>
                     </div>
                     <div class="tryDecision"></div>
@@ -113,9 +114,9 @@
                             <p>Total Score: </p>
                             <p class="tryScore"></p>
                         </div>
-                        <div class="info hiddenInfo">
-                            <p>Cost: </p>
-                            <p></p>
+                        <div class="info">
+                            <p>Step: </p>
+                            <p id="trySayCost"></p>
                         </div>
                 </div>
                 <div class="tryColumn tryVerticalAxis">
@@ -145,7 +146,7 @@
                                 <button class="butExpt" id="tryButOption5">triangle</button>
                             </div>
                             <div class="tryDo">
-                                <p class="inlineImg">Use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</p>
+                                <p class="inlineImg">Use arrow keys on your keyboard to move <img class="inlineShape" src="shape/signaler.png">.</p>
                             </div>
                         </div>
                         <div class="tryDecision"></div>
@@ -161,22 +162,22 @@
     <div class="pageBox" id="sanityCheckPage">
         <div id="sanityCheckBox">
             <div id="sanityCheckScoreBoard">
-                    <div class="info" id="sanityCheckInfo">
-                        <p>Practice </p>
-                        <p id="sanityCheckRound"></p>
-                    </div>
-                    <div class="info">
-                        <p style="top: -5px;">Target: </p>
-                        <img class="shape" id="sanityCheckGoalShape" alt="An error occurred when loading the picture.">
-                    </div>
-                    <div class="info">
-                        <p>Total Bonus: </p>
-                        <p id="sanityCheckTotalBonusBefore"></p>
-                    </div>
-                    <div class="info">
-                        <p>Cost: </p>
-                        <p class="sanityCheckCost"></p>
-                    </div>
+                <div class="info" id="sanityCheckInfo">
+                    <p>Practice </p>
+                    <p id="sanityCheckRound"></p>
+                </div>
+                <div class="info">
+                    <p style="top: -5px;">Target: </p>
+                    <img class="shape" id="sanityCheckGoalShape" alt="An error occurred when loading the picture.">
+                </div>
+                <div class="info hiddenInfo">
+                    <p>Total Bonus: </p>
+                    <p id="sanityCheckTotalBonusBefore"></p>
+                </div>
+                <div class="info" style="width:100px;">
+                    <p>Step: </p>
+                    <p id="sanityCheckStep"></p>
+                </div>
             </div>
             <div class="column" id="sanityCheckVerticalAxis">
                 <p>9</p>
@@ -196,7 +197,7 @@
                 <div id="sanityCheckInstr">
                     <div id="sanityCheckFade">
                         <div id="sanityCheckSay">
-                            <p>Send one signal to <img class="shape" src="shape/receiver.png">:</p>
+                            <p>Send one signal to <img class="inlineShape" src="shape/receiver.png">:</p>
                             <button class="butExpt" id="sanityCheckButOption0">red</button>
                             <button class="butExpt" id="sanityCheckButOption1">green</button>
                             <button class="butExpt" id="sanityCheckButOption2">purple</button>
@@ -205,12 +206,14 @@
                             <button class="butExpt" id="sanityCheckButOption5">triangle</button>
                         </div>
                         <div id="sanityCheckDo">
-                            <p class="inlineImg">Use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</p>
+                            <!-- <p class="inlineImg">Use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</p> -->
+                            <p>Let <img class="inlineShape" src="shape/signaler.png"> walk: </p>
+                            <button class="butExpt" id="sanityCheckMoveBut">Go</button>
                         </div>
-                        <div id="sanityCheckQuit">
+                        <!-- <div id="sanityCheckQuit">
                             <p id="sanityCheckQuitText">Give up on this trial: </p>
                             <button class="butExpt" id="sanityCheckQuitBut">Quit</button>
-                        </div>
+                        </div> -->
                     </div>
                     <div id="sanityCheckDecision"></div>
                 </div>
@@ -218,8 +221,8 @@
             <div id="sanityCheckResult">
                 <p id="sanityCheckResultText"></p>
                 <div class="resultInfo">
-                    <p class="title">Cost: </p>
-                    <p class="data sanityCheckCost"></p>
+                    <p class="title stepCostInResult"></p>
+                    <p class="data" id="sanityCheckCost"></p>
                 </div>
                 <div class="resultInfo">
                     <p class="title">Reward: </p>
@@ -239,7 +242,7 @@
     </div>
 
     <!--==========PRACTICE EXPERIMENT==========-->
-    <div class="pageBox" id="practiceExptPage">
+    <!-- <div class="pageBox" id="practiceExptPage">
         <div id="practiceExptBox">
             <div id="practiceScoreBoard">
                     <div class="info" id="practiceInfo">
@@ -317,7 +320,7 @@
                 <button class="butNext" id="practiceResultBut">NEXT</button>
             </div>
         </div>
-    </div>
+    </div> -->
     <!--==========FORMAL EXPERIMENT==========-->
     <div class="pageBox" id="exptPage">
         <div id="exptBox">
@@ -330,13 +333,13 @@
                         <p style="top: -5px;">Target: </p>
                         <img class="shape" id="goalShape" alt="An error occurred when loading the picture.">
                     </div>
-                    <div class="info">
+                    <div class="info hiddenInfo">
                         <p>Total Bonus: </p>
                         <p id="exptTotalBonusBefore"></p>
                     </div>
                     <div class="info">
-                        <p>Cost: </p>
-                        <p class="exptCost"></p>
+                        <p>Step: </p>
+                        <p id="exptStep"></p>
                     </div>
             </div>
             <div class="column" id="verticalAxis">
@@ -357,7 +360,7 @@
                 <div id="exptInstr">
                     <div id="exptFade">
                         <div id="say">
-                            <p>Send one signal to <img class="shape" src="shape/receiver.png">:</p>
+                            <p>Send one signal to <img class="inlineShape" src="shape/receiver.png">:</p>
                             <button class="butExpt" id="butOption0">red</button>
                             <button class="butExpt" id="butOption1">green</button>
                             <button class="butExpt" id="butOption2">purple</button>
@@ -366,12 +369,14 @@
                             <button class="butExpt" id="butOption5">triangle</button>
                         </div>
                         <div id="do">
-                            <p class="inlineImg">Use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</p>
+                            <!-- <p class="inlineImg">Use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</p> -->
+                            <p>Let <img class="inlineShape" src="shape/signaler.png"> walk: </p>
+                            <button class="butExpt" id="exptMoveBut">Go</button>
                         </div>
-                        <div id="quit">
+                        <!-- <div id="quit">
                             <p id="quitText">Give up on this trial: </p>
                             <button class="butExpt" id="quitBut">Quit</button>
-                        </div>
+                        </div> -->
                     </div>
                     <div id="decision"></div>
                 </div>
@@ -379,8 +384,8 @@
             <div id="result">
                 <p id="resultText"></p>
                 <div class="resultInfo">
-                    <p class="title">Cost: </p>
-                    <p class="data exptCost"></p>
+                    <p class="title stepCostInResult"></p>
+                    <p class="data" id="exptCost"></p>
                 </div>
                 <div class="resultInfo">
                     <p class="title">Reward: </p>
@@ -411,17 +416,33 @@
         <p>Was any part of the procedure unclear? Did you have any technical difficulty completing any of the tasks?</p>
         <textarea id='problems' name="debQ" rows="3"></textarea>
         <br><br>
-        <p>What is your gender?</p>
-        <label><div class="option"><input class='optionRadio' type='radio' name='gender' value='F' /><div class='optionText'>Female</div></div></label>
-        <label><div class="option"><input class='optionRadio' type='radio' name='gender' value='M' /><div class='optionText'>Male</div></div></label>
-        <label><div class="option"><input class='optionRadio' type='radio' name='gender' value='O' /><div class='optionText'>Other</div></div></label>
-        <label><div class="option"><input class='optionRadio' type='radio' name='gender' value='N' /><div class='optionText'>I would rather not say</div></div></label>
+        <p>Please rate your partner's performance.</p>
+        <div id="rating">
+            <label><div class="option"><input class='optionRadio' type='radio' name='rating' value='1' /><div class='optionText'>Very Poor</div></div></label>
+            <label><div class="option"><input class='optionRadio' type='radio' name='rating' value='2' /><div class='optionText'>Poor</div></div></label>
+            <label><div class="option"><input class='optionRadio' type='radio' name='rating' value='3' /><div class='optionText'>Average</div></div></label>
+            <label><div class="option"><input class='optionRadio' type='radio' name='rating' value='4' /><div class='optionText'>Good</div></div></label>
+            <label><div class="option"><input class='optionRadio' type='radio' name='rating' value='5' /><div class='optionText'>Excellent</div></div></label>
+        </div>
         <br><br>
-        <p>What is your age?</p>
-        <input type='number' id='age' name="debQ" min="18" max="100">
+        <p>To what extent do you think the potential money bonus motivated you?</p>
+        <div id="motivation">
+            <label><div class="option"><input class='optionRadio' type='radio' name='motivation' value='1' /><div class='optionText'>Not at all</div></div></label>
+            <label><div class="option"><input class='optionRadio' type='radio' name='motivation' value='2' /><div class='optionText'>A little</div></div></label>
+            <label><div class="option"><input class='optionRadio' type='radio' name='motivation' value='3' /><div class='optionText'>Some</div></div></label>
+            <label><div class="option"><input class='optionRadio' type='radio' name='motivation' value='4' /><div class='optionText'>Much</div></div></label>
+            <label><div class="option"><input class='optionRadio' type='radio' name='motivation' value='5' /><div class='optionText'>Very much</div></div></label>
+        </div>
         <br><br>
-        <p id="debQWarning"></p>
+
         <button class='butNext' onclick='SUBMIT_DEBRIEFING_Q()'>SUBMIT</button>
+    </div>
+    <div class="pageBox" id="uidPage">
+        <p id="uidText"></p>
+        <div class='smallDimText'>(This will only be used to send you the money bonus. You will not be identified, and your responses throughout the experiment will not be attached to any of your personal information.)</div>
+        <textarea id='uid' name="uid" rows="1"></textarea>
+        <br><br>
+        <button class='butNext' onclick='SUBMIT_UID()'>SUBMIT</button>
     </div>
 
     <!--==========THANK YOU==========-->

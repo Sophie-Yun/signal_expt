@@ -10,7 +10,7 @@
         $subjNum = 1;
     }
     echo $subjNum;
-    
+
     $subjNumFile = fopen($file_path, 'w');
     fwrite($subjNumFile, $subjNum);
     fclose($subjNumFile);

@@ -51,48 +51,57 @@ function LIST_FROM_ATTRIBUTE_NAMES(obj, string_list) {
 }
 
 /*
-  #####  #     # ######        # #######  #####  ####### 
- #     # #     # #     #       # #       #     #    #    
- #       #     # #     #       # #       #          #    
-  #####  #     # ######        # #####   #          #    
-       # #     # #     # #     # #       #          #    
- #     # #     # #     # #     # #       #     #    #    
-  #####   #####  ######   #####  #######  #####     #    
-                                                         
+  #####  #     # ######        # #######  #####  #######
+ #     # #     # #     #       # #       #     #    #
+ #       #     # #     #       # #       #          #
+  #####  #     # ######        # #####   #          #
+       # #     # #     # #     # #       #          #
+ #     # #     # #     # #     # #       #     #    #
+  #####   #####  ######   #####  #######  #####     #
+
 */
+const FORMAL = false;
+const EXPERIMENT_NAME = "signal";
+const SUBJ_NUM_FILE = "subjNum_" + EXPERIMENT_NAME + ".txt";
+const VISIT_FILE = "visit_" + EXPERIMENT_NAME + ".txt";
+const ATTRITION_FILE = 'attrition_' + EXPERIMENT_NAME + '.txt';
+const SUBJ_FILE = 'subj_' + EXPERIMENT_NAME + '.txt';
+const VIEWPORT_MIN_W = 1000;
+const VIEWPORT_MIN_H = 600;
+const SAVING_SCRIPT = 'php/save.php';
+const SAVING_DIR = FORMAL ? "data/formal":"data/testing";
 
 
 class subjObject {
     constructor(options = {}) {
         Object.assign(this, {
             num: "pre-post",
-            subjNumScript: "subjNum.php",
+            subjNumScript: "php/subjNum.php",
             subjNumFile: "",
             titles: [""],
             invalidIDFunc: false,
-            validIDFunc: false, //not sure the use of it, no input function
             viewportMinW: 0,
             viewportMinH: 0,
-            savingScript: "save.php",
+            savingScript: 'php/save.php',
             attritionFile: "attrition.txt",
             visitFile: "visit.txt",
             subjFile: "subj.txt",
-            savingDir: "data/testing",
-            handleVisibilityChange: function(){},
+            savingDir: "",
+            //handleVisibilityChange: function(){},
         }, options);
         if (this.num == "pre-post") {
-            this.obtainSubjNum(this.subjNumScript, this.subjNumFile);
+            this.obtainSubjNum();
         }
         this.data = LIST_TO_FORMATTED_STRING(this.titles);
         this.dateObj = new Date();
         this.date = FORMAT_DATE(this.dateObj, "UTC", "-", true);
         this.startTime = FORMAT_TIME(this.dateObj, "UTC", ":", true);
         this.userAgent = window.navigator.userAgent;
-        this.hiddenCount = 0;
-        this.hiddenDurations = [];
+        // this.hiddenCount = 0;
+        // this.hiddenDurations = [];
     }
 
-    obtainSubjNum(subjNumScript, subjNumFile) {
+    obtainSubjNum() {
         var that = this;
         function SUBJ_NUM_UPDATE_SUCCEEDED(number) {
             that.num = number;
@@ -100,7 +109,7 @@ class subjObject {
         function SUBJ_NUM_UPDATE_FAILED() {
             that.num = -999;
         }
-        POST_DATA(subjNumScript, { 'directory_path': this.savingDir, 'file_name': this.subjNumFile }, SUBJ_NUM_UPDATE_SUCCEEDED, SUBJ_NUM_UPDATE_FAILED);
+        POST_DATA(this.subjNumScript, {'directory_path': this.savingDir, 'file_name': this.subjNumFile}, SUBJ_NUM_UPDATE_SUCCEEDED, SUBJ_NUM_UPDATE_FAILED);
     }
 
     saveVisit() {
@@ -136,10 +145,6 @@ class subjObject {
             }
             return null;
         } else {
-            
-            if (this.validIDFunc !== false) {
-                this.validIDFunc();
-            }
             return id;
         }
     }
@@ -207,15 +212,15 @@ class subjObject {
         });
     }
 
-    detectVisibilityStart() {
-        var that = this;
-        document.addEventListener('visibilitychange', that.handleVisibilityChange);
-    }
+    // detectVisibilityStart() {
+    //     var that = this;
+    //     document.addEventListener('visibilitychange', that.handleVisibilityChange);
+    // }
 
-    detectVisibilityEnd() {
-        var that = this;
-        document.removeEventListener('visibilitychange', that.handleVisibilityChange);
-    }
+    // detectVisibilityEnd() {
+    //     var that = this;
+    //     document.removeEventListener('visibilitychange', that.handleVisibilityChange);
+    // }
 }
 
 const SUBJ_TITLES = ['num',
@@ -226,35 +231,42 @@ const SUBJ_TITLES = ['num',
                     //  'endTime',
                     //  'duration',
                      'instrQAttemptN',
-                     'instrReadingTimes',
+                    //  'instrReadingTimes',
                     //  'quickReadingPageN',
-                     'hiddenCount',
-                     'hiddenDurations',
-                     'daily',
-                     'aqResponses',
-                     'aqRt',
-                     'serious',
-                     'problems',
-                     'gender',
-                     'age',
+                    //  'hiddenCount',
+                    //  'hiddenDurations',
                      'inView',
                      'viewportW',
                      'viewportH'
                     ];
+
+function GET_PARAMETERS(var_name, default_value) {
+    const REGEX_STRING = "[\?&]" + var_name + "=([^&#]*)";
+    const REGEX = new RegExp(REGEX_STRING);
+    const URL = location.href;
+    const RESULTS = REGEX.exec(URL);
+    if (RESULTS == null) {
+        return default_value;
+    } else {
+        return RESULTS[1];
+    }
+}
 
 function INVALID_ID_FUNC() {
     $("#instrText").html("We can't identify a valid code from subject pool website. Please reopen the study from the subject pool website again. Thank you!");
     $("#instrBut").hide();
     $("#instrPage").show();
 }
-function HANDLE_VISIBILITY_CHANGE() {
-    if (document.hidden) {
-        subj.hiddenCount += 1;
-        subj.hiddenStartTime = Date.now();
-    } else  {
-        subj.hiddenDurations.push((Date.now() - subj.hiddenStartTime)/1000);
-    }
-}
+
+// function HANDLE_VISIBILITY_CHANGE() {
+//     if (document.hidden) {
+//         subj.hiddenCount += 1;
+//         subj.hiddenStartTime = Date.now();
+//     } else  {
+//         subj.hiddenDurations.push((Date.now() - subj.hiddenStartTime)/1000);
+//     }
+// }
+
 var subj_options = {
     subjNumFile: SUBJ_NUM_FILE,
     titles: SUBJ_TITLES,
@@ -266,5 +278,5 @@ var subj_options = {
     attritionFile: ATTRITION_FILE,
     subjFile: SUBJ_FILE,
     savingDir: SAVING_DIR,
-    handleVisibilityChange: HANDLE_VISIBILITY_CHANGE
+    //handleVisibilityChange: HANDLE_VISIBILITY_CHANGE
 };

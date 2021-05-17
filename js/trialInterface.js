@@ -1,8 +1,16 @@
 function DISABLE_DEFAULT_KEYS() {
     document.onkeydown = function(e) {
-        if(e.keyCode == 13 || e.keyCode == 32) {
+        if(e.keyCode == 13) {
             e.preventDefault();
             //e.stopPropagation();
+        }
+    }
+}
+
+function ALLOW_SPACE() {
+    document.onkeydown = function(e) {
+        if(e.keyCode == 32) {
+            return true;
         }
     }
 }
@@ -18,7 +26,7 @@ function DISABLE_DEFAULT_KEYS() {
 */
 
 function ADD_BARRIER(obj) {
-    if(obj.barrier["up"] == "" || obj.barrier["up"] == undefined)
+    if(obj.barrier["up"] == undefined || obj.barrier["up"] == "")
         return;
     else {
         for (var i = 0; i < obj.barrier["up"].length; i++) {
@@ -32,6 +40,24 @@ function ADD_BARRIER(obj) {
     }
 }
 
+function FIND_SIGNAL_BY_INTENTION(dict, item) {
+    console.log(dict);
+    console.log(item);
+    var signals = Object.keys(dict);
+    var i = 0;
+    while (dict[signals[i]] != item && i < signals.length) {
+        i++;
+    }
+    return signals[i];
+}
+
+function ADD_HOVER_INFO(elem, recDist, sigDist) {
+    ENABLE_HOVER_INFO();
+    $(elem).append("<div class='gridItemInfo'></div>");
+    $(elem + " .gridItemInfo").append("<p><img class='shape' src='"+ SHAPE_DIR + "receiver.png'> : " + recDist + "</p>");
+    $(elem + " .gridItemInfo").append("<p><img class='shape' src='"+ SHAPE_DIR + "signaler.png'> : " + sigDist + "</p>");
+}
+
 function CREATE_GRID(obj) {
     var gridArray = obj.gridArray;
     var nrow = GRID_NROW;
@@ -41,12 +67,18 @@ function CREATE_GRID(obj) {
         for (var row = 0; row < nrow; row++) {
             for (var col = 0; col < ncol; col++) {
                 shapeId = "shape" + row + "v" + col;
-
-                if (gridArray[row][col]!= null){
+                var item = gridArray[row][col];
+                if (item !== undefined){
                     $("#tryMoveGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>")
-                    $("#" + shapeId).append($("<img>", {class: "shape", src: gridArray[row][col]}));
-                }
-                else{
+                    if (item !== SHAPE_DIR + "receiver.png" && item!== SHAPE_DIR + "signaler.png") {
+                        $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
+                        var receiverDist = 4;
+                        var signalerDist = 11;
+                        ADD_HOVER_INFO("#" + shapeId, receiverDist, signalerDist);
+                    } else {
+                        $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
+                    }
+                } else{
                     $("#tryMoveGridContainer").append("<div class='gridEmpty' id='" + shapeId + "'></div>");
                 }
             };
@@ -56,10 +88,22 @@ function CREATE_GRID(obj) {
         for (var row = 0; row < nrow; row++) {
             for (var col = 0; col < ncol; col++) {
                 shapeId = "shape" + row + "v" + col;
-
-                if (gridArray[row][col]!= null){
+                var item = gridArray[row][col];
+                if (item !== undefined){
                     $("#trySayGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>")
-                    $("#" + shapeId).append($("<img>", {class: "shape", src: gridArray[row][col]}));
+                    if (item !== SHAPE_DIR + "receiver.png" && item !== SHAPE_DIR + "signaler.png") {
+                        $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
+                        if(item == SHAPE_DIR + "redCircle.png") {
+                            var receiverDist = 4;
+                            var signalerDist = 9;
+                        } else if (item == SHAPE_DIR + "greenCircle.png") {
+                            var receiverDist = 7;
+                            var signalerDist = 2;
+                        }
+                        ADD_HOVER_INFO("#" + shapeId, receiverDist, signalerDist);
+                    } else {
+                        $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
+                    }
                 }
                 else{
                     $("#trySayGridContainer").append("<div class='gridEmpty' id='" + shapeId + "'></div>");
@@ -70,45 +114,67 @@ function CREATE_GRID(obj) {
         for (var row = 0; row < nrow; row++) {
             for (var col = 0; col < ncol; col++) {
                 shapeId = "shape" + row + "v" + col;
-
-                if (gridArray[row][col]!= null){
-                    $("#sanityCheckGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>")
-                    $("#" + shapeId).append($("<img>", {class: "shape", src: gridArray[row][col]}));
+                var item = gridArray[row][col];
+                if (item !== undefined){
+                    $("#sanityCheckGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>");
+                    if (item!== SHAPE_DIR + "receiver.png" && item!== SHAPE_DIR + "signaler.png") {
+                        $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item]}));
+                        var receiverDist = obj.receiverPath[item].length;
+                        var signalerDist = obj.signalerPath[item].length;
+                        ADD_HOVER_INFO("#" + shapeId, receiverDist, signalerDist);
+                    } else {
+                        $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
+                    }
                 }
                 else{
                     $("#sanityCheckGridContainer").append("<div class='gridEmpty' id='" + shapeId + "'></div>");
+
                 }
             };
         };
         ADD_BARRIER(obj);
-    } else if (obj.isPracTrial) {
+    }
+    // else if (obj.isPracTrial) {
+    //     console.log("in create grid");
+    //     for (var row = 0; row < nrow; row++) {
+    //         for (var col = 0; col < ncol; col++) {
+    //             shapeId = "shape" + row + "v" + col;
+    //             if (gridArray[row][col]!= undefined){
+    //                 $("#practiceGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>")
+    //                 if (gridArray[row][col]!= SHAPE_DIR + "receiver.png" && gridArray[row][col]!= SHAPE_DIR + "signaler.png") {
+    //                     $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[gridArray[row][col]]}));
+    //                 } else {
+    //                     $("#" + shapeId).append($("<img>", {class: "shape", src: gridArray[row][col]}));
+    //                 }
+    //             }
+    //             else{
+    //                 $("#practiceGridContainer").append("<div class='gridEmpty' id='" + shapeId + "'></div>");
+    //             }
+    //         };
+    //     };
+    //     ADD_BARRIER(obj);
+    // }
+    else if (obj.isExptTrial) {
         for (var row = 0; row < nrow; row++) {
             for (var col = 0; col < ncol; col++) {
                 shapeId = "shape" + row + "v" + col;
-
-                if (gridArray[row][col]!= null){
-                    $("#practiceGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>")
-                    $("#" + shapeId).append($("<img>", {class: "shape", src: gridArray[row][col]}));
-                }
-                else{
-                    $("#practiceGridContainer").append("<div class='gridEmpty' id='" + shapeId + "'></div>");
-                }
-            };
-        };
-    } else if (obj.isExptTrial) {
-        for (var row = 0; row < nrow; row++) {
-            for (var col = 0; col < ncol; col++) {
-                shapeId = "shape" + row + "v" + col;
-
-                if (gridArray[row][col]!= null){
+                var item = gridArray[row][col];
+                if (item !== undefined){
                     $("#gridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>")
-                    $("#" + shapeId).append($("<img>", {class: "shape", src: gridArray[row][col]}));
-                }
-                else{
+                    if (item !== SHAPE_DIR + "receiver.png" && item !== SHAPE_DIR + "signaler.png") {
+                        $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item]}));
+                        var receiverDist = obj.receiverPath[item].length;
+                        var signalerDist = obj.signalerPath[item].length;
+                        ADD_HOVER_INFO("#" + shapeId, receiverDist, signalerDist);
+                    } else {
+                        $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
+                    }
+                } else{
                     $("#gridContainer").append("<div class='gridEmpty' id='" + shapeId + "'></div>");
                 }
             };
         };
+        ADD_BARRIER(obj);
     }
 
 }
@@ -162,7 +228,7 @@ function MEET_UP_BARRIER(obj) {
         }
         return false
     }
-    else if (obj.isSanityCheck && obj.barrier["up"] != undefined) {
+    else if ((obj.isSanityCheck || obj.isExptCheck) && obj.barrier["up"] != undefined) {
         for (var i = 0; i < obj.barrier["up"].length; i++){
             var coord = obj.barrier["up"][i];
             if(obj.signalerLocation[0] == coord[0] && obj.signalerLocation[1] == coord[1])
@@ -180,7 +246,7 @@ function MEET_DOWN_BARRIER(obj) {
                 return true
         }
         return false
-    }   else if (obj.isSanityCheck && obj.barrier["down"] != undefined) {
+    }   else if ((obj.isSanityCheck || obj.isExptCheck) && obj.barrier["down"] != undefined) {
         for (var i = 0; i < obj.barrier["down"].length; i++){
             var coord = obj.barrier["down"][i];
             if(obj.signalerLocation[0] == coord[0] && obj.signalerLocation[1] == coord[1])
@@ -272,33 +338,43 @@ function RECEIVER_MOVE_DOWN(obj) {
     }
 }
 
-function UPDATE_GAME_GRID(obj, key) {
-    switch (key){
-        case 37: //left
-            MOVE_LEFT(obj);
-            break;
-        case 38: //up
-            MOVE_UP(obj);
-            break;
-        case 39: //right
-            MOVE_RIGHT(obj);
-            break;
-        case 40: //down
-            MOVE_DOWN(obj);
-            break;
-        case "left":
-            RECEIVER_MOVE_LEFT(obj);
-            break;
-        case "up":
-            RECEIVER_MOVE_UP(obj);
-            break;
-        case "right":
-            RECEIVER_MOVE_RIGHT(obj);
-            break;
-        case "down":
-            RECEIVER_MOVE_DOWN(obj);
-            break;
+function UPDATE_GAME_GRID(obj, key, player) {
+    if (player == "signaler") {
+        switch (key){
+            case "left":
+            case 37: //left
+                MOVE_LEFT(obj);
+                break;
+            case "up":
+            case 38: //up
+                MOVE_UP(obj);
+                break;
+            case "right":
+            case 39: //right
+                MOVE_RIGHT(obj);
+                break;
+            case "down":
+            case 40: //down
+                MOVE_DOWN(obj);
+                break;
+        }
+    } else {
+        switch (key){
+            case "left":
+                RECEIVER_MOVE_LEFT(obj);
+                break;
+            case "up":
+                RECEIVER_MOVE_UP(obj);
+                break;
+            case "right":
+                RECEIVER_MOVE_RIGHT(obj);
+                break;
+            case "down":
+                RECEIVER_MOVE_DOWN(obj);
+                break;
+        }
     }
+
 }
 
 function RESET_GAMEBOARD() {
@@ -328,6 +404,7 @@ function RESET_GAMEBOARD() {
 */
 function CREATE_EXPT_BUTTONS(obj) {
     if(obj.isTryMove && !obj.nextButCreated) {
+        $("#tryMoveMoveBut").click(function(){SIGNALER_AUTO_MOVE(obj)});
         $("#tryMoveResultBut").click(function(){NEXT_INSTR()});
         obj.nextButCreated = true;
     }
@@ -336,13 +413,15 @@ function CREATE_EXPT_BUTTONS(obj) {
         obj.nextButCreated = true;
     }
     else if (obj.isSanityCheck) {
-        $("#sanityCheckQuitBut").click(function(){SHOW_QUIT_RESULT(obj)});
+        $("#sanityCheckMoveBut").click(function(){SIGNALER_AUTO_MOVE(obj)});
         $("#sanityCheckResultBut").click(function(){NEXT_TRIAL(obj)});
-    } else if (obj.isPracTrial) {
-        $("#practiceQuitBut").click(function(){SHOW_QUIT_RESULT(obj)});
-        $("#practiceResultBut").click(function(){NEXT_TRIAL(obj)});
-    } else if (obj.isExptTrial) {
-        $("#quitBut").click(function(){SHOW_QUIT_RESULT(obj)});
+    }
+    // else if (obj.isPracTrial) {
+    //     $("#practiceQuitBut").click(function(){SHOW_QUIT_RESULT(obj)});
+    //     $("#practiceResultBut").click(function(){NEXT_TRIAL(obj)});
+    // }
+    else if (obj.isExptTrial) {
+        $("#exptMoveBut").click(function(){SIGNALER_AUTO_MOVE(obj)});
         $("#resultBut").click(function(){NEXT_TRIAL(obj)});
     }
 }
@@ -396,30 +475,32 @@ function CREATE_SIGNAL_BUTTONS(obj, availableSignals) {
                     });
                 }
             }
-        } else if (obj.isPracTrial) {
-            $("#practiceButOption" + i).css({
-                "border": "1px solid",
-                "opacity": 0.2,
-                "background": "#bcbab8",
-                "cursor": "auto",
-                "box-shadow": "none",
-                "pointer-events": "none"
-            });
-            if(!obj.buttonsCreated)
-                $("#practiceButOption" + i).click(function(){RECEIVER_WALK(obj,$(this).html())});
-            for (var j = 0; j < availableSignals.length; j++) {
-                if (availableSignals[j] == $("#practiceButOption" + i).html()) {
-                    $("#practiceButOption" + i).css({
-                        "border": "revert",
-                        "opacity": 1,
-                        "background": "#9D8F8F",
-                        "box-shadow": "2px 2px 4px rgba(0, 0, 0, 0.25)",
-                        "pointer-events": "revert",
-                        "cursor": "pointer"
-                    });
-                }
-            }
-        } else if (obj.isExptTrial) {
+        }
+        // else if (obj.isPracTrial) {
+        //     $("#practiceButOption" + i).css({
+        //         "border": "1px solid",
+        //         "opacity": 0.2,
+        //         "background": "#bcbab8",
+        //         "cursor": "auto",
+        //         "box-shadow": "none",
+        //         "pointer-events": "none"
+        //     });
+        //     if(!obj.buttonsCreated)
+        //         $("#practiceButOption" + i).click(function(){RECEIVER_WALK(obj,$(this).html())});
+        //     for (var j = 0; j < availableSignals.length; j++) {
+        //         if (availableSignals[j] == $("#practiceButOption" + i).html()) {
+        //             $("#practiceButOption" + i).css({
+        //                 "border": "revert",
+        //                 "opacity": 1,
+        //                 "background": "#9D8F8F",
+        //                 "box-shadow": "2px 2px 4px rgba(0, 0, 0, 0.25)",
+        //                 "pointer-events": "revert",
+        //                 "cursor": "pointer"
+        //             });
+        //         }
+        //     }
+        // }
+        else if (obj.isExptTrial) {
             $("#butOption" + i).css({
                 "border": "1px solid",
                 "opacity": 0.2,
@@ -498,10 +579,10 @@ function CHANGE_IN_TRIAL_INSTR(decision) {
         $("#practiceDecision").html("Please hit ENTER when you land on the item.");
         $("#decision").html("Please hit ENTER when you land on the item.");
     } else if(decision == "say") {
-        $(".tryDecision").html("<img class='shape' src='shape/receiver.png' />" + " is responding to your signal.");
-        $("#sanityCheckDecision").html("<img class='shape' src='shape/receiver.png' />" + " is responding to your signal.");
-        $("#practiceDecision").html("<img class='shape' src='shape/receiver.png' />" + " is responding to your signal.");
-        $("#decision").html("<img class='shape' src='shape/receiver.png' />" + " is responding to your signal.");
+        $(".tryDecision").html("<img class='inlineShape' src='shape/receiver.png' />" + " is responding to your signal.");
+        $("#sanityCheckDecision").html("<img class='inlineShape' src='shape/receiver.png' />" + " is responding to your signal.");
+        $("#practiceDecision").html("<img class='inlineShape' src='shape/receiver.png' />" + " is responding to your signal.");
+        $("#decision").html("<img class='inlineShape' src='shape/receiver.png' />" + " is responding to your signal.");
     }
 }
 
@@ -519,35 +600,48 @@ function CHANGE_IN_TRIAL_INSTR(decision) {
 function SETUP_SCOREBOARD(obj) {
     if(obj.isTryMove) {
         $("#tryMoveGoal").attr("src", obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]);
+        $("#tryMoveCost").html(obj.step.toFixed(0));
     } else if (obj.isTrySay){
         $("#trySayGoal").attr("src", obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]);
+        $("#trySayCost").html(obj.step.toFixed(0));
     } else if (obj.isSanityCheck){
-        $("#sanityCheckGoalShape").attr("src", obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]);
+        $("#sanityCheckGoalShape").attr("src", PIC_DICT[obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]]);
         $("#sanityCheckTotalBonusBefore").html("$" + obj.totalScore.toFixed(2));
-        $(".sanityCheckCost").html("-$" + obj.step.toFixed(2));
-    } else if (obj.isPracTrial){
-        $("#practiceGoalShape").attr("src", obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]);
-        $("#practiceTotalBonusBefore").html("$" + obj.totalScore.toFixed(2));
-        $(".practiceCost").html("-$" + obj.step.toFixed(2));
-    } else if (obj.isExptTrial){
-        $("#goalShape").attr("src", obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]);
+        $("#sanityCheckStep").html(obj.step.toFixed(0));
+    }
+    // else if (obj.isPracTrial){
+    //     $("#practiceGoalShape").attr("src", PIC_DICT[obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]]);
+    //     $("#practiceTotalBonusBefore").html("$" + obj.totalScore.toFixed(2));
+    //     $(".practiceCost").html("-$" + obj.step.toFixed(2));
+    // }
+    else if (obj.isExptTrial){
+        $("#goalShape").attr("src", PIC_DICT[obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]]);
         $("#exptTotalBonusBefore").html("$" + obj.totalScore.toFixed(2));
-        $(".exptCost").html("-$" + obj.step.toFixed(2));
+        $("#exptStep").html(obj.step.toFixed(0));
     }
 }
 
 function UPDATE_STEPS(obj) {
-    obj.step = Math.round((obj.step + STEP_COST) * 100) / 100;
-    if (obj.isSanityCheck)
-        $(".sanityCheckCost").html("-$" + obj.step.toFixed(2));
-    else if (obj.isPracTrial)
-        $(".practiceCost").html("-$" + obj.step.toFixed(2));
-    else if (obj.isExptTrial)
-        $(".exptCost").html("-$" + obj.step.toFixed(2));
-}
-
-function HIDE_COST_IN_TRY_SCOREBOARD() {
-    $(".hiddenInfo").css("opacity", 0);
+    obj.step++;
+    obj.cost = obj.step * STEP_COST;
+    if (obj.isSanityCheck){
+        $("#sanityCheckStep").html(obj.step.toFixed(0));
+        $("#sanityCheckCost").html("-$" + obj.cost.toFixed(2));
+    }
+    // else if (obj.isPracTrial) {
+    //     obj.step = Math.round((obj.step + STEP_COST) * 100) / 100;
+    //     $(".practiceCost").html("-$" + obj.step.toFixed(2));
+    // }
+    else if (obj.isExptTrial){
+        $("#exptStep").html(obj.step.toFixed(0));
+        $("#exptCost").html("-$" + obj.cost.toFixed(2));
+    }
+    else if (obj.isTryMove){
+        $("#tryMoveCost").html(obj.step.toFixed(0));
+    }
+    else if (obj.isTrySay){
+        $("#trySayCost").html(obj.step.toFixed(0));
+    }
 }
 
 /*
@@ -580,7 +674,20 @@ function getSanityCheckFeedback(obj, trialStrategy) {
     return feedback;
 }
 
+function DISABLE_HOVER_INFO() {
+        $(".gridItem").css({
+            "pointer-events": "none"
+        });
+}
+
+function ENABLE_HOVER_INFO() {
+        $(".gridItem").css({
+                    "pointer-events": "revert",
+        });
+}
+
 function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
+    DISABLE_HOVER_INFO();
     var reward;
     obj.totalScore = (obj.totalScore >= 0)? obj.totalScore : 0;
     obj.totalScore = (obj.totalScore <= MAX_BONUS)? obj.totalScore : MAX_BONUS;
@@ -592,6 +699,7 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
         }
         $(".tryResult").show();
     } else if (obj.isSanityCheck){
+        $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
         trialStrategy = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["trialStrategy"];
         if (trialStrategy == "do") {
             if (!win) {
@@ -605,65 +713,69 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
             obj.sanitySayFails++;
             obj.sanitySayAttempts++;
         }
-        $("#sanityCheckResult .sanityCheckCost").html("-$" + obj.step.toFixed(2));
         var reward;
         if(win){
             if (trialStrategy == "do") {
-                $("#sanityCheckResultText").html("Congratulations!<br><br>You reached the target!");
+                $("#sanityCheckResultText").html("You took " + obj.step.toFixed(0) + " steps.<br>Congratulations! You reached the target!");
             }
             else {
-                $("#sanityCheckResultText").html("Congratulations! You reached the target! <br>" + getSanityCheckFeedback(obj, trialStrategy));
+                $("#sanityCheckResultText").html("You took " + obj.step.toFixed(0) + " steps.<br>Congratulations! You reached the target! <br>" + getSanityCheckFeedback(obj, trialStrategy));
             }
             reward = REWARD;
         } else {
-            $("#sanityCheckResultText").html("Sorry, you did not reach the target. <br>" + getSanityCheckFeedback(obj, trialStrategy) + "<br><br>Good luck on your next round! ");
+            $("#sanityCheckResultText").html("You took " + obj.step.toFixed(0) + " steps.<br>Sorry, you did not reach the target. <br>" + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round! ");
             reward = 0;
         }
         $("#sanityCheckReward").html("$" + reward.toFixed(2));
-        $("#sanityCheckRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.step));
+        $("#sanityCheckRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.cost));
         $("#sanityCheckTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
         $("#sanityCheckResult").show();
-    } else if (obj.isPracTrial){
+    }
+    // else if (obj.isPracTrial){
+    //     if(win){
+    //         $("#practiceResultText").html("Congratulations!<br><br>You reached the target!");
+    //         reward = REWARD;
+    //     } else {
+    //         $("#practiceResultText").html("Sorry, you did not reach the target.<br><br>Good luck on your next round!");
+    //         reward = 0;
+    //     }
+    //     $("#practiceReward").html("$" + reward.toFixed(2));
+    //     $("#practiceRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.step));
+    //     $("#practiceTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
+    //     $("#practiceResult").show();
+    // }
+    else if (obj.isExptTrial){
+        $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
         if(win){
-            $("#practiceResultText").html("Congratulations!<br><br>You reached the target!");
+            $("#resultText").html("You took " + obj.step.toFixed(0) + " steps.<br>Congratulations! You reached the target!");
             reward = REWARD;
         } else {
-            $("#practiceResultText").html("Sorry, you did not reach the target.<br><br>Good luck on your next round!");
-            reward = 0;
-        }
-        $("#practiceReward").html("$" + reward.toFixed(2));
-        $("#practiceRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.step));
-        $("#practiceTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
-        $("#practiceResult").show();
-    } else if (obj.isExptTrial){
-        if(win){
-            $("#resultText").html("Congratulations!<br><br>You reached the target!");
-            reward = REWARD;
-        } else {
-            $("#resultText").html("Sorry, you did not reach the target.<br><br>Good luck on your next round!");
+            $("#resultText").html("You took " + obj.step.toFixed(0) + " steps.<br>Sorry, you did not reach the target.<br>Good luck on your next round!");
             reward = 0;
         }
         $("#reward").html("$" + reward.toFixed(2));
-        $("#exptRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.step));
+        $("#exptRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.cost));
         $("#exptTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
         $("#result").show();
     }
 }
 
 function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
+    DISABLE_HOVER_INFO();
     var reward;
     obj.totalScore = (obj.totalScore >= 0)? obj.totalScore : 0;
     obj.totalScore = (obj.totalScore <= MAX_BONUS)? obj.totalScore : MAX_BONUS;
     if (obj.isTrySay || obj.isTryMove) {
         if(win){
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            $(".tryResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
+            $(".tryResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations! You reached the target!");
         } else {
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
             $(".tryResultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target.<br>Good luck on your next round!");
         }
         $(".tryResult").show();
     } else if(obj.isSanityCheck){
+        $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
         trialStrategy = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["trialStrategy"];
         if (trialStrategy == "do") {
             obj.sanityMoveFails++;
@@ -677,52 +789,54 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
             }
             obj.sanitySayAttempts++;
         }
-        $("#sanityCheckResult .sanityCheckCost").html("-$" + obj.step.toFixed(2));
         var reward;
         if(win){
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
             if (trialStrategy == "communicate") {
-                $("#sanityCheckResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
+                $("#sanityCheckResultText").html("<img class='inlineShape' src='shape/receiver.png'/> took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
             }
             else {
-                $("#sanityCheckResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations! You reached the target! <br>" + getSanityCheckFeedback(obj, trialStrategy));
+                $("#sanityCheckResultText").html("<img class='inlineShape' src='shape/receiver.png'/> took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations! You reached the target! <br>" + getSanityCheckFeedback(obj, trialStrategy));
             }
             reward = REWARD;
         } else {
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            $("#sanityCheckResultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target. <br>" + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");
+            $("#sanityCheckResultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/> took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target. <br>" + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");
             reward = 0;
         }
         $("#sanityCheckReward").html("$" + reward.toFixed(2));
-        $("#sanityCheckRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.step));
+        $("#sanityCheckRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.cost));
         $("#sanityCheckTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
         $("#sanityCheckResult").show();
-    } else if(obj.isPracTrial){
+    }
+    // else if(obj.isPracTrial){
+    //     if(win){
+    //         var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
+    //         $("#practiceResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
+    //         reward = REWARD;
+    //     } else {
+    //         var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
+    //         $("#practiceResultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target.<br>Good luck on your next round!");
+    //         reward = 0;
+    //     }
+    //     $("#practiceReward").html("$" + reward.toFixed(2));
+    //     $("#practiceRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.step));
+    //     $("#practiceTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
+    //     $("#practiceResult").show();
+    // }
+    else if (obj.isExptTrial){
+        $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
         if(win){
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            $("#practiceResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
+            $("#resultText").html("<img class='inlineShape' src='shape/receiver.png'/> took " + obj.step.toFixed(0) + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations! You reached the target!");
             reward = REWARD;
         } else {
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            $("#practiceResultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target.<br>Good luck on your next round!");
-            reward = 0;
-        }
-        $("#practiceReward").html("$" + reward.toFixed(2));
-        $("#practiceRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.step));
-        $("#practiceTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
-        $("#practiceResult").show();
-    } else if (obj.isExptTrial){
-        if(win){
-            var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            $("#resultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
-            reward = REWARD;
-        } else {
-            var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            $("#resultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target.<br>Good luck on your next round!");
+            $("#resultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/> took " + obj.step.toFixed(0) + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target.<br>Good luck on your next round!");
             reward = 0;
         }
         $("#reward").html("$" + reward.toFixed(2));
-        $("#exptRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.step));
+        $("#exptRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.cost));
         $("#exptTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
         $("#result").show();
     }
@@ -757,20 +871,22 @@ function SHOW_QUIT_RESULT(obj) {
         $("#sanityCheckRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.step));
         $("#sanityCheckTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
         $("#sanityCheckResult").show();
-    } else if(obj.isPracTrial){
-        reward = 0;
-        $("#practiceResultText").html("Don't worry!<br>Good luck on your next round!");
-        $("#practiceReward").html("$" + reward.toFixed(2));
-        $("#practiceRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.step));
-        $("#practiceTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
-        $("#practiceResult").show();
-    } else if(obj.isExptTrial){
+    }
+    // else if(obj.isPracTrial){
+    //     reward = 0;
+    //     $("#practiceResultText").html("Don't worry!<br>Good luck on your next round!");
+    //     $("#practiceReward").html("$" + reward.toFixed(2));
+    //     $("#practiceRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.step));
+    //     $("#practiceTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
+    //     $("#practiceResult").show();
+    // }
+    else if(obj.isExptTrial){
         RECORD_DECISION_DATA(obj, "quit");
         RECORD_ACTION_TIME(obj);
         reward = 0;
         $("#resultText").html("Don't worry!<br>Good luck on your next round!");
         $("#reward").html("$" + reward.toFixed(2));
-        $("#exptRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.step));
+        $("#exptRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.cost));
         $("#exptTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
         $("#result").show();
         RECORD_SIGNAL_DATA(obj);

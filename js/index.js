@@ -1,16 +1,4 @@
-var textString;
-var lines, linesArray;
-const FORMAL = false;
-const EXPERIMENT_NAME = "Signal";
-const SUBJ_NUM_FILE = "subjNum_" + EXPERIMENT_NAME + ".txt";
 //const TRIAL_FILE = "trial_" + EXPERIMENT_NAME + ".txt";
-const SUBJ_FILE = 'subj_' + EXPERIMENT_NAME + '.txt';
-const VISIT_FILE = "visit_" + EXPERIMENT_NAME + ".txt";
-const ATTRITION_FILE = 'attrition_' + EXPERIMENT_NAME + '.txt';
-const SAVING_DIR = FORMAL ? "data/formal":"data/testing";
-const SAVING_SCRIPT = 'save.php';
-const VIEWPORT_MIN_W = 1000;
-const VIEWPORT_MIN_H = 600;
 const GRID_NROW = 10;
 const GRID_NCOL = 9;
 const SHAPE_DIR = "shape/";
@@ -18,17 +6,14 @@ const RECEIVER_MOVE_SPEED = 0.5;
 const MAX_SAY_OPTION = 6;
 const TRIAL_DICT = {};
 const PRAC_TRIAL_DICT = {};
-const REWARD = 0.4;
-const STEP_COST = 0.05;
 const MAX_BONUS = 8;
 const CONSECUTIVE_QUIT_MAX = 3;
 const CONSECUTIVE_FAST_DECISION_MAX = 3;
 const EXPONENTIAL_RATE = 0.5;
 
-//end
+// object variables
+var instr, subj, tryMove, trySay, expt; //practice
 
-var chooseSay = false;
-var allowWalk = false;
 var qAttemptNum = 0;
 var trial;
 var reward;
@@ -40,8 +25,6 @@ var signalSpace;
 var pathNum = 0;
 var path;
 
-// object variables
-var instr, subj, tryMove, trySay, practice, expt;
 
 /*
   #####  ####### ####### #     # ######
@@ -52,6 +35,7 @@ var instr, subj, tryMove, trySay, practice, expt;
  #     # #          #    #     # #
   #####  #######    #     #####  #
 */
+// Preload all shapes and images
 var images = new Array()
 function preload() {
     for (i = 0; i < preload.arguments.length; i++) {
@@ -86,6 +70,9 @@ const PIC_DICT = {
     "red triangle": SHAPE_DIR + "redTriangle.png",
 }
 
+// Import data
+var textString;
+var lines, linesArray;
 function PARSE_CSV(csvString) {
     var lines = csvString.split(/\r?\n/)
     var linesArray = [];
@@ -121,6 +108,7 @@ function PARSE_CSV(csvString) {
         linesArray[i - 1]["nTargets"] = parseInt(lines[i].match(/,\d,/)[0].substring(1, 2));
 
         linesArray[i - 1]["receiverIntentionDict"] = {};
+
         tmp = lines[i].match(/'\w+': '\w+ \w+'/g);
         for (j = 0; j < tmp.length; j++) {
             signal = tmp[j].match(/'\w+'/)[0];
@@ -134,7 +122,7 @@ function PARSE_CSV(csvString) {
         if (tmp == null) tmp = lines[i].match(/do/)
         linesArray[i - 1]["trialStrategy"] = tmp;
 
-        tmp = lines[i].match(/{'up'.*}/g);
+        tmp = lines[i].match(/{'up'.*?}/g);
         if (tmp != null){
             linesArray[i - 1]["barrierDict"] = {
                 "up": tmp[0].match(/'([^']*)'/g)[1].substring(1, tmp[0].match(/'([^']*)'/g)[1].length - 1),
@@ -146,6 +134,27 @@ function PARSE_CSV(csvString) {
             linesArray[i - 1]["barrierDict"] = tmp;
         }
 
+        tmp = lines[i].match(/{'\w+ \w+': \['.*?}/g);
+        if (tmp != null){
+            tmp = tmp[0].replace(/\'/g, "\"");
+            linesArray[i - 1]["recActSeq"] = JSON.parse(tmp);
+        } else {
+            tmp = lines[i].match(/{'\w+': \['.*?}/g);
+            if (tmp != null){
+                tmp = tmp[0].replace(/\'/g, "\"");
+                linesArray[i - 1]["recActSeq"] = JSON.parse(tmp);
+            } else {
+                linesArray[i - 1]["recActSeq"] = tmp;
+            }
+        }
+
+        tmp = lines[i].match(/{'\w+ \w+': \['.*?}/g);
+        if (tmp != null){
+            tmp = tmp[1].replace(/\'/g, "\"");
+            linesArray[i - 1]["sigActSeq"] = JSON.parse(tmp);
+        } else {
+            linesArray[i - 1]["sigActSeq"] = tmp;
+        }
     }
     return linesArray;
 }
@@ -176,28 +185,25 @@ function CREATE_RANDOM_LIST_FOR_EXPT(obj) {
  #     # ####### #     # ######     #
 
 */
-
-
 $(document).ready(function() {
-    subj = new subjObject(subj_options); // getting subject number
-    //subj.id = subj.getID("sonacode");
+    subj = new subjObject(subj_options);
+    subj.id = subj.getID("sonacode"); // getting subject number
     subj.saveVisit();
     if (subj.phone) { // asking for subj.phone will detect phone
         BLOCK_MOBILE();
-    //} else if (subj.id !== null){
-    } else {
+    } else if (subj.id !== null){
         //fetches CSV from file into a string
-        fetch("sanityTrials_wBarrier_20210405.csv")
+        fetch("inputCSV/sanityTrials_curated_20210505.csv")
             .then(response => response.text())
             .then(textString => {
                 SANITY_CHECK_INPUT_DATA = PARSE_CSV(textString)
             })
-            .then( () => {fetch("practiceTrialsNItems_Set1_20210303.csv")
-                .then(response => response.text())
-                .then(textString => {
-                    PRACTICE_INPUT_DATA = PARSE_CSV(textString)
-                })
-                .then( () => {fetch("exampleTrials_Set1_20210201.csv")
+            // .then( () => {fetch("practiceTrialsNItems_barriers_20210428.csv")
+            //     .then(response => response.text())
+            //     .then(textString => {
+            //         PRACTICE_INPUT_DATA = PARSE_CSV(textString)
+            //     })
+                .then( () => {fetch("inputCSV/experimentTrials_pairedBarrier_20210513.csv")
                     .then(response => response.text())
                     .then(textString => {
                         EXPT_INPUT_DATA = PARSE_CSV(textString)
@@ -208,22 +214,22 @@ $(document).ready(function() {
                         trySay = new trialObject(trial_options);
                         sanityCheck = new trialObject(sanity_check_options);
                         sanityCheck.inputData = SANITY_CHECK_INPUT_DATA;
-                        practice = new trialObject(practice_trial_options);
-                        practice.inputData = PRACTICE_INPUT_DATA;
+                        // practice = new trialObject(practice_trial_options);
+                        // practice.inputData = PRACTICE_INPUT_DATA;
                         expt = new trialObject(trial_options);
                         expt.inputData = EXPT_INPUT_DATA;
                         instr.start();
                         ALLOW_SHORTCUTS_FOR_TESTING();
                         console.log(sanityCheck.inputData);
-                        console.log(practice.inputData);
+                        // console.log(practice.inputData);
                         console.log(expt.inputData);
                         });
-                    });
+                    //});
                 });
 
         //trial_options["subj"] = subj;
-        //trial = new trialObject(trial_options);
-        //$('#captchaBox').show();
+    } else {
+        alert("Please make sure you are directed from SONA.")
     }
 });
 
@@ -270,18 +276,18 @@ var sanity_check_options= {
     //trialFunc: TRIAL,
     //endExptFunc: END_EXPT
 }
-var practice_trial_options = {
-    subj: 'pre-define', // assign after subj is created
-    //trialN: TRIAL_N,
-    titles: TRIAL_TITLES,
-    //stimPath: STIM_PATH,
-    //dataFile: TRIAL_FILE,
-    savingScript: SAVING_SCRIPT,
-    savingDir: SAVING_DIR,
-    //updateFunc: TRIAL_UPDATE,
-    //trialFunc: TRIAL,
-    //endExptFunc: END_EXPT
-}
+// var practice_trial_options = {
+//     subj: 'pre-define', // assign after subj is created
+//     //trialN: TRIAL_N,
+//     titles: TRIAL_TITLES,
+//     //stimPath: STIM_PATH,
+//     //dataFile: TRIAL_FILE,
+//     savingScript: SAVING_SCRIPT,
+//     savingDir: SAVING_DIR,
+//     //updateFunc: TRIAL_UPDATE,
+//     //trialFunc: TRIAL,
+//     //endExptFunc: END_EXPT
+// }
 var trial_options = {
     subj: 'pre-define', // assign after subj is created
     //trialN: TRIAL_N,
