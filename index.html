@@ -25,9 +25,9 @@
             <div class="pageBox" id="instrQBox">
                 <p id="instrQText">Which of the following is <b>not correct</b>?</p>
                 <div id="quizBox">
-                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="walk"><div class="optionText">You can achieve the target by walking on your own.</div></div></label>
+                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="walk"><div class="optionText">You can check the minimum steps for either you or your partner to reach an item by moving your mouse over it.</div></div></label>
                 <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="points"><div class="optionText">If either your partner or you reach the target, you get $<p id="rewardInInstrQuiz"></p> as money bonus.</div></div></label>
-                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="costs"><div class="optionText">Each step taken by either your partner or you costs $<p id="stepCostInInstrQuiz"></p>.</div></div></label>
+                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="costs"><div class="optionText">Your partner can see all the items in the grids, but does not know which one the target is.</div></div></label>
                 <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="several"><div class="optionText">You can send out multiple signals to your partner in each round.</div></div></label>
                 </div>
                 <div class='warning' id='instrQWarning'></div>
@@ -407,8 +407,8 @@
     <div class='pageBox' id='questionsBox'>
         <p>Did you complete this experiment seriously throughout (without randomly responding)?</p>
         <div class='smallDimText'>(You will receive your compensation regardless what your answer is here. Please be honest for science! Thanks!)</div>
-        <label><div class="option"><input class='optionRadio' type='radio' name='serious' value='0' /><div class='optionText'>No, I didn't.</div></div></label>
-        <label><div class="option"><input class='optionRadio' type='radio' name='serious' value='1' /><div class='optionText'>Yes, I did.</div></div></label>
+        <label><div class="option"><input class='optionRadio' type='radio' name='serious' value='F' /><div class='optionText'>No, I didn't.</div></div></label>
+        <label><div class="option"><input class='optionRadio' type='radio' name='serious' value='T' /><div class='optionText'>Yes, I did.</div></div></label>
         <br><br>
         <p>What was the your strategy for solving this task?</p>
         <textarea id='strategy' name="debQ" rows="3"></textarea>
@@ -440,9 +440,18 @@
     <div class="pageBox" id="uidPage">
         <p id="uidText"></p>
         <div class='smallDimText'>(This will only be used to send you the money bonus. You will not be identified, and your responses throughout the experiment will not be attached to any of your personal information.)</div>
+        <p>UID:</p>
         <textarea id='uid' name="uid" rows="1"></textarea>
         <br><br>
+        <p>Email:</p>
+        <textarea id='email' name="email" rows="1"></textarea>
+        <br><br>
         <button class='butNext' onclick='SUBMIT_UID()'>SUBMIT</button>
+    </div>
+    <div class="pageBox" id="lastPage">
+        <p>Thank you for completing this experiment!</p>
+        <br><br>
+        <button class='butNext' onclick='END_TO_SONA()'>END</button>
     </div>
 
     <!--==========THANK YOU==========-->

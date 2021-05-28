@@ -41,8 +41,6 @@ function ADD_BARRIER(obj) {
 }
 
 function FIND_SIGNAL_BY_INTENTION(dict, item) {
-    console.log(dict);
-    console.log(item);
     var signals = Object.keys(dict);
     var i = 0;
     while (dict[signals[i]] != item && i < signals.length) {
@@ -73,7 +71,7 @@ function CREATE_GRID(obj) {
                     if (item !== SHAPE_DIR + "receiver.png" && item!== SHAPE_DIR + "signaler.png") {
                         $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
                         var receiverDist = 4;
-                        var signalerDist = 11;
+                        var signalerDist = 13;
                         ADD_HOVER_INFO("#" + shapeId, receiverDist, signalerDist);
                     } else {
                         $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
@@ -95,9 +93,9 @@ function CREATE_GRID(obj) {
                         $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
                         if(item == SHAPE_DIR + "redCircle.png") {
                             var receiverDist = 4;
-                            var signalerDist = 9;
+                            var signalerDist = 13;
                         } else if (item == SHAPE_DIR + "greenCircle.png") {
-                            var receiverDist = 7;
+                            var receiverDist = 11;
                             var signalerDist = 2;
                         }
                         ADD_HOVER_INFO("#" + shapeId, receiverDist, signalerDist);
@@ -110,6 +108,7 @@ function CREATE_GRID(obj) {
                 }
             };
         };
+        ADD_BARRIER(obj);
     } else if (obj.isSanityCheck) {
         for (var row = 0; row < nrow; row++) {
             for (var col = 0; col < ncol; col++) {
@@ -135,7 +134,6 @@ function CREATE_GRID(obj) {
         ADD_BARRIER(obj);
     }
     // else if (obj.isPracTrial) {
-    //     console.log("in create grid");
     //     for (var row = 0; row < nrow; row++) {
     //         for (var col = 0; col < ncol; col++) {
     //             shapeId = "shape" + row + "v" + col;
@@ -574,10 +572,10 @@ function CHANGE_IN_TRIAL_INSTR(decision) {
     PRACTICE_EXPT_INSTR_FADE();
     EXPT_INSTR_FADE();
     if(decision == "do"){
-        $(".tryDecision").html("Please hit ENTER when you land on the item.");
-        $("#sanityCheckDecision").html("Please hit ENTER when you land on the item.");
-        $("#practiceDecision").html("Please hit ENTER when you land on the item.");
-        $("#decision").html("Please hit ENTER when you land on the item.");
+        // $(".tryDecision").html("Please hit ENTER when you land on the item.");
+        // $("#sanityCheckDecision").html("Please hit ENTER when you land on the item.");
+        // $("#practiceDecision").html("Please hit ENTER when you land on the item.");
+        // $("#decision").html("Please hit ENTER when you land on the item.");
     } else if(decision == "say") {
         $(".tryDecision").html("<img class='inlineShape' src='shape/receiver.png' />" + " is responding to your signal.");
         $("#sanityCheckDecision").html("<img class='inlineShape' src='shape/receiver.png' />" + " is responding to your signal.");
@@ -662,14 +660,15 @@ function GET_ROUND_BONUS_STRING(bonus){
 }
 
 function getSanityCheckFeedback(obj, trialStrategy) {
-    if (trialStrategy == "communicate") {
-        reversedReceiverIntentionDict = Object.entries(obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverIntentionDict"]).reduce((tmpObj, item) => (tmpObj[item[1]] = item[0]) && tmpObj, {});
-        intention = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["intention"];
-        feedback = "Some feedback: the ideal way to reach the target would've been to signal " + reversedReceiverIntentionDict[intention] + ".";
-    } else if (trialStrategy == "do") {
-        feedback = "Some feedback: the ideal way to reach the target would've been to move to the target.";
-    } else if (trialStrategy == "quit") {
-        feedback = "Some feedback: the ideal way to reach the target would've been to quit.";
+    if (trialStrategy == "do") {
+        feedback = "Some feedback: the ideal way to reach the target would've been for you to go.";
+        // reversedReceiverIntentionDict = Object.entries(obj.inputData[obj.trialIndex]["receiverIntentionDict"]).reduce((tmpObj, item) => (tmpObj[item[1]] = item[0]) && tmpObj, {});
+        // intention = obj.inputData[obj.trialIndex]["intention"];
+        // feedback = "Some feedback: the ideal way to reach the target would've been to signal " + reversedReceiverIntentionDict[intention] + ".";
+    } else if (trialStrategy == "ambiguous") {
+        feedback = "Some feedback: this was a difficult trial. There wasn't one signal that was better than the other.";
+    } else {
+        feedback = "Some feedback: the ideal way to reach the target would've been to send the signal: " + trialStrategy + ".";
     }
     return feedback;
 }
@@ -700,19 +699,19 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
         $(".tryResult").show();
     } else if (obj.isSanityCheck){
         $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
-        trialStrategy = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["trialStrategy"];
-        if (trialStrategy == "do") {
-            if (!win) {
-                obj.sanityMoveFails++;
-            }
-            obj.sanityMoveAttempts++;
-        } else if (trialStrategy == "quit") {
-            obj.sanityQuitFails++;
-            obj.sanityQuitAttempts++;
-        } else if (trialStrategy == "communicate") {
-            obj.sanitySayFails++;
-            obj.sanitySayAttempts++;
-        }
+        var trialStrategy = obj.inputData[obj.trialIndex]["trialStrategy"];
+        // if (trialStrategy == "do") {
+        //     if (!win) {
+        //         obj.sanityMoveFails++;
+        //     }
+        //     obj.sanityMoveAttempts++;
+        // } else if (trialStrategy == "quit") {
+        //     obj.sanityQuitFails++;
+        //     obj.sanityQuitAttempts++;
+        // } else if (trialStrategy == "communicate") {
+        //     obj.sanitySayFails++;
+        //     obj.sanitySayAttempts++;
+        // }
         var reward;
         if(win){
             if (trialStrategy == "do") {
@@ -723,7 +722,7 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
             }
             reward = REWARD;
         } else {
-            $("#sanityCheckResultText").html("You took " + obj.step.toFixed(0) + " steps.<br>Sorry, you did not reach the target. <br>" + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round! ");
+            //$("#sanityCheckResultText").html("You took " + obj.step.toFixed(0) + " steps.<br>Sorry, you did not reach the target. <br>" + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round! ");
             reward = 0;
         }
         $("#sanityCheckReward").html("$" + reward.toFixed(2));
@@ -768,35 +767,34 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
     if (obj.isTrySay || obj.isTryMove) {
         if(win){
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            $(".tryResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations! You reached the target!");
+            $(".tryResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br><br>Congratulations! You reached the target!");
         } else {
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            $(".tryResultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target.<br>Good luck on your next round!");
+            $(".tryResultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br><br>Sorry, you did not reach the target.<br>Good luck on your next round!");
         }
         $(".tryResult").show();
     } else if(obj.isSanityCheck){
         $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
-        trialStrategy = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["trialStrategy"];
-        if (trialStrategy == "do") {
-            obj.sanityMoveFails++;
-            obj.sanityMoveAttempts++;
-        } else if (trialStrategy == "quit") {
-            obj.sanityQuitFails++;
-            obj.sanityQuitAttempts++;
-        } else if (trialStrategy == "communicate") {
-            if (!win) {
-                obj.sanitySayFails++;
-            }
-            obj.sanitySayAttempts++;
-        }
+        trialStrategy = obj.inputData[obj.trialIndex]["trialStrategy"];
+        // if (trialStrategy == "do") {
+        //     obj.sanityMoveFails++;
+        //     obj.sanityMoveAttempts++;
+        // } else if (trialStrategy == "quit") {
+        //     obj.sanityQuitFails++;
+        //     obj.sanityQuitAttempts++;
+        // } else if (trialStrategy == "communicate") {
+        //     if (!win) {
+        //         obj.sanitySayFails++;
+        //     }
+        //     obj.sanitySayAttempts++;
+        // }
         var reward;
         if(win){
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            if (trialStrategy == "communicate") {
-                $("#sanityCheckResultText").html("<img class='inlineShape' src='shape/receiver.png'/> took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
-            }
-            else {
+            if (trialStrategy == "ambiguous" || trialStrategy == "do" || trialStrategy !== obj.signal){
                 $("#sanityCheckResultText").html("<img class='inlineShape' src='shape/receiver.png'/> took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations! You reached the target! <br>" + getSanityCheckFeedback(obj, trialStrategy));
+            } else {
+                $("#sanityCheckResultText").html("<img class='inlineShape' src='shape/receiver.png'/> took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
             }
             reward = REWARD;
         } else {
@@ -850,7 +848,7 @@ function SHOW_QUIT_RESULT(obj) {
     CHANGE_IN_TRIAL_INSTR();
     DISABLE_DEFAULT_KEYS();
     if(obj.isSanityCheck){
-        trialStrategy = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["trialStrategy"];
+        trialStrategy = obj.inputData[obj.trialIndex]["trialStrategy"];
         if (trialStrategy == "do") {
             obj.sanityMoveFails++;
             obj.sanityMoveAttempts++;
@@ -861,11 +859,11 @@ function SHOW_QUIT_RESULT(obj) {
             obj.sanitySayAttempts++;
         }
         reward = 0;
-        if (trialStrategy == "quit") {
-            $("#sanityCheckResultText").html("Don't worry!<br>Good luck on your next round!");
-        } else {
-            $("#sanityCheckResultText").html("Don't worry! <br>" + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");
-        }
+        // if (trialStrategy == "quit") {
+        //     $("#sanityCheckResultText").html("Don't worry!<br>Good luck on your next round!");
+        // } else {
+        //     $("#sanityCheckResultText").html("Don't worry! <br>" + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");
+        // }
 
         $("#sanityCheckReward").html("$" + reward.toFixed(2));
         $("#sanityCheckRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.step));

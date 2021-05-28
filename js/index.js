@@ -9,12 +9,12 @@ const PRAC_TRIAL_DICT = {};
 const MAX_BONUS = 8;
 const CONSECUTIVE_QUIT_MAX = 3;
 const CONSECUTIVE_FAST_DECISION_MAX = 3;
-const EXPONENTIAL_RATE = 0.5;
+const FAST_DECISION_TIME = 1; //in seconds
+const EXPONENTIAL_PARAMETER = 2; //mean of a exponential distribution; i.e., 1/lambda
 
 // object variables
 var instr, subj, tryMove, trySay, expt; //practice
 
-var qAttemptNum = 0;
 var trial;
 var reward;
 var startTime;
@@ -56,6 +56,8 @@ preload(
     "shape/receiver.png",
     "shape/signaler.png",
     "exampleGrid.png",
+    "sigRecPOV.png",
+    "utilityHoverEffect.png"
 )
 
 const PIC_DICT = {
@@ -117,9 +119,8 @@ function PARSE_CSV(csvString) {
         }
 
         tmp = null;
-        tmp = lines[i].match(/communicate/);
-        if (tmp == null) tmp = lines[i].match(/quit/);
-        if (tmp == null) tmp = lines[i].match(/do/)
+        var comma = lines[i].lastIndexOf(",");
+        tmp = lines[i].substring(comma + 1);
         linesArray[i - 1]["trialStrategy"] = tmp;
 
         tmp = lines[i].match(/{'up'.*?}/g);
@@ -193,7 +194,7 @@ $(document).ready(function() {
         BLOCK_MOBILE();
     } else if (subj.id !== null){
         //fetches CSV from file into a string
-        fetch("inputCSV/sanityTrials_curated_20210505.csv")
+        fetch("inputCSV/practiceTrials_pairedBarrier_20210521.csv")
             .then(response => response.text())
             .then(textString => {
                 SANITY_CHECK_INPUT_DATA = PARSE_CSV(textString)
@@ -203,7 +204,7 @@ $(document).ready(function() {
             //     .then(textString => {
             //         PRACTICE_INPUT_DATA = PARSE_CSV(textString)
             //     })
-                .then( () => {fetch("inputCSV/experimentTrials_pairedBarrier_20210513.csv")
+                .then( () => {fetch("inputCSV/experimentTrials_pairedBarrier_20210521.csv")
                     .then(response => response.text())
                     .then(textString => {
                         EXPT_INPUT_DATA = PARSE_CSV(textString)
@@ -220,14 +221,14 @@ $(document).ready(function() {
                         expt.inputData = EXPT_INPUT_DATA;
                         instr.start();
                         ALLOW_SHORTCUTS_FOR_TESTING();
-                        console.log(sanityCheck.inputData);
-                        // console.log(practice.inputData);
-                        console.log(expt.inputData);
+                        // console.log(sanityCheck.inputData);
+                        // // console.log(practice.inputData);
+                        // console.log(expt.inputData);
                         });
                     //});
                 });
-
-        //trial_options["subj"] = subj;
+        sanity_check_options["subj"] = subj;
+        trial_options["subj"] = subj;
     } else {
         alert("Please make sure you are directed from SONA.")
     }
@@ -245,7 +246,10 @@ $(document).ready(function() {
 
 */
 const TRIAL_TITLES = [
-    "subjId",
+    "subjNum",
+    "startDate",
+    "startTime",
+    "trialType",
     "trialIndex",
     "exptId",
     "decision",
@@ -253,6 +257,7 @@ const TRIAL_TITLES = [
     "signalerPath",
     "signalerEndCoordinate",
     "signalerEndItem",
+    "receiverPath",
     "receiverEndCoordinate",
     "receiverEndItem",
     "signalerAchievedGoal",
@@ -261,20 +266,16 @@ const TRIAL_TITLES = [
     "decisionTime",
     "actionTime",
     "feedbackTime",
-    "responseWarningPopup",
-    "quitWarningPopup"];
+    "responseWarningPopup"
+    // "quitWarningPopup"
+];
 
 var sanity_check_options= {
     subj: 'pre-define', // assign after subj is created
-    //trialN: TRIAL_N,
     titles: TRIAL_TITLES,
-    //stimPath: STIM_PATH,
-    //dataFile: TRIAL_FILE,
+    dataFile: SANITY_FILE,
     savingScript: SAVING_SCRIPT,
-    savingDir: SAVING_DIR,
-    //updateFunc: TRIAL_UPDATE,
-    //trialFunc: TRIAL,
-    //endExptFunc: END_EXPT
+    savingDir: SAVING_DIR
 }
 // var practice_trial_options = {
 //     subj: 'pre-define', // assign after subj is created
@@ -284,20 +285,14 @@ var sanity_check_options= {
 //     //dataFile: TRIAL_FILE,
 //     savingScript: SAVING_SCRIPT,
 //     savingDir: SAVING_DIR,
-//     //updateFunc: TRIAL_UPDATE,
 //     //trialFunc: TRIAL,
 //     //endExptFunc: END_EXPT
 // }
 var trial_options = {
     subj: 'pre-define', // assign after subj is created
-    //trialN: TRIAL_N,
     titles: TRIAL_TITLES,
-    //stimPath: STIM_PATH,
-    //dataFile: TRIAL_FILE,
+    dataFile: TRIAL_FILE,
     savingScript: SAVING_SCRIPT,
-    savingDir: SAVING_DIR,
-    //updateFunc: TRIAL_UPDATE,
-    //trialFunc: TRIAL,
-    //endExptFunc: END_EXPT
+    savingDir: SAVING_DIR
 }
 
