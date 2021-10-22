@@ -162,21 +162,27 @@
     <div class="pageBox" id="sanityCheckPage">
         <div id="sanityCheckBox">
             <div id="sanityCheckScoreBoard">
-                <div class="info" id="sanityCheckInfo">
+                <!--<div class="info" id="sanityCheckInfo">
                     <p>Practice </p>
                     <p id="sanityCheckRound"></p>
                 </div>
                 <div class="info">
                     <p style="top: -5px;">Target: </p>
                     <img class="shape" id="sanityCheckGoalShape" alt="An error occurred when loading the picture.">
+                </div>-->
+                <div class ="info">
+                    <p style = "left: 440px;">Total Score: </p>
+                    <!-- BELOW LINE WAS ADDED AS PLACEHOLDER, NOT SURE WHAT
+                    THE ACTUAL OBJECT FOR TOTAL SCORE WILL BE-->
+                    <!--<p id="sanityCheckScoreBoard" style="left:400px;"></p>-->
                 </div>
                 <div class="info hiddenInfo">
                     <p>Total Bonus: </p>
                     <p id="sanityCheckTotalBonusBefore"></p>
                 </div>
                 <div class="info" style="width:100px;">
-                    <p>Step: </p>
-                    <p id="sanityCheckStep"></p>
+                    <p style="left:140px;">Step: </p>
+                    <p id="sanityCheckStep" style="left:140px;"></p>
                 </div>
             </div>
             <div class="column" id="sanityCheckVerticalAxis">
@@ -197,25 +203,25 @@
                 <div id="sanityCheckInstr">
                     <div id="sanityCheckFade">
                         <div id="sanityCheckSay">
-                            <p>Send one signal to <img class="inlineShape" src="shape/receiver.png">:</p>
+                            <!--<p>Send one signal to <img class="inlineShape" src="shape/receiver.png">:</p>
                             <button class="butExpt" id="sanityCheckButOption0">red</button>
                             <button class="butExpt" id="sanityCheckButOption1">green</button>
                             <button class="butExpt" id="sanityCheckButOption2">purple</button>
                             <button class="butExpt" id="sanityCheckButOption3">circle</button>
                             <button class="butExpt" id="sanityCheckButOption4">square</button>
-                            <button class="butExpt" id="sanityCheckButOption5">triangle</button>
+                            <button class="butExpt" id="sanityCheckButOption5">triangle</button>-->
                         </div>
-                        <div id="sanityCheckDo">
+                        <div id="sanityCheckDo" style = "top:120px;">
                             <!-- <p class="inlineImg">Use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</p> -->
-                            <p>Let <img class="inlineShape" src="shape/signaler.png"> walk: </p>
-                            <button class="butExpt" id="sanityCheckMoveBut">Go</button>
+                            <p>Waiting for &nbsp; <img class="inlineShape" src="shape/signaler.png"> </p>
+                            <!--<button class="butExpt" id="sanityCheckMoveBut">Go</button>-->
                         </div>
                         <!-- <div id="sanityCheckQuit">
                             <p id="sanityCheckQuitText">Give up on this trial: </p>
                             <button class="butExpt" id="sanityCheckQuitBut">Quit</button>
                         </div> -->
                     </div>
-                    <div id="sanityCheckDecision"></div>
+                    <!--<div id="sanityCheckDecision"></div>-->
                 </div>
             </div>
             <div id="sanityCheckResult">
