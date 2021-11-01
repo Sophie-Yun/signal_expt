@@ -565,6 +565,84 @@ function RECEIVER_WALK_AFTER_WAIT(obj, signal) {
     }
 }
 
+function RECEIVER_WALK_TWO(obj, signal) {
+    DISABLE_HOVER_INFO();
+    if(obj.isTrySay) {
+        $("#instrBackBut").css({
+            "cursor": "auto",
+            "pointer-events": "none"
+        });
+        $("#instrNextBut").css({
+            "cursor": "auto",
+            "pointer-events": "none"
+        });
+    }
+    obj.consecutiveQuitNum = 0;
+    DISABLE_DEFAULT_KEYS();
+    RECORD_DECISION_DATA(obj, "say");
+    RECORD_SIGNAL_DATA(obj, signal);
+    CHANGE_IN_TRIAL_INSTR("say");
+    obj.allowMove = false;
+
+    var randUni = Math.random();
+    var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
+    setTimeout(RECEIVER_WALK_TO_CHOSEN_OBJECT, randExpo * 1000, obj, signal);
+}
+
+function RECEIVER_WALK_TO_CHOSEN_OBJECT(obj, intendedItemtemp) {
+    //Change ? -- Button should be disabled at start. Once "waiting for..." changes to a signal, people should be able to click
+    //Change 1 -- hover over item changes cursor to hand
+        //"pointer-events": "revert",
+        //"cursor": "pointer"
+    //Change 2 -- once they click on a button, should not be able to click on other buttons / should disable other fxns
+        //Can use pointer-events to disable clicking on buttons
+    //Also need to update the changing text so that it sends right signal for each trial 
+    console.log(intendedItemtemp.id);
+    var row = intendedItemtemp.id[5];
+    var col = intendedItemtemp.id[7];
+    intendedItem = obj.gridArray[row][col];
+    var path = obj.receiverPath[intendedItem];
+    var stepOnGrid = path[obj.pathIndex];
+
+    UPDATE_STEPS(obj);
+    UPDATE_GAME_GRID(obj, stepOnGrid, "receiver");
+
+    if(obj.pathIndex == path.length - 1) {
+        setTimeout(RECEIVER_ARRIVE, 1000, obj);
+    } else {
+        obj.pathIndex++;
+        setTimeout(RECEIVER_WALK_TO_CHOSEN_OBJECT, RECEIVER_MOVE_SPEED * 1000, obj, intendedItemtemp);
+    }
+    //intendedItemtemp
+    //id = "shape" row "v" col
+    //"shape1v3" --> str[5] = 1, str[7] = 3
+
+    console.log(intendedItem);
+    //console.log(obj.inputData[obj.trialIndex].receiverIntentionDict["triangle"]);
+    /*
+    var intendedItem = obj.inputData[intendedItemtemp].receiverIntentionDict["triangle"];
+
+    //obj.inputData[obj.trialIndex].receiverIntentionDict[signal];
+
+    "red triangle"
+
+    console.log(intendedItem);
+    console.log(obj);
+    var path = obj.receiverPath[intendedItem];
+    console.log(path);
+    var stepOnGrid = path[obj.pathIndex];
+    UPDATE_STEPS(obj);
+    UPDATE_GAME_GRID(obj, stepOnGrid, "receiver");
+
+    if(obj.pathIndex == path.length - 1) {
+        setTimeout(RECEIVER_ARRIVE, 1000, obj);
+    } else {
+        obj.pathIndex++;
+        setTimeout(RECEIVER_WALK_TO_CHOSEN_OBJECT, RECEIVER_MOVE_SPEED * 1000, obj, signal);
+    }
+    */
+}
+
 function RECEIVER_ARRIVE(obj) {
     if(obj.isTrySay) {
         $("#instrBackBut").css({
@@ -780,6 +858,7 @@ function SANITY_CHECK_GAMEBOARD_SETUP() {
 }
 
 function START_SANITY_CHECK_TRIAL() {
+    console.log("HERE");
     subj.saveAttrition();
     $("#instrPage").hide();
     $("#sanityCheckInfo").css("opacity", 1);
@@ -818,8 +897,23 @@ function START_SANITY_CHECK_TRIAL() {
     SETUP_SCOREBOARD(sanityCheck);
     SANITY_CHECK_GAMEBOARD_SETUP();
     CREATE_EXPT_BUTTONS(sanityCheck);
+
+    var randUni = Math.random();
+    var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
+    var signal = "red";
+    setTimeout(CHANGE_INSTRUCTION, randExpo * 1000, signal);
+    //NEED TO DISABLE BUTTONS BEFORE THIS IS CALLED ^ --> RE-ENABLE AFTER THIS IS CALLED
+    //setTimeout(RECEIVER_WALK_AFTER_WAIT, randExpo * 1000, obj, signal);
     sanityCheck.move();
 }
+
+function CHANGE_INSTRUCTION(signal){
+    console.log("CHANGE CALLED");
+    $("#instruction").hide();
+    $("#instruction_2").html("Signaler says: Red");
+    $("#instruction_2").show();
+}
+
 
 /*
  ######  ######     #     #####  ####### ###  #####  #######
@@ -875,6 +969,7 @@ function EXPT_GAMEBOARD_SETUP() {
 }
 
 function START_EXPT(){
+    //console.log("HERE");
     $("#instrPage").hide();
     $("#exptPracticeInfo").css("opacity", 0);
     expt.isExptTrial = true;

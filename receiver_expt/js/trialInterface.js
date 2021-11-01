@@ -54,10 +54,12 @@ function ADD_HOVER_INFO(elem, recDist, sigDist) {
     $(elem).append("<div class='gridItemInfo'></div>");
     $(elem + " .gridItemInfo").append("<p><img class='shape' src='"+ SHAPE_DIR + "receiver.png'> : " + recDist + "</p>");
     $(elem + " .gridItemInfo").append("<p><img class='shape' src='"+ SHAPE_DIR + "signaler.png'> : " + sigDist + "</p>");
+    
 }
 
 function CREATE_GRID(obj) {
     var gridArray = obj.gridArray;
+    console.log(gridArray);
     var nrow = GRID_NROW;
     var ncol = GRID_NCOL;
     var shapeId;
@@ -117,12 +119,25 @@ function CREATE_GRID(obj) {
                 if (item !== undefined){
                     $("#sanityCheckGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>");
                     if (item!== SHAPE_DIR + "receiver.png" && item!== SHAPE_DIR + "signaler.png") {
+                        
+                        console.log(item);
                         $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item]}));
                         var receiverDist = obj.receiverPath[item].length;
                         var signalerDist = obj.signalerPath[item].length;
                         ADD_HOVER_INFO("#" + shapeId, receiverDist, signalerDist);
+                        //var saveItem = item;
+                        //console.log(row_save);
+                        //var row_save = row;
+                        //Updating some dictionary with [key = button; value = item]
+
+                        $("#"+shapeId).click(function(){
+                            //console.log(row_save);
+                            RECEIVER_WALK_TWO(obj, this);
+                        });
+                        console.log("Added item");
                     } else {
                         $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
+                        
                     }
                 }
                 else{
