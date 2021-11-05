@@ -63,6 +63,7 @@ function CREATE_GRID(obj) {
     var nrow = GRID_NROW;
     var ncol = GRID_NCOL;
     var shapeId;
+    buttonDict = {}
     if(obj.isTryMove) {
         for (var row = 0; row < nrow; row++) {
             for (var col = 0; col < ncol; col++) {
@@ -129,10 +130,13 @@ function CREATE_GRID(obj) {
                         //console.log(row_save);
                         //var row_save = row;
                         //Updating some dictionary with [key = button; value = item]
-
+                        
+                        buttonDict[("#"+shapeId)] = (this)
                         $("#"+shapeId).click(function(){
+                            $("#"+shapeId).css("pointer-events","none");
                             //console.log(row_save);
                             RECEIVER_WALK_TWO(obj, this);
+                            $("#"+shapeId).css("pointer-events","auto");
                         });
                         console.log("Added item");
                     } else {
@@ -146,6 +150,7 @@ function CREATE_GRID(obj) {
                 }
             };
         };
+        DISABLE_GRID_BUTTONS(buttonDict);
         ADD_BARRIER(obj);
     }
     // else if (obj.isPracTrial) {
@@ -189,7 +194,8 @@ function CREATE_GRID(obj) {
         };
         ADD_BARRIER(obj);
     }
-
+console.log("returning");
+return buttonDict;
 }
 
 function REMOVE_PREVIOUS(actor) {
