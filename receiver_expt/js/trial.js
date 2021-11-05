@@ -565,6 +565,23 @@ function RECEIVER_WALK_AFTER_WAIT(obj, signal) {
     }
 }
 
+function DISABLE_GRID_BUTTONS(buttonDict){
+    //console.log("attempting disable")
+    //console.log(Object.keys(buttonDict).length)
+    for (const [key,value] of Object.entries(buttonDict)){
+        //console.log(key)
+        //console.log("disabling button")
+        $(key).css("pointer-events","none");
+    }
+}
+
+function ENABLE_GRID_BUTTONS(buttonDict){
+    for (const [key,value] of Object.entries(buttonDict)){
+        $(key).css("pointer-events","auto");
+        $(key).css("cursor","pointer");
+}
+}
+
 function RECEIVER_WALK_TWO(obj, signal) {
     DISABLE_HOVER_INFO();
     if(obj.isTrySay) {
@@ -597,7 +614,7 @@ function RECEIVER_WALK_TO_CHOSEN_OBJECT(obj, intendedItemtemp) {
     //Change 2 -- once they click on a button, should not be able to click on other buttons / should disable other fxns
         //Can use pointer-events to disable clicking on buttons
     //Also need to update the changing text so that it sends right signal for each trial 
-    console.log(intendedItemtemp.id);
+    //console.log(intendedItemtemp.id);
     var row = intendedItemtemp.id[5];
     var col = intendedItemtemp.id[7];
     intendedItem = obj.gridArray[row][col];
@@ -892,26 +909,39 @@ function START_SANITY_CHECK_TRIAL() {
     sanityCheck.exptReceiverPath = "N/A",
 
     TRIAL_SET_UP(sanityCheck);
-    CREATE_GRID(sanityCheck);
+    buttonDict = CREATE_GRID(sanityCheck);
+    console.log(Object.keys(buttonDict).length);
     CREATE_SIGNAL_BUTTONS(sanityCheck, sanityCheck.signalSpace);
     SETUP_SCOREBOARD(sanityCheck);
     SANITY_CHECK_GAMEBOARD_SETUP();
     CREATE_EXPT_BUTTONS(sanityCheck);
+    DISABLE_DEFAULT_KEYS();
+    
 
     var randUni = Math.random();
     var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
     var signal = "red";
-    setTimeout(CHANGE_INSTRUCTION, randExpo * 1000, signal);
+    setTimeout(CHANGE_INSTRUCTION, randExpo * 1100, signal);
+    setTimeout(ENABLE_GRID_BUTTONS,randExpo*1200,buttonDict);
+
+    
     //NEED TO DISABLE BUTTONS BEFORE THIS IS CALLED ^ --> RE-ENABLE AFTER THIS IS CALLED
     //setTimeout(RECEIVER_WALK_AFTER_WAIT, randExpo * 1000, obj, signal);
     sanityCheck.move();
 }
 
 function CHANGE_INSTRUCTION(signal){
-    console.log("CHANGE CALLED");
+    //console.log("CHANGE CALLED");
     $("#instruction").hide();
     $("#instruction_2").html("Signaler says: Red");
     $("#instruction_2").show();
+}
+
+function RESET_INSTRUCTION(){
+    //console.log("RESET CALLED");
+    $("#instruction_2").hide();
+    //$("#instruction_2").html("Signaler says: Red");
+    $("#instruction_1").show();
 }
 
 
