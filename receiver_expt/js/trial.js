@@ -76,9 +76,18 @@ class trialObject {
             this.exptSignalerPath = "N/A",
             this.exptReceiverPath = "N/A",
             TRIAL_SET_UP(this);
-            CREATE_GRID(this);
+            buttonDict = CREATE_GRID(this);
             SETUP_SCOREBOARD(this);
             CREATE_SIGNAL_BUTTONS(this, this.signalSpace);
+            console.log("right next");
+            console.log(Object.keys(buttonDict).length);
+            RESET_INSTRUCTION();
+            var randUni = Math.random();
+            var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
+            var signal = "red";
+            setTimeout(CHANGE_INSTRUCTION, randExpo * 1100, signal);
+            setTimeout(ENABLE_GRID_BUTTONS,randExpo*1200,buttonDict);
+            //ENABLE_GRID_BUTTONS(buttonDict);
             $("#sanityCheckInstr").show();
             this.move();
             }
@@ -603,7 +612,7 @@ function RECEIVER_WALK_TWO(obj, signal) {
 
     var randUni = Math.random();
     var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
-    setTimeout(RECEIVER_WALK_TO_CHOSEN_OBJECT, randExpo * 1000, obj, signal);
+    setTimeout(RECEIVER_WALK_TO_CHOSEN_OBJECT, randExpo * 400, obj, signal);
 }
 
 function RECEIVER_WALK_TO_CHOSEN_OBJECT(obj, intendedItemtemp) {
@@ -941,7 +950,7 @@ function RESET_INSTRUCTION(){
     //console.log("RESET CALLED");
     $("#instruction_2").hide();
     //$("#instruction_2").html("Signaler says: Red");
-    $("#instruction_1").show();
+    $("#instruction").show();
 }
 
 
