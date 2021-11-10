@@ -184,6 +184,14 @@ function CREATE_GRID(obj) {
                         var receiverDist = obj.receiverPath[item].length;
                         var signalerDist = obj.signalerPath[item].length;
                         ADD_HOVER_INFO("#" + shapeId, receiverDist, signalerDist);
+
+                        buttonDict[("#"+shapeId)] = (this)
+                        $("#"+shapeId).click(function(){
+                            $("#"+shapeId).css("pointer-events","none");
+                            //console.log(row_save);
+                            RECEIVER_WALK_TWO(obj, this);
+                            $("#"+shapeId).css("pointer-events","auto");
+                        });
                     } else {
                         $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
                     }
@@ -192,6 +200,7 @@ function CREATE_GRID(obj) {
                 }
             };
         };
+        DISABLE_GRID_BUTTONS(buttonDict);
         ADD_BARRIER(obj);
     }
 console.log("returning");
@@ -734,12 +743,14 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
         //     obj.sanitySayAttempts++;
         // }
         var reward;
-        if(win){
-            if (trialStrategy == "do") {
-                $("#sanityCheckResultText").html("You took " + obj.step.toFixed(0) + " steps.<br>Congratulations! You reached the target!");
+        if(win){ //SIGNALER MOVES TO TARGET RESULT BOX
+            var landedItem = $('#shape'+ obj.signalerLocation[0] + 'v' + obj.signalerLocation[1] + ' .shape').attr('src');
+            if (trialStrategy == "do") { //chckpt
+                $("#sanityCheckResultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>It is the target!");
             }
             else {
-                $("#sanityCheckResultText").html("You took " + obj.step.toFixed(0) + " steps.<br>Congratulations! You reached the target! <br>" + getSanityCheckFeedback(obj, trialStrategy));
+                $("#sanityCheckResultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>It is the target!");
+                //$("#sanityCheckResultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps.<br>It is the target!<br>" + getSanityCheckFeedback(obj, trialStrategy));
             }
             reward = REWARD;
         } else {
@@ -765,12 +776,13 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
     //     $("#practiceResult").show();
     // }
     else if (obj.isExptTrial){
+        var landedItem = $('#shape'+ obj.signalerLocation[0] + 'v' + obj.signalerLocation[1] + ' .shape').attr('src');
         $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
         if(win){
-            $("#resultText").html("You took " + obj.step.toFixed(0) + " steps.<br>Congratulations! You reached the target!");
+            $("#resultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>It is the target!");
             reward = REWARD;
         } else {
-            $("#resultText").html("You took " + obj.step.toFixed(0) + " steps.<br>Sorry, you did not reach the target.<br>Good luck on your next round!");
+            $("#resultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>It is not the target!");
             reward = 0;
         }
         $("#reward").html("$" + reward.toFixed(2));
@@ -810,17 +822,19 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         //     obj.sanitySayAttempts++;
         // }
         var reward;
-        if(win){
+        if(win){ //RECIEVER MOVES TO TARGET RESULT BOX
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
             if (trialStrategy == "ambiguous" || trialStrategy == "do" || trialStrategy !== obj.signal){
-                $("#sanityCheckResultText").html("<img class='inlineShape' src='shape/receiver.png'/> took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations! You reached the target! <br>" + getSanityCheckFeedback(obj, trialStrategy));
+                //$("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations! It is the target! <br>" + getSanityCheckFeedback(obj, trialStrategy));
+                $("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br> It is the target! <br>");
             } else {
-                $("#sanityCheckResultText").html("<img class='inlineShape' src='shape/receiver.png'/> took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations!<br>You reached the target!");
+                $("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br> It is the target! <br>");
             }
             reward = REWARD;
         } else {
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            $("#sanityCheckResultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/> took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target. <br>" + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");
+            $("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>It is not the target! <br>");
+            //$("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>It is not the target! <br>" + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");
             reward = 0;
         }
         $("#sanityCheckReward").html("$" + reward.toFixed(2));
@@ -847,11 +861,11 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
         if(win){
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            $("#resultText").html("<img class='inlineShape' src='shape/receiver.png'/> took " + obj.step.toFixed(0) + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations! You reached the target!");
+            $("#resultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br> It is the target! <br>");
             reward = REWARD;
         } else {
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            $("#resultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/> took " + obj.step.toFixed(0) + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>Sorry, you did not reach the target.<br>Good luck on your next round!");
+            $("#resultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>It is not the target! <br>");
             reward = 0;
         }
         $("#reward").html("$" + reward.toFixed(2));

@@ -219,7 +219,7 @@
                         <div id="sanityCheckDo">
                             <!-- <p class="inlineImg">Use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</p> -->
                             <p id="instruction">Waiting for &nbsp; <img class="inlineShape" src="shape/signaler.png"> </p>
-                            <p id="instruction_2" style="display:none;">Signaler says: </p>
+                            <p id="instruction_2" style="display:none;"><img class="inlineShape" src="shape/signaler.png"> says: </p>
                             <!--<button class="butExpt" id="sanityCheckMoveBut">Go</button>-->
                         </div>
                         <!-- <div id="sanityCheckQuit">
@@ -341,7 +341,7 @@
                         <p>Experiment </p>
                         <p></p>
                     </div>
-                    <div class="info">
+                    <div class="info hiddenInfo">
                         <p style="top: -5px;">Target: </p>
                         <img class="shape" id="goalShape" alt="An error occurred when loading the picture.">
                     </div>
@@ -372,25 +372,25 @@
                 <div id="exptInstr">
                     <div id="exptFade">
                         <div id="say">
-                            <p>Send one signal to <img class="inlineShape" src="shape/receiver.png">:</p>
+                           <!-- <p>Send one signal to <img class="inlineShape" src="shape/receiver.png">:</p>
                             <button class="butExpt" id="butOption0">red</button>
                             <button class="butExpt" id="butOption1">green</button>
                             <button class="butExpt" id="butOption2">purple</button>
                             <button class="butExpt" id="butOption3">circle</button>
                             <button class="butExpt" id="butOption4">square</button>
-                            <button class="butExpt" id="butOption5">triangle</button>
+                            <button class="butExpt" id="butOption5">triangle</button> -->
                         </div>
                         <div id="do">
                             <!-- <p class="inlineImg">Use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</p> -->
-                            <p>Let <img class="inlineShape" src="shape/signaler.png"> walk: </p>
-                            <button class="butExpt" id="exptMoveBut">Go</button>
+                            <p id="exptInstruct1">Waiting for &nbsp; <img class="inlineShape" src="shape/signaler.png"> </p>
+                            <p id="exptInstruct2" style="display:none;"><img class="inlineShape" src="shape/signaler.png"> says: </p>
                         </div>
                         <!-- <div id="quit">
                             <p id="quitText">Give up on this trial: </p>
                             <button class="butExpt" id="quitBut">Quit</button>
                         </div> -->
                     </div>
-                    <div id="decision"></div>
+                    <!--<div id="decision"></div>-->
                 </div>
             </div>
             <div id="result">

@@ -79,14 +79,20 @@ class trialObject {
             buttonDict = CREATE_GRID(this);
             SETUP_SCOREBOARD(this);
             CREATE_SIGNAL_BUTTONS(this, this.signalSpace);
-            console.log("right next");
-            console.log(Object.keys(buttonDict).length);
+            //console.log("right next");
+            //console.log(Object.keys(buttonDict).length);
             RESET_INSTRUCTION();
             var randUni = Math.random();
             var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
             var signal = "red";
+            var signal = "do";
             setTimeout(CHANGE_INSTRUCTION, randExpo * 1100, signal);
+            if(signal == "do"){
+                setTimeout(SIGNALER_AUTO_MOVE,randExpo*1200,sanityCheck);
+            }
+            else{
             setTimeout(ENABLE_GRID_BUTTONS,randExpo*1200,buttonDict);
+            }
             //ENABLE_GRID_BUTTONS(buttonDict);
             $("#sanityCheckInstr").show();
             this.move();
@@ -118,9 +124,21 @@ class trialObject {
                 this.exptSignalerPath = "N/A",
                 this.exptReceiverPath = "N/A",
                 TRIAL_SET_UP(this);
-                CREATE_GRID(this);
+                buttonDict = CREATE_GRID(this);
                 SETUP_SCOREBOARD(this);
                 CREATE_SIGNAL_BUTTONS(this, this.signalSpace);
+                RESET_INSTRUCTION_EXPT();
+                var randUni = Math.random();
+                var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
+                var signal = "red";
+                var signal = "do"; 
+                setTimeout(CHANGE_INSTRUCTION_EXPT, randExpo * 1100, signal);
+                if(signal == "do"){
+                    setTimeout(SIGNALER_AUTO_MOVE,randExpo*1200,expt);
+                }
+                else{
+                setTimeout(ENABLE_GRID_BUTTONS,randExpo*1200,buttonDict);
+                }
                 $("#exptInstr").show();
                 this.move();
             }
@@ -931,7 +949,12 @@ function START_SANITY_CHECK_TRIAL() {
     var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
     var signal = "red";
     setTimeout(CHANGE_INSTRUCTION, randExpo * 1100, signal);
+    if(signal == "do"){
+        SIGNALER_AUTO_MOVE(sanityCheck);
+    }
+    else{
     setTimeout(ENABLE_GRID_BUTTONS,randExpo*1200,buttonDict);
+    }
 
     
     //NEED TO DISABLE BUTTONS BEFORE THIS IS CALLED ^ --> RE-ENABLE AFTER THIS IS CALLED
@@ -940,17 +963,50 @@ function START_SANITY_CHECK_TRIAL() {
 }
 
 function CHANGE_INSTRUCTION(signal){
-    //console.log("CHANGE CALLED");
+    console.log("Changing instr");
+    var signalString = signal.charAt(0).toUpperCase() + signal.slice(1);
     $("#instruction").hide();
-    $("#instruction_2").html("Signaler says: Red");
+    if(signal == "do"){
+        $("#instruction_2").html( '<img class="inlineShape" src="shape/signaler.png">' + ' is walking to the target.');
+
+    }
+    //console.log("CHANGE CALLED");
+    else{
+        console.log("changing");
+        $("#instruction_2").html( '<img class="inlineShape" src="shape/signaler.png">' + ' says: "' + signalString + '".');
+    }
     $("#instruction_2").show();
 }
+
 
 function RESET_INSTRUCTION(){
     //console.log("RESET CALLED");
     $("#instruction_2").hide();
     //$("#instruction_2").html("Signaler says: Red");
     $("#instruction").show();
+}
+
+function CHANGE_INSTRUCTION_EXPT(signal){
+    console.log("Changing instr");
+    var signalString = signal.charAt(0).toUpperCase() + signal.slice(1);
+    $("#exptInstruct1").hide();
+    if(signal == "do"){
+        $("#exptInstruct2").html( '<img class="inlineShape" src="shape/signaler.png">' + ' is walking to the target.');
+
+    }
+    //console.log("CHANGE CALLED");
+    else{
+        console.log("changing");
+        $("#exptInstruct2").html( '<img class="inlineShape" src="shape/signaler.png">' + ' says: "' + signalString + '".');
+    }
+    $("#exptInstruct2").show();
+}
+
+function RESET_INSTRUCTION_EXPT(){
+    //console.log("RESET CALLED");
+    $("#exptInstruct2").hide();
+    //$("#instruction_2").html("Signaler says: Red");
+    $("#exptInstruct1").show();
 }
 
 
@@ -1020,6 +1076,20 @@ function START_EXPT(){
     SETUP_SCOREBOARD(expt);
     EXPT_GAMEBOARD_SETUP();
     CREATE_EXPT_BUTTONS(expt);
+
+    var randUni = Math.random();
+    var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
+    var signal = "red";
+    console.log("starting expt")
+    setTimeout(CHANGE_INSTRUCTION_EXPT, randExpo * 1100, signal);
+    if(signal == "do"){
+        SIGNALER_AUTO_MOVE(expt);
+    }
+    else{
+    setTimeout(ENABLE_GRID_BUTTONS,randExpo*1200,buttonDict);
+    }
+
+
     expt.move();
 
     expt.startTime = Date.now();
