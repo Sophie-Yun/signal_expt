@@ -189,6 +189,42 @@ function SHUFFLE_ARRAY(array) {
     return array;
 }
 
+function tempDeletePlease(){
+    fetch("inputCSV/trial_signal.txt")
+        .then(response => response.text())
+        .then(textString => {
+            //console.log(textString);
+            var lines = textString.split(/\r?\n/);
+            var linesArray = [];
+            //console.log(lines);
+            headerArray = lines[0].match(/;[A-Z]*/gi);
+            console.log(headerArray);
+            predSignalIndex = headerArray.indexOf(";decisionTime");
+            for (i = 1; i < lines.length - 1; i++) {
+                linesArray[i - 1] = {};
+                currLineArray = lines[i].match(/[;][a-zA-Z0-9_.,-]*/g);
+                linesArray[i-1]["predSignalNoActionUtility"]=currLineArray[predSignalIndex];
+                //console.log(linesArray[i-1]);
+        }
+        var sum = 0;
+        var numelements = 0;
+        for(i = 1; i < lines.length - 1; i++){
+            //console.log(i);
+            testElement = linesArray[i-1]["predSignalNoActionUtility"].substring(1);
+            console.log(testElement);
+            if(!isNaN(testElement)){
+                numelements++;
+                sum += parseInt(linesArray[i-1]["predSignalNoActionUtility"].substring(1)); 
+            }   
+        }
+        console.log(sum);
+        console.log(numelements);
+    
+})
+}
+        
+
+
 function CREATE_RANDOM_LIST_FOR_EXPT(obj) {
     obj.randomizedTrialList = SHUFFLE_ARRAY(Object.keys(obj.inputData));
 }
@@ -205,6 +241,7 @@ function CREATE_RANDOM_LIST_FOR_EXPT(obj) {
 
 */
 $(document).ready(function() {
+    //tempDeletePlease();
     subj = new subjObject(subj_options);
     //xxx: uncomment before release
     // subj.id = subj.getID("sonacode"); // getting subject number
