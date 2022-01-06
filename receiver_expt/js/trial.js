@@ -84,8 +84,9 @@ class trialObject {
             RESET_INSTRUCTION();
             var randUni = Math.random();
             var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
-            var signal = "red";
-            var signal = "do";
+            //var signal = "red";
+            //var signal = "do";
+            var signal = this.inputData[this.trialIndex]["predSignalNoActionUtility"];
             setTimeout(CHANGE_INSTRUCTION, randExpo * 1100, signal);
             if(signal == "do"){
                 setTimeout(SIGNALER_AUTO_MOVE,randExpo*1200,sanityCheck);
@@ -130,14 +131,16 @@ class trialObject {
                 RESET_INSTRUCTION_EXPT();
                 var randUni = Math.random();
                 var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
-                var signal = "red";
-                var signal = "do"; 
+                //var signal = "red";
+                //var signal = "do"; 
+                var signal = this.inputData[this.randomizedTrialList[this.trialIndex]]["predSignalNoActionUtility"];
+                console.log(signal);
                 setTimeout(CHANGE_INSTRUCTION_EXPT, randExpo * 1100, signal);
                 if(signal == "do"){
-                    setTimeout(SIGNALER_AUTO_MOVE,randExpo*1200,expt);
+                    setTimeout(SIGNALER_AUTO_MOVE,randExpo*1100,expt);
                 }
                 else{
-                setTimeout(ENABLE_GRID_BUTTONS,randExpo*1200,buttonDict);
+                setTimeout(ENABLE_GRID_BUTTONS,randExpo*1100,buttonDict);
                 }
                 $("#exptInstr").show();
                 this.move();
@@ -493,6 +496,72 @@ function SIGNALER_AUTO_MOVE_ARRIVE(obj) {
     obj.step = 0;
 }
 
+function RECEIVER_AUTO_MOVE(obj) {
+    DISABLE_HOVER_INFO();
+    if(obj.isTryMove) {
+        $("#instrBackBut").css({
+            "cursor": "auto",
+            "pointer-events": "none"
+        });
+        $("#instrNextBut").css({
+            "cursor": "auto",
+            "pointer-events": "none"
+        });
+    }
+
+    DISABLE_DEFAULT_KEYS();
+    if(!obj.decisionRecorded) {
+        RECORD_DECISION_DATA(obj, "do");
+        RECORD_SIGNAL_DATA(obj);
+    }
+    CHANGE_IN_TRIAL_INSTR("do");
+    obj.allowMove = false;
+
+    if(obj.isTryMove)
+        var path = ["down","right","right","right"];
+    else if (obj.isSanityCheck)
+        var path = obj.signalerPath[obj.inputData[obj.trialIndex].intention];
+    else if (obj.isExptTrial)
+        var path = obj.signalerPath[obj.inputData[obj.randomizedTrialList[obj.trialIndex]].intention];
+
+
+    var stepOnGrid = path[obj.pathIndex];
+
+    UPDATE_STEPS(obj);
+    UPDATE_GAME_GRID(obj, stepOnGrid, "receiver");
+
+    if(obj.pathIndex == path.length - 1) {
+        setTimeout(RECEIVER_AUTO_MOVE_ARRIVE, 1000, obj);
+
+    } else {
+        obj.pathIndex++;
+        setTimeout(RECEIVER_AUTO_MOVE, RECEIVER_MOVE_SPEED * 1000, obj, signal);
+    }
+}
+
+function RECEIVER_AUTO_MOVE_ARRIVE(obj) {
+    if(obj.isTryMove) {
+        $("#instrBackBut").css({
+            "cursor": "pointer",
+            "pointer-events": "revert"
+        });
+        $("#instrNextBut").css({
+            "cursor": "pointer",
+            "pointer-events": "revert"
+        });
+    }
+    RECORD_ACTION_TIME(obj);
+    RECORD_SIGNALER_END_LOCATION(obj, obj.signalerLocation);
+    RECORD_RECEIVER_END_LOCATION(obj);
+    RECORD_SIGNALER_ACHIEVED(obj, "achieved")
+    RECORD_RECEIVER_ACHIEVED(obj);
+    UPDATE_RESULT_IN_OBJ(obj, REWARD);
+    SHOW_WIN_RESULT_BOX_FOR_MOVE(obj, true);
+
+    obj.pathIndex = 0;
+    obj.step = 0;
+}
+
 // function MOVE(obj) {
 //     var arrowClicked = false; //to prevent clicking on ENTER before arrow keys
 //     DISABLE_DEFAULT_KEYS();
@@ -633,6 +702,7 @@ function RECEIVER_WALK_TWO(obj, signal) {
     setTimeout(RECEIVER_WALK_TO_CHOSEN_OBJECT, randExpo * 400, obj, signal);
 }
 
+
 function RECEIVER_WALK_TO_CHOSEN_OBJECT(obj, intendedItemtemp) {
     //Change ? -- Button should be disabled at start. Once "waiting for..." changes to a signal, people should be able to click
     //Change 1 -- hover over item changes cursor to hand
@@ -642,8 +712,16 @@ function RECEIVER_WALK_TO_CHOSEN_OBJECT(obj, intendedItemtemp) {
         //Can use pointer-events to disable clicking on buttons
     //Also need to update the changing text so that it sends right signal for each trial 
     //console.log(intendedItemtemp.id);
+
+    //if(intendedItemtemp == 0){
+    //    var row = 3;
+    //    var col = 7;
+    //}
+    //else{
     var row = intendedItemtemp.id[5];
     var col = intendedItemtemp.id[7];
+    //}
+    
     intendedItem = obj.gridArray[row][col];
     var path = obj.receiverPath[intendedItem];
     var stepOnGrid = path[obj.pathIndex];
@@ -811,6 +889,7 @@ function TRY_MOVE() {
     if(!tryMove.reached)
         $("#instrNextBut").hide();
     CREATE_EXPT_BUTTONS(tryMove);
+   
     tryMove.gridArray = [
             [,,,,,,,,],
             [,,,,,,,,],
@@ -829,6 +908,24 @@ function TRY_MOVE() {
         "left": "",
         "right": ""
     }
+ //NEED TO, IN THIS PROCESS, CREATE A BUTTON ON [3,7]
+    var item = tryMove.gridArray[3,7];
+    shapeId = "shape3v7"
+    $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item]}));
+    //var receiverDist = tryMove.receiverPath[item].length;
+    //var signalerDist = tryMove.signalerPath[item].length;
+    ADD_HOVER_INFO("#" + shapeId, 4, 13);
+    $("#"+shapeId).click(function(){
+        $("#"+shapeId).css("pointer-events","none");
+        //console.log(row_save);
+        RECEIVER_AUTO_MOVE(tryMove);
+        $("#"+shapeId).css("pointer-events","auto");
+    });
+    $("#"+shapeId).css("pointer-events","auto");
+    $("#"+shapeId).css("cursor","pointer");
+//THIS CURRENTLY DOES NOT WORK ^
+
+
     tryMove.step = 0;
     SET_BARRIER(tryMove);
     tryMove.goalCoord=[3,7];
@@ -947,7 +1044,13 @@ function START_SANITY_CHECK_TRIAL() {
 
     var randUni = Math.random();
     var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
-    var signal = "red";
+    //
+    //console.log(sanityCheck.trialIndex);
+    var signal = sanityCheck.inputData[sanityCheck.trialIndex]["predSignalNoActionUtility"];
+    //console.log(newsignal);
+    //
+
+    //var signal = "red";
     setTimeout(CHANGE_INSTRUCTION, randExpo * 1100, signal);
     if(signal == "do"){
         SIGNALER_AUTO_MOVE(sanityCheck);
@@ -1079,11 +1182,12 @@ function START_EXPT(){
 
     var randUni = Math.random();
     var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
-    var signal = "red";
+    var signal = expt.inputData[expt.randomizedTrialList[expt.trialIndex]]["predSignalNoActionUtility"];
+    //var signal = "red";
     console.log("starting expt")
     setTimeout(CHANGE_INSTRUCTION_EXPT, randExpo * 1100, signal);
     if(signal == "do"){
-        SIGNALER_AUTO_MOVE(expt);
+        setTimeout(SIGNALER_AUTO_MOVE,randExpo*1200,expt);
     }
     else{
     setTimeout(ENABLE_GRID_BUTTONS,randExpo*1200,buttonDict);

@@ -432,15 +432,19 @@ function RESET_GAMEBOARD() {
 */
 function CREATE_EXPT_BUTTONS(obj) {
     if(obj.isTryMove && !obj.nextButCreated) {
-        $("#tryMoveMoveBut").click(function(){SIGNALER_AUTO_MOVE(obj)});
+        console.log("1")
+        $("#tryMoveMoveBut").click(function(){RECEIVER_AUTO_MOVE(obj)});
+        //$("#tryMoveMoveBut").click(function(){RECEIVER_WALK_TO_CHOSEN_OBJECT(obj, 0)});
         $("#tryMoveResultBut").click(function(){NEXT_INSTR()});
         obj.nextButCreated = true;
     }
     else if (obj.isTrySay && !obj.nextButCreated) {
+        console.log("2")
         $("#trySayResultBut").click(function(){NEXT_INSTR()});
         obj.nextButCreated = true;
     }
     else if (obj.isSanityCheck) {
+        console.log("3")
         $("#sanityCheckMoveBut").click(function(){SIGNALER_AUTO_MOVE(obj)});
         $("#sanityCheckResultBut").click(function(){NEXT_TRIAL(obj)});
     }
@@ -449,6 +453,7 @@ function CREATE_EXPT_BUTTONS(obj) {
     //     $("#practiceResultBut").click(function(){NEXT_TRIAL(obj)});
     // }
     else if (obj.isExptTrial) {
+        console.log("4")
         $("#exptMoveBut").click(function(){SIGNALER_AUTO_MOVE(obj)});
         $("#resultBut").click(function(){NEXT_TRIAL(obj)});
     }

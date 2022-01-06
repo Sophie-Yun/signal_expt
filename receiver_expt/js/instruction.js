@@ -101,20 +101,21 @@ var instr_text = new Array;
 var instr_text = new Array;
 instr_text[0] = "<strong>Welcome!</strong><br><br>In this experiment, you will play a game that involves cooperating and communicating with another player to take as few steps as possible to reach a target goal item in the environment. You even have a chance to earn some bonus money. <br><br>Hope you enjoy it!";
 instr_text[1] = "Please read the instructions on the next few pages carefully. You will be asked about the instructions later and see some practice rounds to make sure you understand the game.";
-instr_text[2] = "In this experiment, you are the player in blue " + "<img class='inlineShape' src='shape/signaler.png'/>" + " and your partner is in white " + "<img class='inlineShape' src='shape/receiver.png' />" + " .";
+instr_text[2] = "In this experiment, you are the player in white " + "<img class='inlineShape' src='shape/receiver.png'/>" + " and your partner is in blue " + "<img class='inlineShape' src='shape/signaler.png' />" + " .";
 instr_text[3] = "At the beginning of each round, you and your partner will stand at different positions in a game board. <br><br>You will also see items scattered in the grids.";
-instr_text[4] = "The goal of each round is for you or your partner to reach an item which has been designated as the target. However, <strong>you are the only person who knows which item is the target.</strong> Your partner does not know the target but is intelligent and motivated to help.<br><br><img style='width: 130%; margin: 0px -15%' src='sigRecPOV.png' />";
-instr_text[5] = "There are multiple ways to reach the target. To help you decide whether you want to go yourself or ask your partner for help, you can look at how far each of you is from any item.<br><br>If you move your mouse over an item, you will see the minimum number of steps it takes you or your partner to get there.<br><br><img style='width: 60%; margin: 0px 20%' src='utilityHoverEffect.png' />";
-instr_text[6] = "If you want to go yourself, you can click the button labeled \"Go.\" You will then automatically walk to the target, taking the shortest path possible. You cannot walk across a barrier which is displayed as a thick line.<br><br>Try to go to the target by yourself on the next page."
-instr_text[7] = "";
-instr_text[8] = "Good job! <br><br>If you don't want to move by yourself, you can ask your partner to move. <br><br>You have the option to send one of the given signals to your partner. The signal can give partial information about the target."
-instr_text[9] = "After you send the signal, your partner will try their best to reach the target given the information you provided. <br><br>Similarly, your partner cannot move across a barrier which is displayed as a thick line. <br><br>Your partner may take some time to respond. <strong>Please do NOT refresh your browser while waiting.</strong><br><br>You can try to send a signal on the next page."
-instr_text[10] = "";
-instr_text[11] = "Nice! Now you know how to send a signal to your partner. <br><br> If you and your partner cooperate to reach the target efficiently, you will have a chance to accumulate an additional money reward at the end of the experiment."
+instr_text[4] = "The goal of each round is for you or your partner to reach an item which has been designated as the target. However, <strong>your partner (blue " + "<img class='inlineShape' src='shape/signaler.png' />" + ") is the only person who knows which item is the target.</strong> You do not know which item is the target, but your partner will give you a signal to indicate which item to go to.<br><br><img style='width: 130%; margin: 0px -15%' src='sigRecPOV.png' />";
+instr_text[5] = "Your partner will either send you a signal of which item to move to, or decide to move themselves. To help you figure out which item the signal refers to, you can look at how far each of you are from any given item. <br><br>If you move your mouse over an item, you will see the minimum number of steps it takes you or your partner to get there.<br><br><img style='width: 60%; margin: 0px 20%' src='ReceiverHover.png' />";
+//changed above image
+instr_text[6] = "If your partner sends a signal, you can move to an item by clicking on it in the grid. You will then automatically walk to the target, taking the shortest path possible. You cannot walk across a barrier which is displayed as a thick line.<br><br>Try to go to the target by yourself on the next page."
+instr_text[7] = "";   //CHANGE THIS PRACTICE ROUND
+instr_text[8] = "Good job! <br><br>The signal your partner sends will contain <strong> only one element (shape or color) </strong> of the target. <br><br>You have to do your best to figure out which item it refers to using the partial information available."
+instr_text[9] = "At the start of each round, your partner will decide to either move themselves or send a signal to help you figure out where to move. <br><br>You and your partner cannot move across a barrier which is displayed as a thick line. <br><br>Your partner may take some time to decide. <strong>Please do NOT refresh your browser while waiting.</strong><br><br>You can practice interpreting a signal on the next page."
+instr_text[10] = "";  //CHANGE THIS PRACTICE ROUND
+instr_text[11] = "Nice! Now you know how to interpret a signal. <br><br> If you and your partner cooperate to reach the target efficiently, you will have a chance to accumulate an additional money reward at the end of the experiment."
 instr_text[12] = "In each round, if either you or your partner reaches the correct goal, you will both receive a bonus of $" + REWARD.toFixed(2) + ". However, every step either of you takes costs $" + STEP_COST.toFixed(2) + "."
 instr_text[13] = "Your additional money reward accumulates across rounds, but it will never drop below $0.00. <br><br> You will see a set of practice rounds before you can start to earn the money bonus.";
 //instr_text[13] = "Some rounds might be difficult. If you decide that it is too costly for either of you to move towards the target, you have the option to QUIT this round. Neither of you will lose or receive money bonus if you choose to quit. <br><br>However, once you start an action, you cannot change your mind on that round.";
-instr_text[14] = "";
+instr_text[14] = ""; //CHANGE THIS QUIZ
 instr_text[15] = "By clicking on the NEXT button, I am acknowledged and hereby accept the terms. I understand the task in this experiment.";
 instr_text[16] = "Please start the practice rounds on the next page. Note that the cost and reward in this set <strong>ARE NOT</strong> counting towards your additional money reward.";
 instr_text[17] = "";
@@ -137,7 +138,8 @@ const INSTR_FUNC_DICT = {
     4: HIDE_EXAMPLE_GRID,
     5: SHOW_INSTR,
     6: SHOW_INSTR,
-    7: TRY_MOVE,
+    //Note: For 7, need to change the way the grid is constructed to match CREATE_GRID
+    7: TRY_MOVE,  //NEED TO UPDATE: BUTTON SHOULD BE ON ITEM, NOT THE "LET BLUE MOVE", AND CHANGE RECORDING IN RECEIVER_AUTO_MOVE_ARRIVE TO MEASURE RECEIVER
     8: SHOW_INSTR,
     9: SHOW_INSTR,
     10: TRY_SAY,

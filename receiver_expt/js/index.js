@@ -78,12 +78,29 @@ var lines, linesArray;
 function PARSE_CSV(csvString) {
     var lines = csvString.split(/\r?\n/)
     var linesArray = [];
+    //var found = false
+    //while(found != true){
+
+    //}
+    //console.log(lines[0]);
+    headerArray = lines[0].match(/,[A-Z]*/gi);
+    //console.log(headerArray);
+    predSignalIndex = headerArray.indexOf(",predSignalNoActionUtility")+1;
+    //console.log(predSignalIndex);
+    //console.log(temp);
+
+    
 
     for (i = 1; i < lines.length - 1; i++) {
         linesArray[i - 1] = {};
+        currLineArray = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+        linesArray[i-1]["predSignalNoActionUtility"]=currLineArray[predSignalIndex];
+        //console.log(testarray);
+        //console.log(testarray[predSignalIndex+1]);
 
         tmp = lines[i].match(/\(\d, \d\)/g)[0];
         linesArray[i - 1]["signalerLocation"] = [parseInt(tmp.substring(1, 2)), parseInt(tmp.substring(4, 5))];
+        //console.log(linesArray);
 
         tmp = lines[i].match(/\(\d, \d\)/g)[1];
         linesArray[i - 1]["receiverLocation"] = [parseInt(tmp.substring(1)), parseInt(tmp.substring(4))];
@@ -157,6 +174,7 @@ function PARSE_CSV(csvString) {
             linesArray[i - 1]["sigActSeq"] = tmp;
         }
     }
+    console.log(linesArray[0]["predSignalNoActionUtility"]);
     return linesArray;
 }
 
@@ -195,7 +213,7 @@ $(document).ready(function() {
     //     BLOCK_MOBILE();
     // } else if (subj.id !== null){
         //fetches CSV from file into a string
-        fetch("inputCSV/practiceTrials_pairedBarrier_20210521.csv")
+        fetch("inputCSV/practiceTrials_pairedBarrier_20211229.csv")
             .then(response => response.text())
             .then(textString => {
                 SANITY_CHECK_INPUT_DATA = PARSE_CSV(textString)
@@ -205,7 +223,7 @@ $(document).ready(function() {
             //     .then(textString => {
             //         PRACTICE_INPUT_DATA = PARSE_CSV(textString)
             //     })
-                .then( () => {fetch("inputCSV/experimentTrials_pairedBarrier_20210521.csv")
+                .then( () => {fetch("inputCSV/experimentTrials_pairedBarrier_20211229.csv")
                     .then(response => response.text())
                     .then(textString => {
                         EXPT_INPUT_DATA = PARSE_CSV(textString)
