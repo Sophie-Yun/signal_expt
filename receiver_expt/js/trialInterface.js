@@ -54,7 +54,7 @@ function ADD_HOVER_INFO(elem, recDist, sigDist) {
     $(elem).append("<div class='gridItemInfo'></div>");
     $(elem + " .gridItemInfo").append("<p><img class='shape' src='"+ SHAPE_DIR + "receiver.png'> : " + recDist + "</p>");
     $(elem + " .gridItemInfo").append("<p><img class='shape' src='"+ SHAPE_DIR + "signaler.png'> : " + sigDist + "</p>");
-    
+
 }
 
 function CREATE_GRID(obj) {
@@ -120,7 +120,7 @@ function CREATE_GRID(obj) {
                 if (item !== undefined){
                     $("#sanityCheckGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>");
                     if (item!== SHAPE_DIR + "receiver.png" && item!== SHAPE_DIR + "signaler.png") {
-                        
+
                         console.log(item);
                         $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item]}));
                         var receiverDist = obj.receiverPath[item].length;
@@ -130,7 +130,7 @@ function CREATE_GRID(obj) {
                         //console.log(row_save);
                         //var row_save = row;
                         //Updating some dictionary with [key = button; value = item]
-                        
+
                         buttonDict[("#"+shapeId)] = (this)
                         $("#"+shapeId).click(function(){
                             $("#"+shapeId).css("pointer-events","none");
@@ -141,7 +141,7 @@ function CREATE_GRID(obj) {
                         console.log("Added item");
                     } else {
                         $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
-                        
+
                     }
                 }
                 else{
@@ -656,10 +656,10 @@ function SETUP_SCOREBOARD(obj) {
 
 function UPDATE_STEPS(obj) {
     obj.step++;
-    obj.cost = obj.step * STEP_COST;
+    //obj.cost = obj.step * STEP_COST;
     if (obj.isSanityCheck){
         $("#sanityCheckStep").html(obj.step.toFixed(0));
-        $("#sanityCheckCost").html("-$" + obj.cost.toFixed(2));
+        //$("#sanityCheckCost").html("-$" + obj.cost.toFixed(2));
     }
     // else if (obj.isPracTrial) {
     //     obj.step = Math.round((obj.step + STEP_COST) * 100) / 100;
@@ -667,7 +667,7 @@ function UPDATE_STEPS(obj) {
     // }
     else if (obj.isExptTrial){
         $("#exptStep").html(obj.step.toFixed(0));
-        $("#exptCost").html("-$" + obj.cost.toFixed(2));
+        //$("#exptCost").html("-$" + obj.cost.toFixed(2));
     }
     else if (obj.isTryMove){
         $("#tryMoveCost").html(obj.step.toFixed(0));
@@ -751,10 +751,10 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
         if(win){ //SIGNALER MOVES TO TARGET RESULT BOX
             var landedItem = $('#shape'+ obj.signalerLocation[0] + 'v' + obj.signalerLocation[1] + ' .shape').attr('src');
             if (trialStrategy == "do") { //chckpt
-                $("#sanityCheckResultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>It is the target!");
+                $("#sanityCheckResultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
             }
             else {
-                $("#sanityCheckResultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>It is the target!");
+                $("#sanityCheckResultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
                 //$("#sanityCheckResultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps.<br>It is the target!<br>" + getSanityCheckFeedback(obj, trialStrategy));
             }
             reward = REWARD;
@@ -762,9 +762,9 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
             //$("#sanityCheckResultText").html("You took " + obj.step.toFixed(0) + " steps.<br>Sorry, you did not reach the target. <br>" + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round! ");
             reward = 0;
         }
-        $("#sanityCheckReward").html("$" + reward.toFixed(2));
-        $("#sanityCheckRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.cost));
-        $("#sanityCheckTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
+        //$("#sanityCheckReward").html("$" + reward.toFixed(2));
+        //$("#sanityCheckRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.cost));
+        //$("#sanityCheckTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
         $("#sanityCheckResult").show();
     }
     // else if (obj.isPracTrial){
@@ -784,15 +784,15 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
         var landedItem = $('#shape'+ obj.signalerLocation[0] + 'v' + obj.signalerLocation[1] + ' .shape').attr('src');
         $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
         if(win){
-            $("#resultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>It is the target!");
+            $("#resultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
             reward = REWARD;
         } else {
-            $("#resultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>It is not the target!");
+            $("#resultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
             reward = 0;
         }
-        $("#reward").html("$" + reward.toFixed(2));
-        $("#exptRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.cost));
-        $("#exptTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
+        //$("#reward").html("$" + reward.toFixed(2));
+        //$("#exptRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.cost));
+        //$("#exptTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
         $("#result").show();
     }
 }
@@ -831,14 +831,14 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
             if (trialStrategy == "ambiguous" || trialStrategy == "do" || trialStrategy !== obj.signal){
                 //$("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations! It is the target! <br>" + getSanityCheckFeedback(obj, trialStrategy));
-                $("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br> It is the target! <br>");
+                $("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
             } else {
-                $("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br> It is the target! <br>");
+                $("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
             }
             reward = REWARD;
         } else {
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            $("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>It is not the target! <br>");
+            $("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>");
             //$("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>It is not the target! <br>" + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");
             reward = 0;
         }
@@ -866,11 +866,11 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
         if(win){
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            $("#resultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br> It is the target! <br>");
+            $("#resultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
             reward = REWARD;
         } else {
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            $("#resultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>It is not the target! <br>");
+            $("#resultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>");
             reward = 0;
         }
         $("#reward").html("$" + reward.toFixed(2));

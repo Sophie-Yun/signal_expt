@@ -25,10 +25,10 @@
             <div class="pageBox" id="instrQBox">
                 <p id="instrQText">Which of the following is <b>not correct</b>?</p>
                 <div id="quizBox">
-                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="walk"><div class="optionText">You can check the minimum steps for either you or your partner to reach an item by moving your mouse over it.</div></div></label>
-                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="points"><div class="optionText">If either your partner or you reach the target, you get $<p id="rewardInInstrQuiz"></p> as money bonus.</div></div></label>
-                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="costs"><div class="optionText">Your partner can see all the items in the grids, but does not know which one the target is.</div></div></label>
-                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="several"><div class="optionText">You can send out multiple signals to your partner in each round.</div></div></label>
+                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="checkDist"><div class="optionText">You can check the minimum steps for either you or your partner to reach an item by moving your mouse over it.</div></div></label>
+                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="sigView"><div class="optionText">Your partner can see all the items in the grids and knows which one the target is.</div></div></label>
+                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="recView"><div class="optionText">Your can see all the items in the grids, but does not know which one the target is.</div></div></label>
+                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="several"><div class="optionText">In each round, your partner can send you two signals that tell you both features of the target.</div></div></label>
                 </div>
                 <div class='warning' id='instrQWarning'></div>
                 <button class="butNext" id="instrQBut" onclick="SUBMIT_INSTR_Q()">SUBMIT</button>
@@ -37,7 +37,7 @@
             <button class="butNext" id="instrBackBut" onclick="instr.back()">BACK</button>
         </div>
     </div>
-    <!--==========TRY MOVE==========-->
+    <!-- ==========TRY MOVE==========
     <div class="pageBox" id="tryMovePage">
         <div id="tryMoveBox">
             <div id="tryMoveBoard">
@@ -97,8 +97,8 @@
                 <button class="butNext" id="tryMoveResultBut">NEXT</button>
             </div>
         </div>
-    </div>
-        <!--==========TRY SAY==========-->
+    </div>-->
+        <!-- ==========TRY SAY==========
         <div class="pageBox" id="trySayPage">
             <div id="trySayBox">
                 <div id="trySayBoard">
@@ -157,7 +157,7 @@
                     <button class="butNext" id="trySayResultBut">NEXT</button>
                 </div>
             </div>
-        </div>
+        </div> -->
     <!--==========SANITY CHECK==========-->
     <div class="pageBox" id="sanityCheckPage">
         <div id="sanityCheckBox">
@@ -172,7 +172,7 @@
                     <p style="top: -5px;">Target: </p>
                     <img class="shape" id="sanityCheckGoalShape" alt="An error occurred when loading the picture.">
                 </div>
-                
+
                 <div class ="info hiddenInfo">
                     <p>Total Score: </p>
                     <!-- BELOW LINE WAS ADDED AS PLACEHOLDER, NOT SURE WHAT
@@ -232,7 +232,10 @@
             </div>
             <div id="sanityCheckResult">
                 <p id="sanityCheckResultText"></p>
-                <div class="resultInfo">
+
+                <!-- MAX: START HERE FOR THE CONFIDENCE Q -->
+
+                <!-- <div class="resultInfo">
                     <p class="title stepCostInResult"></p>
                     <p class="data" id="sanityCheckCost"></p>
                 </div>
@@ -247,7 +250,7 @@
                 <div id="sanityCheckTotalBonusBox">
                     <p class="title">Total Bonus (Practice): </p>
                     <p class="data" id="sanityCheckTotalBonusAfter"></p>
-                </div>
+                </div> -->
                 <button class="butNext" id="sanityCheckResultBut">NEXT</button>
             </div>
         </div>
@@ -395,7 +398,7 @@
             </div>
             <div id="result">
                 <p id="resultText"></p>
-                <div class="resultInfo">
+                <!-- <div class="resultInfo">
                     <p class="title stepCostInResult"></p>
                     <p class="data" id="exptCost"></p>
                 </div>
@@ -410,7 +413,7 @@
                 <div id="totalBonusBox">
                     <p class="title">Total Bonus: </p>
                     <p class="data" id="exptTotalBonusAfter"></p>
-                </div>
+                </div> -->
                 <button class="butNext" id="resultBut">NEXT</button>
             </div>
         </div>
@@ -437,7 +440,7 @@
             <label><div class="option"><input class='optionRadio' type='radio' name='rating' value='5' /><div class='optionText'>Excellent</div></div></label>
         </div>
         <br><br>
-        <p>To what extent do you think the potential money bonus motivated you?</p>
+        <!-- <p>To what extent do you think the potential money bonus motivated you?</p>
         <div id="motivation">
             <label><div class="option"><input class='optionRadio' type='radio' name='motivation' value='1' /><div class='optionText'>Not at all</div></div></label>
             <label><div class="option"><input class='optionRadio' type='radio' name='motivation' value='2' /><div class='optionText'>A little</div></div></label>
@@ -445,7 +448,7 @@
             <label><div class="option"><input class='optionRadio' type='radio' name='motivation' value='4' /><div class='optionText'>Much</div></div></label>
             <label><div class="option"><input class='optionRadio' type='radio' name='motivation' value='5' /><div class='optionText'>Very much</div></div></label>
         </div>
-        <br><br>
+        <br><br> -->
 
         <button class='butNext' onclick='SUBMIT_DEBRIEFING_Q()'>SUBMIT</button>
     </div>

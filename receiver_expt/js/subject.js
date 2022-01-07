@@ -135,7 +135,8 @@ class subjObject {
         this.endTime = FORMAT_TIME(endTimeObj, 'UTC', ':', true);
         this.duration = (endTimeObj - this.dateObj) / 60000; // in minutes
         var dataList = [this.num, this.date, this.startTime, this.id, this.endTime, this.duration, this.qAttemptN,
-            this.serious, this.strategy, this.problems, this.rating, this.motivation,
+            this.serious, this.strategy, this.problems, this.rating,
+            //this.motivation,
             this.inView, this.viewportW, this.viewportH];
         this.data += LIST_TO_FORMATTED_STRING(dataList);
         var postData = {
@@ -172,7 +173,7 @@ const SUBJ_TITLES = ['subjNum',
                      "strategy",
                      "problems",
                      "rating",
-                     "motivation",
+                    //"motivation",
                     //  'instrReadingTimes',
                     //  'quickReadingPageN',
                     //  'hiddenCount',

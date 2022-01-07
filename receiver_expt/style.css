@@ -272,7 +272,7 @@ body {
 }
 
 #practiceResult, #result {
-    height: 530px;
+    /*height: 530px;*/
     width: 40%;
 }
 
@@ -330,7 +330,7 @@ body {
 }
 
 #instrQWarning {
-    margin: 50px;
+    margin: 20px;
 }
 
 /*
@@ -422,7 +422,7 @@ body {
     border-style: solid;
     border-width: 1px;
     color: black;
-    margin: 0px auto 50px;
+    margin: 0px auto;
     padding: 10px;
 }
 

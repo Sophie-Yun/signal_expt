@@ -133,7 +133,7 @@ class trialObject {
                 var randUni = Math.random();
                 var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
                 //var signal = "red";
-                //var signal = "do"; 
+                //var signal = "do";
                 var signal = this.inputData[this.randomizedTrialList[this.trialIndex]]["predSignalNoActionUtility"];
                 console.log(signal);
                 var waitoutTime = 5.91228*1000;
@@ -712,7 +712,7 @@ function RECEIVER_WALK_TO_CHOSEN_OBJECT(obj, intendedItemtemp) {
         //"cursor": "pointer"
     //Change 2 -- once they click on a button, should not be able to click on other buttons / should disable other fxns
         //Can use pointer-events to disable clicking on buttons
-    //Also need to update the changing text so that it sends right signal for each trial 
+    //Also need to update the changing text so that it sends right signal for each trial
     //console.log(intendedItemtemp.id);
 
     //if(intendedItemtemp == 0){
@@ -723,7 +723,7 @@ function RECEIVER_WALK_TO_CHOSEN_OBJECT(obj, intendedItemtemp) {
     var row = intendedItemtemp.id[5];
     var col = intendedItemtemp.id[7];
     //}
-    
+
     intendedItem = obj.gridArray[row][col];
     var path = obj.receiverPath[intendedItem];
     var stepOnGrid = path[obj.pathIndex];
@@ -891,7 +891,7 @@ function TRY_MOVE() {
     if(!tryMove.reached)
         $("#instrNextBut").hide();
     CREATE_EXPT_BUTTONS(tryMove);
-   
+
     tryMove.gridArray = [
             [,,,,,,,,],
             [,,,,,,,,],
@@ -1042,7 +1042,7 @@ function START_SANITY_CHECK_TRIAL() {
     SANITY_CHECK_GAMEBOARD_SETUP();
     CREATE_EXPT_BUTTONS(sanityCheck);
     DISABLE_DEFAULT_KEYS();
-    
+
 
     var randUni = Math.random();
     var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
@@ -1062,7 +1062,7 @@ function START_SANITY_CHECK_TRIAL() {
     setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
     }
 
-    
+
     //NEED TO DISABLE BUTTONS BEFORE THIS IS CALLED ^ --> RE-ENABLE AFTER THIS IS CALLED
     //setTimeout(RECEIVER_WALK_AFTER_WAIT, randExpo * 1000, obj, signal);
     sanityCheck.move();

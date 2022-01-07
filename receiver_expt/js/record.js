@@ -1,5 +1,5 @@
 const FORMAL = true;
-const EXPERIMENT_NAME = "signal";
+const EXPERIMENT_NAME = "recPRorJU";
 const SUBJ_NUM_FILE = "subjNum_" + EXPERIMENT_NAME + ".txt";
 const VISIT_FILE = "visit_" + EXPERIMENT_NAME + ".txt";
 const ATTRITION_FILE = 'attrition_' + EXPERIMENT_NAME + '.txt';

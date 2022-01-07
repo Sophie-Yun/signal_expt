@@ -82,14 +82,10 @@ function PARSE_CSV(csvString) {
     //while(found != true){
 
     //}
-    //console.log(lines[0]);
-    headerArray = lines[0].match(/,[A-Z]*/gi);
-    //console.log(headerArray);
+    var headerArray = lines[0].match(/,[A-Z]*/gi);
     predSignalIndex = headerArray.indexOf(",predSignalNoActionUtility")+1;
-    //console.log(predSignalIndex);
-    //console.log(temp);
 
-    
+
 
     for (i = 1; i < lines.length - 1; i++) {
         linesArray[i - 1] = {};
@@ -174,7 +170,7 @@ function PARSE_CSV(csvString) {
             linesArray[i - 1]["sigActSeq"] = tmp;
         }
     }
-    console.log(linesArray[0]["predSignalNoActionUtility"]);
+    //console.log(linesArray[0]["predSignalNoActionUtility"]);
     return linesArray;
 }
 
@@ -214,15 +210,15 @@ function tempDeletePlease(){
             console.log(testElement);
             if(!isNaN(testElement)){
                 numelements++;
-                sum += parseInt(linesArray[i-1]["predSignalNoActionUtility"].substring(1)); 
-            }   
+                sum += parseInt(linesArray[i-1]["predSignalNoActionUtility"].substring(1));
+            }
         }
         console.log(sum);
         console.log(numelements);
-    
+
 })
 }
-        
+
 
 
 function CREATE_RANDOM_LIST_FOR_EXPT(obj) {
@@ -243,12 +239,12 @@ function CREATE_RANDOM_LIST_FOR_EXPT(obj) {
 $(document).ready(function() {
     //tempDeletePlease();
     subj = new subjObject(subj_options);
-    //xxx: uncomment before release
-    // subj.id = subj.getID("sonacode"); // getting subject number
-    // subj.saveVisit();
-    // if (subj.phone) { // asking for subj.phone will detect phone
-    //     BLOCK_MOBILE();
-    // } else if (subj.id !== null){
+    //                                                                 //MAX:
+    // subj.id = subj.getID("sonacode"); // getting subject number     //xxx: comment to run on local
+    // subj.saveVisit();                                               //xxx: comment to run on local
+    // if (subj.phone) { // asking for subj.phone will detect phone    //xxx: comment to run on local
+    //     BLOCK_MOBILE();                                             //xxx: comment to run on local
+    // } else if (subj.id !== null){                                   //xxx: comment to run on local
         //fetches CSV from file into a string
         fetch("inputCSV/practiceTrials_pairedBarrier_20211229.csv")
             .then(response => response.text())
@@ -284,11 +280,10 @@ $(document).ready(function() {
                     //});
                 });
         sanity_check_options["subj"] = subj;
-        trial_options["subj"] = subj;
-    //xxx: uncomment before release
-    // } else {
-    //     alert("Please make sure you are directed from SONA.")
-    // }
+        trial_options["subj"] = subj;                                  //MAX:
+    // } else {                                                        //xxx: comment to run on local
+    //     alert("Please make sure you are directed from SONA.")       //xxx: comment to run on local
+    // }                                                               //xxx: comment to run on local
 });
 
 
