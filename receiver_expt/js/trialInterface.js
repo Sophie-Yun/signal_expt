@@ -138,6 +138,15 @@ function CREATE_GRID(obj) {
                             RECEIVER_WALK_TWO(obj, this);
                             $("#"+shapeId).css("pointer-events","auto");
                         });
+                        var newItem = document.querySelector("#"+shapeId);
+                        (function(){
+                            var nameOfShape = String(item);
+                            var coordinates = [row,col];
+                            newItem.addEventListener("mouseenter", function( event ) {
+                                console.log("Moused over " + String(nameOfShape));
+                                RECORD_HOVER_ITEMS(obj, nameOfShape, coordinates)
+                        } )
+                        })();
                         console.log("Added item");
                     } else {
                         $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
@@ -192,6 +201,15 @@ function CREATE_GRID(obj) {
                             RECEIVER_WALK_TWO(obj, this);
                             $("#"+shapeId).css("pointer-events","auto");
                         });
+                        var newItem = document.querySelector("#"+shapeId);
+                        (function(){
+                            var nameOfShape = String(item);
+                            var coordinates = [row,col];
+                            newItem.addEventListener("mouseenter", function( event ) {
+                                console.log("Moused over " + String(nameOfShape));
+                                RECORD_HOVER_ITEMS(obj, nameOfShape, coordinates)
+                        } )
+                        })();
                     } else {
                         $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
                     }

@@ -333,7 +333,9 @@ const TRIAL_TITLES = [
     "this.exptLikertSet",
     "this.sanity",
     "this.sanityChosenItemDict", 
-    "this.exptChosenItemDict"
+    "this.exptChosenItemDict",
+    "this.sanityHoverItems",
+    "this.exptHoverItems"
     // "quitWarningPopup"
 ];
 

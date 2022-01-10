@@ -133,6 +133,63 @@ function RECORD_CHOSEN_ITEM(obj, item, row, col){
     //console.log(item);
 }
 
+function RECORD_HOVER_ITEMS(obj, name, coordinates){
+    var uniqueId = String(name) + ": " + String(coordinates[0]) + ", " + String(coordinates[1]);
+    if(obj.isSanityCheck){
+        if(!obj.sanityHoverItems){
+            var itemDict = {};
+            var innerDict = {};
+            innerDict[uniqueId] = 1;
+            itemDict[obj.trialIndex] = innerDict;
+            obj.sanityHoverItems = itemDict;
+        }
+        else{
+            if(!obj.sanityHoverItems[obj.trialIndex]){
+                obj.sanityHoverItems[obj.trialIndex] = {};
+            }
+            innerDict = obj.sanityHoverItems[obj.trialIndex];
+            var newVal = 0;
+            if(!(uniqueId in innerDict)){
+                newVal = 1;
+            }
+            else{
+                newVal = innerDict[uniqueId] + 1;
+            }
+            obj.sanityHoverItems[obj.trialIndex][uniqueId] = newVal;
+        }
+        console.log(obj.sanityHoverItems);
+        
+    }
+    else if(obj.isExptTrial){
+        if(!obj.exptHoverItems){
+            console.log("First Hover");
+            var itemDict = {};
+            var innerDict = {};
+            innerDict[uniqueId] = 1;
+            itemDict[obj.randomizedTrialList[obj.trialIndex]] = innerDict;
+            obj.exptHoverItems = itemDict;
+        }
+        else{
+            if(!obj.exptHoverItems[obj.randomizedTrialList[obj.trialIndex]]){
+                obj.exptHoverItems[obj.randomizedTrialList[obj.trialIndex]] = {};
+            }
+            innerDict = obj.exptHoverItems[obj.randomizedTrialList[obj.trialIndex]];
+            var newVal = 0;
+            if(!(uniqueId in innerDict)){
+                console.log("First Hover of this item");
+                newVal = 1;
+            }
+            else{
+                newVal = innerDict[uniqueId] + 1;
+            }
+            obj.exptHoverItems[obj.randomizedTrialList[obj.trialIndex]][uniqueId] = newVal;
+        }
+        console.log(obj.exptHoverItems);
+    }
+
+
+}
+
 function RECORD_DECISION_DATA(obj, decision) {
     if(!obj.decisionRecorded){
         obj.decision = decision;

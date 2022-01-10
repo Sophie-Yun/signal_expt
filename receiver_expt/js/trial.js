@@ -204,7 +204,8 @@ class trialObject {
             this.totalUtility,
             this.decisionTime, this.actionTime, this.feedbackTime, this.responseWarningPopup,
             this.sanityLikertSet, this.exptLikertSet,
-            this.sanityChosenItemDict, this.exptChosenItemDict];
+            this.sanityChosenItemDict, this.exptChosenItemDict,
+            this.sanityHoverItems, this.exptHoverItems];
             // this.quitWarningPopup
         this.exptDataToSave += LIST_TO_FORMATTED_STRING(dataList, ";");
        // console.log(this.exptDataToSave);
