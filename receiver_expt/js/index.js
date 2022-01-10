@@ -318,7 +318,12 @@ const TRIAL_TITLES = [
     "decisionTime",
     "actionTime",
     "feedbackTime",
-    "responseWarningPopup"
+    "responseWarningPopup",
+    "sanityLikertSet",
+    "this.exptLikertSet",
+    "this.sanity",
+    "this.sanityChosenItemDict", 
+    "this.exptChosenItemDict"
     // "quitWarningPopup"
 ];
 

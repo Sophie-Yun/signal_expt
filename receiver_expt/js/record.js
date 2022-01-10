@@ -73,6 +73,66 @@ function LIST_FROM_ATTRIBUTE_NAMES(obj, string_list) {
 
 */
 
+function RECORD_LIKERT_ANSWER(obj, value){
+    //console.log("record called");
+    if(obj.isSanityCheck){
+        if(!obj.sanityLikertSet){
+            const scaleSet = {};
+            scaleSet[obj.trialIndex] = value;
+            //scaleSet.push(value);
+            obj.sanityLikertSet = scaleSet;
+            console.log(obj.sanityLikertSet);
+        }
+        else{
+            (obj.sanityLikertSet)[obj.trialIndex]=value;
+            console.log(obj.sanityLikertSet);
+        }
+    }
+    else if(obj.isExptTrial){
+        console.log(obj.randomizedTrialList[obj.trialIndex]);
+        //console.log("expt trial oo");
+        if(!obj.exptLikertSet){
+            const scaleSet = {};
+            scaleSet[obj.randomizedTrialList[obj.trialIndex]] = value;
+            //scaleSet.push(value);
+            obj.exptLikertSet = scaleSet;
+            console.log(obj.exptLikertSet);
+        }
+        else{
+            (obj.exptLikertSet)[obj.randomizedTrialList[obj.trialIndex]] = value;
+            console.log(obj.exptLikertSet);
+        }
+    }
+}
+
+function RECORD_CHOSEN_ITEM(obj, item, row, col){
+    var chosenItemLog = [item, row, col];
+    if(obj.isSanityCheck){
+        if(!obj.sanityChosenItemDict){
+            var itemDict = {};
+            itemDict[obj.trialIndex]=chosenItemLog;
+            obj.sanityChosenItemDict = itemDict;
+        }
+        else{
+            (obj.sanityChosenItemDict)[obj.trialIndex]=chosenItemLog; 
+        }
+        console.log(obj.sanityChosenItemDict);
+    }
+    else if(obj.isExptTrial){
+        if(!obj.exptChosenItemDict){
+            var itemDict ={};
+            itemDict[obj.randomizedTrialList[obj.trialIndex]] = chosenItemLog;
+            obj.exptChosenItemDict = itemDict;
+        }
+        else{
+            (obj.exptChosenItemDict)[obj.randomizedTrialList[obj.trialIndex]] = chosenItemLog;
+        }
+        console.log(obj.exptChosenItemDict);
+
+    }
+    //console.log(item);
+}
+
 function RECORD_DECISION_DATA(obj, decision) {
     if(!obj.decisionRecorded){
         obj.decision = decision;

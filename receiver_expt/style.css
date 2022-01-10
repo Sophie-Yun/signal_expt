@@ -251,7 +251,7 @@ body {
     width: 450px;
 }
 
-.tryResult, #sanityCheckResult, #practiceResult, #result {
+.tryResult, #sanityCheckResult, #practiceResult, #result, #sanityCheckResultDo, #resultDo {
     display: none;
     position: absolute;
     padding: 20px;
@@ -267,21 +267,21 @@ body {
     width: 40%;
 }
 
-#sanityCheckResult {
+#sanityCheckResult,#sanityCheckResultDo  {
     width: 40%;
 }
 
-#practiceResult, #result {
+#practiceResult, #result, #resultDo {
     /*height: 530px;*/
     width: 40%;
 }
 
-.tryResultText, #sanityCheckResultText, #practiceResultText, #resultText {
+.tryResultText, #sanityCheckResultText, #practiceResultText, #resultText, #sanityCheckResultTextDo, #resultTextDo {
     text-align: center;
     margin-bottom: 50px;
 }
 
-.tryResult .title, #sanityCheckResult .title, #practiceResult .title, #result .title {
+.tryResult .title, #sanityCheckResult .title, #practiceResult .title, #result .title, #sanityCheckResultDo .title, #resultDo .title {
     float: left;
     width: 70%;
     position: relative;
@@ -290,7 +290,7 @@ body {
     margin: 0px;
 }
 
-.tryResult .data, #sanityCheckResult .data, #practiceResult .data, #result .data {
+.tryResult .data, #sanityCheckResult .data, #practiceResult .data, #result .data, #sanityCheckResultDo .data, #resultDo .data {
     float: left;
     width: 30%;
     position: relative;
@@ -300,7 +300,7 @@ body {
     margin: 0px;
 }
 
-.tryResult .tryScoreThisRoundBox .title, .tryResult .tryScoreThisRoundBox .data, #sanityCheckResult #sanityCheckRoundBonusBox .title, #sanityCheckResult #sanityCheckRoundBonusBox .data, #practiceResult #practiceRoundBonusBox .title, #practiceResult #practiceRoundBonusBox .data, #result #exptRoundBonusBox .title, #result #exptRoundBonusBox .data {
+.tryResult .tryScoreThisRoundBox .title, .tryResult .tryScoreThisRoundBox .data, #sanityCheckResult, #sanityCheckResultDo, #sanityCheckRoundBonusBox .title, #sanityCheckResult #sanityCheckRoundBonusBox .data, #sanityCheckResultDo #sanityCheckRoundBonusBox .data, #practiceResult #practiceRoundBonusBox .title, #practiceResult #practiceRoundBonusBox .data, #result #exptRoundBonusBox .title, #result #exptRoundBonusBox .data, #resultDo #exptRoundBonusBox .data, #resultDo #exptRoundBonusBox .title {
     border-top: 1px solid;
     margin: 10px 0px;
 }
@@ -308,7 +308,7 @@ body {
     margin: 20px 0px 90px;
 }
 
-#sanityCheckResult #sanityCheckTotalBonusBox .title, #sanityCheckResult #sanityCheckTotalBonusBox .data {
+#sanityCheckResult #sanityCheckTotalBonusBox .title, #sanityCheckResult, #sanityCheckResultDo #sanityCheckTotalBonusBox .title, #sanityCheckResultDo, #sanityCheckTotalBonusBox .data {
     margin: 20px 0px 20px;
 }
 
@@ -364,7 +364,7 @@ body {
     border: none;
 }
 
-#tryMoveResultBut, #trySayResultBut, #sanityCheckResultBut, #practiceResultBut, #resultBut {
+#tryMoveResultBut, #trySayResultBut, #sanityCheckResultBut, #practiceResultBut, #resultBut, #resultButDo, #sanityCheckResultButDo {
     margin-left: 50%;
     transform: translate(-50%, 0px);
 }

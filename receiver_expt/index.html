@@ -233,7 +233,47 @@
             <div id="sanityCheckResult">
                 <p id="sanityCheckResultText"></p>
 
+                <p style = "text-align: center">How confident are you that you selected the correct target object?</p>
+
                 <!-- MAX: START HERE FOR THE CONFIDENCE Q -->
+                
+                <!--
+                <style type="text/css">
+                    .likert ul
+                    {
+                        list-style-type: none;
+                        margin: 0;
+                        padding: 0;
+                        text-align: left;
+                    }
+                
+                    .likert li
+                    {
+                        float: center;
+                        text-align: center;
+                        list-style-type: none;
+                        margin: 2.5px;
+                    }
+                    </style>
+                -->
+                
+
+
+                <div style = "margin: auto">
+                    <ul style = "font-size:15px; text-align: center" class="likert">
+                        <li class="likert"> Not Confident <input id="ConfStart" type="radio" name="ConfidenceScale" value="1" />
+                        <li class="likert"><input type="radio" name="ConfidenceScale" value="2" />
+                        <li class="likert"><input type="radio" name="ConfidenceScale" value="3" />
+                        <li class="likert"><input type="radio" name="ConfidenceScale" value="4" />
+                        <li class="likert"><input id="ConfEnd" type="radio" name="ConfidenceScale" value="5" /> Very Confident
+                    </ul>
+                </div>
+
+                <!--  TO DO: Formatting, Remove confidence from trials where signaler moves
+                Tried creating a new div without the buttons which is called when trialstrategy = do, but it only
+                brings up a next button and no box.
+                
+                -->
 
                 <!-- <div class="resultInfo">
                     <p class="title stepCostInResult"></p>
@@ -253,6 +293,13 @@
                 </div> -->
                 <button class="butNext" id="sanityCheckResultBut">NEXT</button>
             </div>
+            <div id = "sanityCheckResultDo">
+                <p id="sanityCheckResultTextDo"></p>
+                
+
+                <button class="butNext" id="sanityCheckResultButDo">NEXT</button>
+            </div>
+        
         </div>
     </div>
 
@@ -398,6 +445,36 @@
             </div>
             <div id="result">
                 <p id="resultText"></p>
+
+                <p style = "text-align: center">How confident are you that you selected the correct target object?</p>
+
+                <style type="text/css">
+                    .likert ul
+                    {
+                        list-style-type: none;
+                        margin: 0;
+                        padding: 0;
+                    }
+                
+                    .likert li
+                    {
+                        float: left;
+                        text-align: left;
+                        list-style-type: none;
+                    }
+                    </style>
+                
+
+
+                <div style = "margin: auto">
+                    <ul style = "font-size:15px; text-align: center" class="likert">
+                        <li class="likert"> Not Confident <input id="ConfStart" type="radio" name="ConfidenceScale" value="1" />
+                        <li class="likert"><input type="radio" name="ConfidenceScale" value="2" />
+                        <li class="likert"><input type="radio" name="ConfidenceScale" value="3" />
+                        <li class="likert"><input type="radio" name="ConfidenceScale" value="4" />
+                        <li class="likert"><input id="ConfEnd" type="radio" name="ConfidenceScale" value="5" /> Very Confident
+                    </ul>
+                </div>
                 <!-- <div class="resultInfo">
                     <p class="title stepCostInResult"></p>
                     <p class="data" id="exptCost"></p>
@@ -415,6 +492,12 @@
                     <p class="data" id="exptTotalBonusAfter"></p>
                 </div> -->
                 <button class="butNext" id="resultBut">NEXT</button>
+            </div>
+            <div id = "resultDo">
+                <p id="resultTextDo"></p>
+                
+
+                <button class="butNext" id="resultButDo">NEXT</button>
             </div>
         </div>
     </div>

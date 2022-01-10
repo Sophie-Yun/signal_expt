@@ -202,7 +202,9 @@ class trialObject {
             this.exptReceiverPath, this.receiverEndCoordinate, this.receiverEndItem,
             this.signalerAchievedGoal, this.receiverAchievedGoal,
             this.totalUtility,
-            this.decisionTime, this.actionTime, this.feedbackTime, this.responseWarningPopup];
+            this.decisionTime, this.actionTime, this.feedbackTime, this.responseWarningPopup,
+            this.sanityLikertSet, this.exptLikertSet,
+            this.sanityChosenItemDict, this.exptChosenItemDict];
             // this.quitWarningPopup
         this.exptDataToSave += LIST_TO_FORMATTED_STRING(dataList, ";");
        // console.log(this.exptDataToSave);
@@ -701,6 +703,14 @@ function RECEIVER_WALK_TWO(obj, signal) {
 
     var randUni = Math.random();
     var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
+    //RECORDING
+    var row = signal.id[5];
+    var col = signal.id[7];
+    selectedItem = obj.gridArray[row][col];
+    RECORD_CHOSEN_ITEM(obj, selectedItem, row, col);
+
+
+    //
     setTimeout(RECEIVER_WALK_TO_CHOSEN_OBJECT, randExpo * 400, obj, signal);
 }
 
@@ -741,6 +751,7 @@ function RECEIVER_WALK_TO_CHOSEN_OBJECT(obj, intendedItemtemp) {
     //id = "shape" row "v" col
     //"shape1v3" --> str[5] = 1, str[7] = 3
 
+    console.log("This item was: ");
     console.log(intendedItem);
     //console.log(obj.inputData[obj.trialIndex].receiverIntentionDict["triangle"]);
     /*
@@ -829,9 +840,21 @@ function NEXT_TRIAL(obj) {
         $("#instrText").show();
         $("#instrNextBut").show();
     } else if(obj.isSanityCheck){
+        var trialStrategy = obj.inputData[obj.trialIndex]["trialStrategy"];
+        var selected = $("input[name='ConfidenceScale']:checked");
+        var click = selected.val();
+        $("input[name='ConfidenceScale']").prop('checked',false);
+
+        if(click == undefined && trialStrategy != "do"){
+            alert("Please select a response on the scale. Thank you!");
+        }
+        else{
+        RECORD_LIKERT_ANSWER(obj, click);
+        //console.log(click);
         RESET_GAMEBOARD();
         SANITY_CHECK_INSTR_APPEAR();
         sanityCheck.next();
+        }
     }
     // else if(obj.isPracTrial){
     //     RESET_GAMEBOARD();
@@ -839,12 +862,43 @@ function NEXT_TRIAL(obj) {
     //     obj.next()
     // }
     else if(obj.isExptTrial){
+        var trialStrategy = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["trialStrategy"];
+        var selected = $("input[name='ConfidenceScale']:checked");
+        var click = selected.val();
+        $("input[name='ConfidenceScale']").prop('checked',false);
+        if(click == undefined && trialStrategy != "do"){
+            alert("Please select a response on the scale. Thank you!");
+        }
+        else{
+        RECORD_LIKERT_ANSWER(obj, click);
         RESET_GAMEBOARD();
         EXPT_INSTR_APPEAR();
         obj.next()
+        }
     }
 }
-
+/*
+function SUBMIT_DEBRIEFING_Q() {
+    var serious = $("input[name='serious']:checked").val();
+    var strategy = $("#strategy").val();
+    var problems = $("#problems").val();
+    var rating = $("input[name='rating']:checked").val();
+    // var motivation = $("input[name='motivation']:checked").val();
+    if (serious == undefined || strategy == "" || problems == "" || rating === undefined)
+    //if (serious == undefined || strategy == "" || problems == "" || rating === undefined || motivation === undefined)
+        alert("Please finish all the questions. Thank you!")
+    else {
+        // RECORD_DEBRIEFING_ANSWERS(serious, strategy, problems, rating, motivation);
+        RECORD_DEBRIEFING_ANSWERS(serious, strategy, problems, rating);
+        subj.submitQ();
+        $("#uidText").html("You have earned " + expt.totalScore.toFixed(2) + " in total. Please put down both your UID and email address if you'd like to receive the money bonus.")
+        $("#questionsBox").hide();
+        // $("#uidPage").show();
+        NEXT_INSTR();
+        $("#lastPage").show();
+    }
+}
+*/
 
 
 /*

@@ -416,8 +416,10 @@ function RESET_GAMEBOARD() {
     $("#decision").html("");
     $(".tryResult").hide();
     $("#sanityCheckResult").hide();
+    $("#sanityCheckResultDo").hide();
     $("#practiceResult").hide();
     $("#result").hide();
+    $("#resultDo").hide();
 }
 
 /*
@@ -447,6 +449,7 @@ function CREATE_EXPT_BUTTONS(obj) {
         console.log("3")
         $("#sanityCheckMoveBut").click(function(){SIGNALER_AUTO_MOVE(obj)});
         $("#sanityCheckResultBut").click(function(){NEXT_TRIAL(obj)});
+        $("#sanityCheckResultButDo").click(function(){NEXT_TRIAL(obj)});
     }
     // else if (obj.isPracTrial) {
     //     $("#practiceQuitBut").click(function(){SHOW_QUIT_RESULT(obj)});
@@ -456,6 +459,7 @@ function CREATE_EXPT_BUTTONS(obj) {
         console.log("4")
         $("#exptMoveBut").click(function(){SIGNALER_AUTO_MOVE(obj)});
         $("#resultBut").click(function(){NEXT_TRIAL(obj)});
+        $("#resultButDo").click(function(){NEXT_TRIAL(obj)});
     }
 }
 
@@ -751,7 +755,7 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
         if(win){ //SIGNALER MOVES TO TARGET RESULT BOX
             var landedItem = $('#shape'+ obj.signalerLocation[0] + 'v' + obj.signalerLocation[1] + ' .shape').attr('src');
             if (trialStrategy == "do") { //chckpt
-                $("#sanityCheckResultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
+                $("#sanityCheckResultTextDo").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
             }
             else {
                 $("#sanityCheckResultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
@@ -765,7 +769,17 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
         //$("#sanityCheckReward").html("$" + reward.toFixed(2));
         //$("#sanityCheckRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.cost));
         //$("#sanityCheckTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
+
+        //$("#sanityCheckResult").show();
+        
+        if(trialStrategy == "do"){
+            $("#sanityCheckResultDo").show();
+        }
+        else{
         $("#sanityCheckResult").show();
+        }
+        
+        
     }
     // else if (obj.isPracTrial){
     //     if(win){
@@ -781,19 +795,20 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
     //     $("#practiceResult").show();
     // }
     else if (obj.isExptTrial){
+        var trialStrategy = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["trialStrategy"];
         var landedItem = $('#shape'+ obj.signalerLocation[0] + 'v' + obj.signalerLocation[1] + ' .shape').attr('src');
         $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
         if(win){
-            $("#resultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
+            $("#resultTextDo").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
             reward = REWARD;
         } else {
-            $("#resultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
+            $("#resultTextDo").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
             reward = 0;
         }
         //$("#reward").html("$" + reward.toFixed(2));
         //$("#exptRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.cost));
         //$("#exptTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
-        $("#result").show();
+        $("#resultDo").show();
     }
 }
 
@@ -845,6 +860,7 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         $("#sanityCheckReward").html("$" + reward.toFixed(2));
         $("#sanityCheckRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.cost));
         $("#sanityCheckTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
+        console.log("Reached");
         $("#sanityCheckResult").show();
     }
     // else if(obj.isPracTrial){
