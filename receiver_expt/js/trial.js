@@ -751,8 +751,8 @@ function RECEIVER_WALK_TO_CHOSEN_OBJECT(obj, intendedItemtemp) {
     //id = "shape" row "v" col
     //"shape1v3" --> str[5] = 1, str[7] = 3
 
-    console.log("This item was: ");
-    console.log(intendedItem);
+    //console.log("This item was: ");
+    //console.log(intendedItem);
     //console.log(obj.inputData[obj.trialIndex].receiverIntentionDict["triangle"]);
     /*
     var intendedItem = obj.inputData[intendedItemtemp].receiverIntentionDict["triangle"];
