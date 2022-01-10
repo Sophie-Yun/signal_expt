@@ -87,7 +87,7 @@ class trialObject {
             //var signal = "red";
             //var signal = "do";
             var signal = this.inputData[this.trialIndex]["predSignalNoActionUtility"];
-            var waitoutTime = 5.91228*1000;
+            var waitoutTime = 3.962*1000;
             setTimeout(CHANGE_INSTRUCTION, waitoutTime + randExpo * 300, signal);
             if(signal == "do"){
                 setTimeout(SIGNALER_AUTO_MOVE,waitoutTime + randExpo*300,sanityCheck);
@@ -136,7 +136,7 @@ class trialObject {
                 //var signal = "do";
                 var signal = this.inputData[this.randomizedTrialList[this.trialIndex]]["predSignalNoActionUtility"];
                 console.log(signal);
-                var waitoutTime = 5.91228*1000;
+                var waitoutTime = 3.962*1000;
                 setTimeout(CHANGE_INSTRUCTION_EXPT, waitoutTime + randExpo * 300, signal);
                 if(signal == "do"){
                     setTimeout(SIGNALER_AUTO_MOVE,waitoutTime + randExpo*300,expt);
@@ -1107,7 +1107,7 @@ function START_SANITY_CHECK_TRIAL() {
     //
 
     //var signal = "red";
-    var waitoutTime = 5.91228*1000;
+    var waitoutTime = 3.962*1000;
     setTimeout(CHANGE_INSTRUCTION, waitoutTime + randExpo * 300, signal);
     if(signal == "do"){
         setTimeout(SIGNALER_AUTO_MOVE,waitoutTime + randExpo*300,sanityCheck);
@@ -1242,7 +1242,7 @@ function START_EXPT(){
     var signal = expt.inputData[expt.randomizedTrialList[expt.trialIndex]]["predSignalNoActionUtility"];
     //var signal = "red";
     console.log("starting expt")
-    var waitoutTime = 5.91228*1000;
+    var waitoutTime = 3.962*1000;
     setTimeout(CHANGE_INSTRUCTION_EXPT, waitoutTime + randExpo * 300, signal);
     if(signal == "do"){
         setTimeout(SIGNALER_AUTO_MOVE,waitoutTime + randExpo*300,expt);

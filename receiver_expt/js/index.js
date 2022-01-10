@@ -204,20 +204,30 @@ function tempDeletePlease(){
         }
         var sum = 0;
         var numelements = 0;
+        var entryArray = [];
         for(i = 1; i < lines.length - 1; i++){
             //console.log(i);
             testElement = linesArray[i-1]["predSignalNoActionUtility"].substring(1);
-            console.log(testElement);
+            //console.log(testElement);
             if(!isNaN(testElement)){
                 numelements++;
-                sum += parseInt(linesArray[i-1]["predSignalNoActionUtility"].substring(1));
+                sum += parseFloat(linesArray[i-1]["predSignalNoActionUtility"].substring(1));
+                entryArray.push(parseFloat(linesArray[i-1]["predSignalNoActionUtility"].substring(1)));
             }
         }
         console.log(sum);
         console.log(numelements);
+        //console.log(entryArray);
+        entryArray.sort((a,b)=>a-b);
+        console.log(entryArray);
+        console.log(numelements/2);
+        console.log(entryArray[Math.floor(numelements / 2)]);
+        console.log(entryArray[Math.ceil(numelements / 2)]);
+
 
 })
 }
+
 
 
 
