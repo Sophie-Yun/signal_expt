@@ -73,28 +73,32 @@ class trialObject {
             } else {
             this.step = 0;
             this.decisionRecorded = false;
-            this.exptSignalerPath = "N/A",
-            this.exptReceiverPath = "N/A",
+            this.exptSignalerPath = "N/A";
+            this.exptReceiverPath = "N/A";
+            this.chosenItem = "N/A";
+            this.confidence = "N/A";
+            this.hoverItems = "N/A";
             TRIAL_SET_UP(this);
             buttonDict = CREATE_GRID(this);
             SETUP_SCOREBOARD(this);
-            CREATE_SIGNAL_BUTTONS(this, this.signalSpace);
-            //console.log("right next");
-            //console.log(Object.keys(buttonDict).length);
+            //CREATE_SIGNAL_BUTTONS(this, this.signalSpace);
             RESET_INSTRUCTION();
             var randUni = Math.random();
             var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
             //var signal = "red";
             //var signal = "do";
             var signal = this.inputData[this.trialIndex]["predSignalNoActionUtility"];
-            var waitoutTime = 3.962*1000;
+            var waitoutTime = SIMULATED_SIGNALER_DECISION_TIME*1000;
             setTimeout(CHANGE_INSTRUCTION, waitoutTime + randExpo * 300, signal);
             if(signal == "do"){
                 setTimeout(SIGNALER_AUTO_MOVE,waitoutTime + randExpo*300,sanityCheck);
+                RECORD_SIMULATED_SIG_DECISION_TIME(this, (waitoutTime + randExpo*300)/1000);
             }
             else{
-            setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
+                setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
+                RECORD_SIMULATED_SIG_DECISION_TIME(this, (waitoutTime + randExpo*400)/1000);
             }
+
             //ENABLE_GRID_BUTTONS(buttonDict);
             $("#sanityCheckInstr").show();
             this.move();
@@ -125,6 +129,10 @@ class trialObject {
                 this.decisionRecorded = false;
                 this.exptSignalerPath = "N/A",
                 this.exptReceiverPath = "N/A",
+                this.chosenItem = "N/A";
+                this.confidence = "N/A";
+                this.hoverItems = "N/A";
+
                 TRIAL_SET_UP(this);
                 buttonDict = CREATE_GRID(this);
                 SETUP_SCOREBOARD(this);
@@ -136,13 +144,15 @@ class trialObject {
                 //var signal = "do";
                 var signal = this.inputData[this.randomizedTrialList[this.trialIndex]]["predSignalNoActionUtility"];
                 console.log(signal);
-                var waitoutTime = 3.962*1000;
+                var waitoutTime = SIMULATED_SIGNALER_DECISION_TIME*1000;
                 setTimeout(CHANGE_INSTRUCTION_EXPT, waitoutTime + randExpo * 300, signal);
                 if(signal == "do"){
                     setTimeout(SIGNALER_AUTO_MOVE,waitoutTime + randExpo*300,expt);
+                    RECORD_SIMULATED_SIG_DECISION_TIME(this, (waitoutTime + randExpo*300)/1000);
                 }
                 else{
-                setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
+                    setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
+                    RECORD_SIMULATED_SIG_DECISION_TIME(this, (waitoutTime + randExpo*400)/1000);
                 }
                 $("#exptInstr").show();
                 this.move();
@@ -184,16 +194,16 @@ class trialObject {
 
     createDataToSave () {
         var currentTime = Date.now();
-        this.feedbackTime = (currentTime - this.startTime) / 1000 - this.actionTime; // in seconds
-        if (this.isSanityCheck)
+        this.feedbackTime = (currentTime - this.startTime) / 1000 - this.simSigDecisionTime - this.partiRecDecisionTime - this.actionTime; // in seconds
+        if (this.isSanityCheck){
             this.trialType = "sanity";
-        else if (this.isExptTrial)
+            this.exptId = this.trialIndex;
+        } else if (this.isExptTrial) {
             this.trialType = "expt";
-        if (this.isSanityCheck || this.isExptTrial)
-            this.exptId = this.randomizedTrialList[this.trialIndex];
-        else
-            this.exptId = -1;
+            this.randomizedTrialList[this.trialIndex];
+        }
         this.totalUtility = this.totalScore.toFixed(2);
+        this.hoverItems = JSON.stringify(this.hoverItems);
         var dataList = [this.subjID, this.subjStartDate, this.subjStartTime,
             this.trialType,
             this.trialIndex, this.exptId,
@@ -202,10 +212,10 @@ class trialObject {
             this.exptReceiverPath, this.receiverEndCoordinate, this.receiverEndItem,
             this.signalerAchievedGoal, this.receiverAchievedGoal,
             this.totalUtility,
-            this.decisionTime, this.actionTime, this.feedbackTime, this.responseWarningPopup,
-            this.sanityLikertSet, this.exptLikertSet,
-            this.sanityChosenItemDict, this.exptChosenItemDict,
-            this.sanityHoverItems, this.exptHoverItems];
+            this.simSigDecisionTime, this.partiRecDecisionTime, this.actionTime, this.feedbackTime, this.responseWarningPopup,
+            this.chosenItem,
+            this.confidence,
+            this.hoverItems];
             // this.quitWarningPopup
         this.exptDataToSave += LIST_TO_FORMATTED_STRING(dataList, ";");
        // console.log(this.exptDataToSave);
@@ -385,7 +395,7 @@ function TRIAL_SET_UP (obj) {
     ];
 
     SET_RECEIVER_SIGNALER_LOCATION(obj);
-    SET_BARRIER(obj);
+    //SET_BARRIER(obj);
 
     obj.gridArray[obj.receiverLocation[0]][obj.receiverLocation[1]] = SHAPE_DIR + "receiver.png";
     obj.gridArray[obj.signalerLocation[0]][obj.signalerLocation[1]] = SHAPE_DIR + "signaler.png";
@@ -414,13 +424,13 @@ function TRIAL_SET_UP (obj) {
         var row = coordInArray[0];
         var col = coordInArray[1];
         obj.gridArray[row][col] = shape[i];
-        if(!obj.isExptTrial) {
-            if (shape[i] == obj.inputData[obj.trialIndex].intention)
-                obj.goalCoord = [row, col];
-        } else {
-            if (shape[i] == obj.inputData[obj.randomizedTrialList[obj.trialIndex]].intention)
-                obj.goalCoord = [row, col];
-        }
+        // if(!obj.isExptTrial) {
+        //     if (shape[i] == obj.inputData[obj.trialIndex].intention)
+        //         obj.goalCoord = [row, col];
+        // } else {
+        //     if (shape[i] == obj.inputData[obj.randomizedTrialList[obj.trialIndex]].intention)
+        //         obj.goalCoord = [row, col];
+        // }
     }
 
     obj.signalerMoved = false;
@@ -450,8 +460,8 @@ function SIGNALER_AUTO_MOVE(obj) {
 
     DISABLE_DEFAULT_KEYS();
     if(!obj.decisionRecorded) {
-        RECORD_DECISION_DATA(obj, "do");
-        RECORD_SIGNAL_DATA(obj);
+        RECORD_PARTI_DECISION_DATA(obj, "do");
+        RECORD_SIGNAL_DATA(obj, "do");
     }
     CHANGE_IN_TRIAL_INSTR("do");
     obj.allowMove = false;
@@ -501,71 +511,71 @@ function SIGNALER_AUTO_MOVE_ARRIVE(obj) {
     obj.step = 0;
 }
 
-function RECEIVER_AUTO_MOVE(obj) {
-    DISABLE_HOVER_INFO();
-    if(obj.isTryMove) {
-        $("#instrBackBut").css({
-            "cursor": "auto",
-            "pointer-events": "none"
-        });
-        $("#instrNextBut").css({
-            "cursor": "auto",
-            "pointer-events": "none"
-        });
-    }
+// function RECEIVER_AUTO_MOVE(obj) {
+//     DISABLE_HOVER_INFO();
+//     if(obj.isTryMove) {
+//         $("#instrBackBut").css({
+//             "cursor": "auto",
+//             "pointer-events": "none"
+//         });
+//         $("#instrNextBut").css({
+//             "cursor": "auto",
+//             "pointer-events": "none"
+//         });
+//     }
 
-    DISABLE_DEFAULT_KEYS();
-    if(!obj.decisionRecorded) {
-        RECORD_DECISION_DATA(obj, "do");
-        RECORD_SIGNAL_DATA(obj);
-    }
-    CHANGE_IN_TRIAL_INSTR("do");
-    obj.allowMove = false;
+//     DISABLE_DEFAULT_KEYS();
+//     if(!obj.decisionRecorded) {
+//         RECORD_PARTI_DECISION_DATA(obj, "do");
+//         RECORD_SIGNAL_DATA(obj);
+//     }
+//     CHANGE_IN_TRIAL_INSTR("do");
+//     obj.allowMove = false;
 
-    if(obj.isTryMove)
-        var path = ["down","right","right","right"];
-    else if (obj.isSanityCheck)
-        var path = obj.signalerPath[obj.inputData[obj.trialIndex].intention];
-    else if (obj.isExptTrial)
-        var path = obj.signalerPath[obj.inputData[obj.randomizedTrialList[obj.trialIndex]].intention];
+//     if(obj.isTryMove)
+//         var path = ["down","right","right","right"];
+//     else if (obj.isSanityCheck)
+//         var path = obj.signalerPath[obj.inputData[obj.trialIndex].intention];
+//     else if (obj.isExptTrial)
+//         var path = obj.signalerPath[obj.inputData[obj.randomizedTrialList[obj.trialIndex]].intention];
 
 
-    var stepOnGrid = path[obj.pathIndex];
+//     var stepOnGrid = path[obj.pathIndex];
 
-    UPDATE_STEPS(obj);
-    UPDATE_GAME_GRID(obj, stepOnGrid, "receiver");
+//     UPDATE_STEPS(obj);
+//     UPDATE_GAME_GRID(obj, stepOnGrid, "receiver");
 
-    if(obj.pathIndex == path.length - 1) {
-        setTimeout(RECEIVER_AUTO_MOVE_ARRIVE, 1000, obj);
+//     if(obj.pathIndex == path.length - 1) {
+//         setTimeout(RECEIVER_AUTO_MOVE_ARRIVE, 1000, obj);
 
-    } else {
-        obj.pathIndex++;
-        setTimeout(RECEIVER_AUTO_MOVE, RECEIVER_MOVE_SPEED * 1000, obj, signal);
-    }
-}
+//     } else {
+//         obj.pathIndex++;
+//         setTimeout(RECEIVER_AUTO_MOVE, RECEIVER_MOVE_SPEED * 1000, obj, signal);
+//     }
+// }
 
-function RECEIVER_AUTO_MOVE_ARRIVE(obj) {
-    if(obj.isTryMove) {
-        $("#instrBackBut").css({
-            "cursor": "pointer",
-            "pointer-events": "revert"
-        });
-        $("#instrNextBut").css({
-            "cursor": "pointer",
-            "pointer-events": "revert"
-        });
-    }
-    RECORD_ACTION_TIME(obj);
-    RECORD_SIGNALER_END_LOCATION(obj, obj.signalerLocation);
-    RECORD_RECEIVER_END_LOCATION(obj);
-    RECORD_SIGNALER_ACHIEVED(obj, "achieved")
-    RECORD_RECEIVER_ACHIEVED(obj);
-    UPDATE_RESULT_IN_OBJ(obj, REWARD);
-    SHOW_WIN_RESULT_BOX_FOR_MOVE(obj, true);
+// function RECEIVER_AUTO_MOVE_ARRIVE(obj) {
+//     if(obj.isTryMove) {
+//         $("#instrBackBut").css({
+//             "cursor": "pointer",
+//             "pointer-events": "revert"
+//         });
+//         $("#instrNextBut").css({
+//             "cursor": "pointer",
+//             "pointer-events": "revert"
+//         });
+//     }
+//     RECORD_ACTION_TIME(obj);
+//     RECORD_SIGNALER_END_LOCATION(obj, obj.signalerLocation);
+//     RECORD_RECEIVER_END_LOCATION(obj);
+//     RECORD_SIGNALER_ACHIEVED(obj, "achieved")
+//     RECORD_RECEIVER_ACHIEVED(obj);
+//     UPDATE_RESULT_IN_OBJ(obj, REWARD);
+//     SHOW_WIN_RESULT_BOX_FOR_MOVE(obj, true);
 
-    obj.pathIndex = 0;
-    obj.step = 0;
-}
+//     obj.pathIndex = 0;
+//     obj.step = 0;
+// }
 
 // function MOVE(obj) {
 //     var arrowClicked = false; //to prevent clicking on ENTER before arrow keys
@@ -575,7 +585,7 @@ function RECEIVER_AUTO_MOVE_ARRIVE(obj) {
 //             if(e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40) {// arrow keys
 //                 obj.consecutiveQuitNum = 0;
 //                 if(!obj.decisionRecorded) {
-//                     RECORD_DECISION_DATA(obj, "move");
+//                     RECORD_PARTI_DECISION_DATA(obj, "move");
 //                     RECORD_SIGNAL_DATA(obj);
 //                 }
 //                 arrowClicked = true;
@@ -618,29 +628,29 @@ function CONVERT_STR_TO_ARRAY(input) {
     return input.split(',').map(Number);
 }
 
-function RECEIVER_WALK(obj, signal) {
-    DISABLE_HOVER_INFO();
-    if(obj.isTrySay) {
-        $("#instrBackBut").css({
-            "cursor": "auto",
-            "pointer-events": "none"
-        });
-        $("#instrNextBut").css({
-            "cursor": "auto",
-            "pointer-events": "none"
-        });
-    }
-    obj.consecutiveQuitNum = 0;
-    DISABLE_DEFAULT_KEYS();
-    RECORD_DECISION_DATA(obj, "say");
-    RECORD_SIGNAL_DATA(obj, signal);
-    CHANGE_IN_TRIAL_INSTR("say");
-    obj.allowMove = false;
+// function RECEIVER_WALK(obj, signal) {
+//     DISABLE_HOVER_INFO();
+//     if(obj.isTrySay) {
+//         $("#instrBackBut").css({
+//             "cursor": "auto",
+//             "pointer-events": "none"
+//         });
+//         $("#instrNextBut").css({
+//             "cursor": "auto",
+//             "pointer-events": "none"
+//         });
+//     }
+//     obj.consecutiveQuitNum = 0;
+//     DISABLE_DEFAULT_KEYS();
+//     RECORD_PARTI_DECISION_DATA(obj, "say");
+//     RECORD_SIGNAL_DATA(obj, "say");
+//     CHANGE_IN_TRIAL_INSTR("say");
+//     obj.allowMove = false;
 
-    var randUni = Math.random();
-    var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
-    setTimeout(RECEIVER_WALK_AFTER_WAIT, randExpo * 1000, obj, signal);
-}
+//     var randUni = Math.random();
+//     var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
+//     setTimeout(RECEIVER_WALK_AFTER_WAIT, randExpo * 1000, obj, signal);
+// }
 
 function RECEIVER_WALK_AFTER_WAIT(obj, signal) {
     if (obj.isTrySay) {
@@ -697,8 +707,8 @@ function RECEIVER_WALK_TWO(obj, signal) {
     }
     obj.consecutiveQuitNum = 0;
     DISABLE_DEFAULT_KEYS();
-    RECORD_DECISION_DATA(obj, "say");
-    RECORD_SIGNAL_DATA(obj, signal);
+    RECORD_PARTI_DECISION_DATA(obj, "say");
+    RECORD_SIGNAL_DATA(obj, "say");
     CHANGE_IN_TRIAL_INSTR("say");
     obj.allowMove = false;
 
@@ -790,7 +800,7 @@ function RECEIVER_ARRIVE(obj) {
             "pointer-events": "revert"
         });
     }
-    if(obj.receiverLocation[0] == obj.goalCoord[0] && obj.receiverLocation[1] == obj.goalCoord[1]) {
+    //if(obj.receiverLocation[0] == obj.goalCoord[0] && obj.receiverLocation[1] == obj.goalCoord[1]) {
         RECORD_ACTION_TIME(obj);
         RECORD_SIGNALER_END_LOCATION(obj);
         RECORD_RECEIVER_END_LOCATION(obj, obj.receiverLocation);
@@ -800,17 +810,17 @@ function RECEIVER_ARRIVE(obj) {
         SHOW_WIN_RESULT_BOX_FOR_SAY(obj, true);
         obj.step = 0;
         obj.pathIndex = 0;
-    } else {
-        RECORD_ACTION_TIME(obj);
-        RECORD_SIGNALER_END_LOCATION(obj);
-        RECORD_RECEIVER_END_LOCATION(obj, obj.receiverLocation);
-        RECORD_SIGNALER_ACHIEVED(obj);
-        RECORD_RECEIVER_ACHIEVED(obj);
-        UPDATE_RESULT_IN_OBJ(obj, 0);
-        SHOW_WIN_RESULT_BOX_FOR_SAY(obj, false);
-        obj.step = 0;
-        obj.pathIndex = 0;
-    }
+    // } else {
+    //     RECORD_ACTION_TIME(obj);
+    //     RECORD_SIGNALER_END_LOCATION(obj);
+    //     RECORD_RECEIVER_END_LOCATION(obj, obj.receiverLocation);
+    //     RECORD_SIGNALER_ACHIEVED(obj);
+    //     RECORD_RECEIVER_ACHIEVED(obj);
+    //     UPDATE_RESULT_IN_OBJ(obj, 0);
+    //     SHOW_WIN_RESULT_BOX_FOR_SAY(obj, false);
+    //     obj.step = 0;
+    //     obj.pathIndex = 0;
+    // }
 }
 
 function SUCCESS(){
@@ -850,11 +860,12 @@ function NEXT_TRIAL(obj) {
             alert("Please select a response on the scale. Thank you!");
         }
         else{
-        RECORD_LIKERT_ANSWER(obj, click);
-        //console.log(click);
+            if (trialStrategy != "do"){
+                RECORD_LIKERT_ANSWER(obj, click);
+            }
         RESET_GAMEBOARD();
         SANITY_CHECK_INSTR_APPEAR();
-        sanityCheck.next();
+        obj.next();
         }
     }
     // else if(obj.isPracTrial){
@@ -871,7 +882,9 @@ function NEXT_TRIAL(obj) {
             alert("Please select a response on the scale. Thank you!");
         }
         else{
-        RECORD_LIKERT_ANSWER(obj, click);
+            if (trialStrategy != "do"){
+                RECORD_LIKERT_ANSWER(obj, click);
+            }
         RESET_GAMEBOARD();
         EXPT_INSTR_APPEAR();
         obj.next()
@@ -938,102 +951,102 @@ function TRY_SAY_GAMEBOARD_SETUP() {
     $("#trySayPage").show();
 }
 
-function TRY_MOVE() {
-    tryMove.isTryMove = true;
-    tryMove.signalerMoved = false;
-    tryMove.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(4, 7);
-    tryMove.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(4, 0);
-    if(!tryMove.reached)
-        $("#instrNextBut").hide();
-    CREATE_EXPT_BUTTONS(tryMove);
+// function TRY_MOVE() {
+//     tryMove.isTryMove = true;
+//     tryMove.signalerMoved = false;
+//     tryMove.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(4, 7);
+//     tryMove.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(4, 0);
+//     if(!tryMove.reached)
+//         $("#instrNextBut").hide();
+//     CREATE_EXPT_BUTTONS(tryMove);
 
-    tryMove.gridArray = [
-            [,,,,,,,,],
-            [,,,,,,,,],
-            [,,,,,,,,],
-            [,,,,,,,PIC_DICT["red circle"],],
-            [,,,,,,,,],
-            [,,,,,,,,],
-            [,,,,,,,,],
-            [,,,,,,,,],
-            [,,,,,,,,],
-            [,,,,,,,,]
-        ];
-    tryMove.barrierInput = {
-        "up": "(3, 2), (4, 2), (5, 2), (6, 2), (7, 2), (8, 2)",
-        "down": "(3, 3), (4, 3), (5, 3), (6, 3), (7, 3), (8, 3)",
-        "left": "",
-        "right": ""
-    }
- //NEED TO, IN THIS PROCESS, CREATE A BUTTON ON [3,7]
-    var item = tryMove.gridArray[3,7];
-    shapeId = "shape3v7"
-    $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item]}));
-    //var receiverDist = tryMove.receiverPath[item].length;
-    //var signalerDist = tryMove.signalerPath[item].length;
-    ADD_HOVER_INFO("#" + shapeId, 4, 13);
-    $("#"+shapeId).click(function(){
-        $("#"+shapeId).css("pointer-events","none");
-        //console.log(row_save);
-        RECEIVER_AUTO_MOVE(tryMove);
-        $("#"+shapeId).css("pointer-events","auto");
-    });
-    $("#"+shapeId).css("pointer-events","auto");
-    $("#"+shapeId).css("cursor","pointer");
-//THIS CURRENTLY DOES NOT WORK ^
+//     tryMove.gridArray = [
+//             [,,,,,,,,],
+//             [,,,,,,,,],
+//             [,,,,,,,,],
+//             [,,,,,,,PIC_DICT["red circle"],],
+//             [,,,,,,,,],
+//             [,,,,,,,,],
+//             [,,,,,,,,],
+//             [,,,,,,,,],
+//             [,,,,,,,,],
+//             [,,,,,,,,]
+//         ];
+//     tryMove.barrierInput = {
+//         "up": "(3, 2), (4, 2), (5, 2), (6, 2), (7, 2), (8, 2)",
+//         "down": "(3, 3), (4, 3), (5, 3), (6, 3), (7, 3), (8, 3)",
+//         "left": "",
+//         "right": ""
+//     }
+//  //NEED TO, IN THIS PROCESS, CREATE A BUTTON ON [3,7]
+//     var item = tryMove.gridArray[3,7];
+//     shapeId = "shape3v7"
+//     $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item]}));
+//     //var receiverDist = tryMove.receiverPath[item].length;
+//     //var signalerDist = tryMove.signalerPath[item].length;
+//     ADD_HOVER_INFO("#" + shapeId, 4, 13);
+//     $("#"+shapeId).click(function(){
+//         $("#"+shapeId).css("pointer-events","none");
+//         //console.log(row_save);
+//         RECEIVER_AUTO_MOVE(tryMove);
+//         $("#"+shapeId).css("pointer-events","auto");
+//     });
+//     $("#"+shapeId).css("pointer-events","auto");
+//     $("#"+shapeId).css("cursor","pointer");
+// //THIS CURRENTLY DOES NOT WORK ^
 
 
-    tryMove.step = 0;
-    SET_BARRIER(tryMove);
-    tryMove.goalCoord=[3,7];
-    TRY_GRID_SETUP(tryMove);
-    SETUP_SCOREBOARD(tryMove);
-    TRY_MOVE_GAMEBOARD_SETUP();
-    tryMove.move();
-}
+//     tryMove.step = 0;
+//     SET_BARRIER(tryMove);
+//     tryMove.goalCoord=[3,7];
+//     TRY_GRID_SETUP(tryMove);
+//     SETUP_SCOREBOARD(tryMove);
+//     TRY_MOVE_GAMEBOARD_SETUP();
+//     tryMove.move();
+// }
 
-function TRY_SAY(){
-    trySay.isTrySay = true;
-    trySay.receiverMoved = false;
-    trySay.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(4, 7);
-    trySay.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(4, 0);
-    if(!trySay.reached)
-        $("#instrNextBut").hide();
-    CREATE_EXPT_BUTTONS(trySay);
+// function TRY_SAY(){
+//     trySay.isTrySay = true;
+//     trySay.receiverMoved = false;
+//     trySay.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(4, 7);
+//     trySay.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(4, 0);
+//     if(!trySay.reached)
+//         $("#instrNextBut").hide();
+//     CREATE_EXPT_BUTTONS(trySay);
 
-    trySay.gridArray = [
-        [,,,,,,,,],
-        [,,,,,,,,],
-        [,,,,,,,,],
-        [,,,,,,,PIC_DICT["red circle"],],
-        [,,,,,,,,],
-        [,,,,,,,,],
-        [,,,,,,,,],
-        [,,,,,,,,],
-        [,,,,,PIC_DICT["green circle"],,,],
-        [,,,,,,,,]
-    ];
-    trySay.barrierInput = {
-        "up": "(3, 5), (4, 5), (5, 5), (6, 5), (7, 5), (8, 5)",
-        "down": "(3, 6), (4, 6), (5, 6), (6, 6), (7, 6), (8, 6)",
-        "left": "",
-        "right": ""
-    }
-    trySay.receiverPath = {
-        "red": ["right","right","right","down"],
-        "green": ["left","left", "down","down","down","down","down","down", "right", "right", "right"],
-        "circle": ["right","right","right","down"]
-    };
+//     trySay.gridArray = [
+//         [,,,,,,,,],
+//         [,,,,,,,,],
+//         [,,,,,,,,],
+//         [,,,,,,,PIC_DICT["red circle"],],
+//         [,,,,,,,,],
+//         [,,,,,,,,],
+//         [,,,,,,,,],
+//         [,,,,,,,,],
+//         [,,,,,PIC_DICT["green circle"],,,],
+//         [,,,,,,,,]
+//     ];
+//     trySay.barrierInput = {
+//         "up": "(3, 5), (4, 5), (5, 5), (6, 5), (7, 5), (8, 5)",
+//         "down": "(3, 6), (4, 6), (5, 6), (6, 6), (7, 6), (8, 6)",
+//         "left": "",
+//         "right": ""
+//     }
+//     trySay.receiverPath = {
+//         "red": ["right","right","right","down"],
+//         "green": ["left","left", "down","down","down","down","down","down", "right", "right", "right"],
+//         "circle": ["right","right","right","down"]
+//     };
 
-    SET_BARRIER(trySay);
-    trySay.step = 0;
-    trySay.goalCoord = [3,7];
-    var trySayOptions = ["red", "circle", "green"];
-    CREATE_SIGNAL_BUTTONS(trySay, trySayOptions);
-    TRY_GRID_SETUP(trySay);
-    SETUP_SCOREBOARD(trySay);
-    TRY_SAY_GAMEBOARD_SETUP();
-}
+//     SET_BARRIER(trySay);
+//     trySay.step = 0;
+//     trySay.goalCoord = [3,7];
+//     var trySayOptions = ["red", "circle", "green"];
+//     CREATE_SIGNAL_BUTTONS(trySay, trySayOptions);
+//     TRY_GRID_SETUP(trySay);
+//     SETUP_SCOREBOARD(trySay);
+//     TRY_SAY_GAMEBOARD_SETUP();
+// }
 
 
 
@@ -1056,7 +1069,6 @@ function SANITY_CHECK_GAMEBOARD_SETUP() {
 }
 
 function START_SANITY_CHECK_TRIAL() {
-    console.log("HERE");
     subj.saveAttrition();
     $("#instrPage").hide();
     $("#sanityCheckInfo").css("opacity", 1);
@@ -1079,8 +1091,7 @@ function START_SANITY_CHECK_TRIAL() {
     // conditionalDoTrial = JSON.parse(JSON.stringify(sanityCheck.inputData[randomIndexDo]));
     // sanityCheck.inputData.splice(randomIndexDo, 1);
 
-
-    CREATE_RANDOM_LIST_FOR_EXPT(sanityCheck);
+    //CREATE_RANDOM_LIST_FOR_EXPT(sanityCheck);
 
     // sanityCheck.inputData.push(conditionalCommunicateTrial, conditionalQuitTrial, conditionalDoTrial);
     // sanityCheck.randomizedTrialList.push("6", "7", "8");
@@ -1088,11 +1099,13 @@ function START_SANITY_CHECK_TRIAL() {
     sanityCheck.startTime = Date.now();
     sanityCheck.exptSignalerPath = "N/A",
     sanityCheck.exptReceiverPath = "N/A",
+    sanityCheck.chosenItem = "N/A";
+    sanityCheck.confidence = "N/A";
+    sanityCheck.hoverItems = "N/A";
 
     TRIAL_SET_UP(sanityCheck);
     buttonDict = CREATE_GRID(sanityCheck);
-    console.log(Object.keys(buttonDict).length);
-    CREATE_SIGNAL_BUTTONS(sanityCheck, sanityCheck.signalSpace);
+    //CREATE_SIGNAL_BUTTONS(sanityCheck, sanityCheck.signalSpace);
     SETUP_SCOREBOARD(sanityCheck);
     SANITY_CHECK_GAMEBOARD_SETUP();
     CREATE_EXPT_BUTTONS(sanityCheck);
@@ -1108,13 +1121,15 @@ function START_SANITY_CHECK_TRIAL() {
     //
 
     //var signal = "red";
-    var waitoutTime = 3.962*1000;
-    setTimeout(CHANGE_INSTRUCTION, waitoutTime + randExpo * 300, signal);
+    var waitoutTime = SIMULATED_SIGNALER_DECISION_TIME*1000;
+    setTimeout(CHANGE_INSTRUCTION_EXPT, waitoutTime + randExpo * 300, signal);
     if(signal == "do"){
         setTimeout(SIGNALER_AUTO_MOVE,waitoutTime + randExpo*300,sanityCheck);
+        RECORD_SIMULATED_SIG_DECISION_TIME(sanityCheck, (waitoutTime + randExpo*300)/1000);
     }
     else{
-    setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
+        setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
+        RECORD_SIMULATED_SIG_DECISION_TIME(sanityCheck, (waitoutTime + randExpo*400)/1000);
     }
 
 
@@ -1124,16 +1139,14 @@ function START_SANITY_CHECK_TRIAL() {
 }
 
 function CHANGE_INSTRUCTION(signal){
-    console.log("Changing instr");
+
     var signalString = signal.charAt(0).toUpperCase() + signal.slice(1);
     $("#instruction").hide();
     if(signal == "do"){
         $("#instruction_2").html( '<img class="inlineShape" src="shape/signaler.png">' + ' is walking to the target.');
 
     }
-    //console.log("CHANGE CALLED");
     else{
-        console.log("changing");
         $("#instruction_2").html( '<img class="inlineShape" src="shape/signaler.png">' + ' says: "' + signalString + '".');
     }
     $("#instruction_2").show();
@@ -1141,9 +1154,7 @@ function CHANGE_INSTRUCTION(signal){
 
 
 function RESET_INSTRUCTION(){
-    //console.log("RESET CALLED");
     $("#instruction_2").hide();
-    //$("#instruction_2").html("Signaler says: Red");
     $("#instruction").show();
 }
 
@@ -1155,16 +1166,13 @@ function CHANGE_INSTRUCTION_EXPT(signal){
         $("#exptInstruct2").html( '<img class="inlineShape" src="shape/signaler.png">' + ' is walking to the target.');
 
     }
-    //console.log("CHANGE CALLED");
     else{
-        console.log("changing");
         $("#exptInstruct2").html( '<img class="inlineShape" src="shape/signaler.png">' + ' says: "' + signalString + '".');
     }
     $("#exptInstruct2").show();
 }
 
 function RESET_INSTRUCTION_EXPT(){
-    //console.log("RESET CALLED");
     $("#exptInstruct2").hide();
     //$("#instruction_2").html("Signaler says: Red");
     $("#exptInstruct1").show();
@@ -1233,7 +1241,7 @@ function START_EXPT(){
     CREATE_RANDOM_LIST_FOR_EXPT(expt);
     TRIAL_SET_UP(expt);
     CREATE_GRID(expt);
-    CREATE_SIGNAL_BUTTONS(expt, expt.signalSpace);
+    //CREATE_SIGNAL_BUTTONS(expt, expt.signalSpace);
     SETUP_SCOREBOARD(expt);
     EXPT_GAMEBOARD_SETUP();
     CREATE_EXPT_BUTTONS(expt);
@@ -1242,22 +1250,26 @@ function START_EXPT(){
     var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
     var signal = expt.inputData[expt.randomizedTrialList[expt.trialIndex]]["predSignalNoActionUtility"];
     //var signal = "red";
-    console.log("starting expt")
-    var waitoutTime = 3.962*1000;
+    var waitoutTime = SIMULATED_SIGNALER_DECISION_TIME*1000;
     setTimeout(CHANGE_INSTRUCTION_EXPT, waitoutTime + randExpo * 300, signal);
     if(signal == "do"){
         setTimeout(SIGNALER_AUTO_MOVE,waitoutTime + randExpo*300,expt);
+        RECORD_SIMULATED_SIG_DECISION_TIME(expt, (waitoutTime + randExpo*300)/1000);
     }
     else{
-    setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
+        setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
+        RECORD_SIMULATED_SIG_DECISION_TIME(expt, (waitoutTime + randExpo*400)/1000);
     }
 
 
     expt.move();
 
     expt.startTime = Date.now();
-    expt.exptSignalerPath = "N/A",
-    expt.exptReceiverPath = "N/A",
+    expt.exptSignalerPath = "N/A";
+    expt.exptReceiverPath = "N/A";
+    expt.chosenItem = "N/A";
+    expt.confidence = "N/A";
+    expt.hoverItems = "N/A";
     $("#exptPage").show();
 }
 

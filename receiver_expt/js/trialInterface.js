@@ -64,55 +64,56 @@ function CREATE_GRID(obj) {
     var ncol = GRID_NCOL;
     var shapeId;
     buttonDict = {}
-    if(obj.isTryMove) {
-        for (var row = 0; row < nrow; row++) {
-            for (var col = 0; col < ncol; col++) {
-                shapeId = "shape" + row + "v" + col;
-                var item = gridArray[row][col];
-                if (item !== undefined){
-                    $("#tryMoveGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>")
-                    if (item !== SHAPE_DIR + "receiver.png" && item!== SHAPE_DIR + "signaler.png") {
-                        $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
-                        var receiverDist = 4;
-                        var signalerDist = 13;
-                        ADD_HOVER_INFO("#" + shapeId, receiverDist, signalerDist);
-                    } else {
-                        $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
-                    }
-                } else{
-                    $("#tryMoveGridContainer").append("<div class='gridEmpty' id='" + shapeId + "'></div>");
-                }
-            };
-        };
-        ADD_BARRIER(obj);
-    } else if (obj.isTrySay) {
-        for (var row = 0; row < nrow; row++) {
-            for (var col = 0; col < ncol; col++) {
-                shapeId = "shape" + row + "v" + col;
-                var item = gridArray[row][col];
-                if (item !== undefined){
-                    $("#trySayGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>")
-                    if (item !== SHAPE_DIR + "receiver.png" && item !== SHAPE_DIR + "signaler.png") {
-                        $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
-                        if(item == SHAPE_DIR + "redCircle.png") {
-                            var receiverDist = 4;
-                            var signalerDist = 13;
-                        } else if (item == SHAPE_DIR + "greenCircle.png") {
-                            var receiverDist = 11;
-                            var signalerDist = 2;
-                        }
-                        ADD_HOVER_INFO("#" + shapeId, receiverDist, signalerDist);
-                    } else {
-                        $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
-                    }
-                }
-                else{
-                    $("#trySayGridContainer").append("<div class='gridEmpty' id='" + shapeId + "'></div>");
-                }
-            };
-        };
-        ADD_BARRIER(obj);
-    } else if (obj.isSanityCheck) {
+    // if(obj.isTryMove) {
+    //     for (var row = 0; row < nrow; row++) {
+    //         for (var col = 0; col < ncol; col++) {
+    //             shapeId = "shape" + row + "v" + col;
+    //             var item = gridArray[row][col];
+    //             if (item !== undefined){
+    //                 $("#tryMoveGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>")
+    //                 if (item !== SHAPE_DIR + "receiver.png" && item!== SHAPE_DIR + "signaler.png") {
+    //                     $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
+    //                     var receiverDist = 4;
+    //                     var signalerDist = 13;
+    //                     ADD_HOVER_INFO("#" + shapeId, receiverDist, signalerDist);
+    //                 } else {
+    //                     $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
+    //                 }
+    //             } else{
+    //                 $("#tryMoveGridContainer").append("<div class='gridEmpty' id='" + shapeId + "'></div>");
+    //             }
+    //         };
+    //     };
+    //     ADD_BARRIER(obj);
+    // } else if (obj.isTrySay) {
+    //     for (var row = 0; row < nrow; row++) {
+    //         for (var col = 0; col < ncol; col++) {
+    //             shapeId = "shape" + row + "v" + col;
+    //             var item = gridArray[row][col];
+    //             if (item !== undefined){
+    //                 $("#trySayGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>")
+    //                 if (item !== SHAPE_DIR + "receiver.png" && item !== SHAPE_DIR + "signaler.png") {
+    //                     $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
+    //                     if(item == SHAPE_DIR + "redCircle.png") {
+    //                         var receiverDist = 4;
+    //                         var signalerDist = 13;
+    //                     } else if (item == SHAPE_DIR + "greenCircle.png") {
+    //                         var receiverDist = 11;
+    //                         var signalerDist = 2;
+    //                     }
+    //                     ADD_HOVER_INFO("#" + shapeId, receiverDist, signalerDist);
+    //                 } else {
+    //                     $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
+    //                 }
+    //             }
+    //             else{
+    //                 $("#trySayGridContainer").append("<div class='gridEmpty' id='" + shapeId + "'></div>");
+    //             }
+    //         };
+    //     };
+    //     ADD_BARRIER(obj);
+    // } else
+    if (obj.isSanityCheck) {
         for (var row = 0; row < nrow; row++) {
             for (var col = 0; col < ncol; col++) {
                 shapeId = "shape" + row + "v" + col;
@@ -120,9 +121,12 @@ function CREATE_GRID(obj) {
                 if (item !== undefined){
                     $("#sanityCheckGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>");
                     if (item!== SHAPE_DIR + "receiver.png" && item!== SHAPE_DIR + "signaler.png") {
+                        if (item.slice(-1) == "e"){
+                             $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item]}));
+                        } else {
+                           $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item.slice(0, -1)]}));
+                        }
 
-                        console.log(item);
-                        $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item]}));
                         var receiverDist = obj.receiverPath[item].length;
                         var signalerDist = obj.signalerPath[item].length;
                         ADD_HOVER_INFO("#" + shapeId, receiverDist, signalerDist);
@@ -147,7 +151,6 @@ function CREATE_GRID(obj) {
                                 RECORD_HOVER_ITEMS(obj, nameOfShape, coordinates)
                         } )
                         })();
-                        console.log("Added item");
                     } else {
                         $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
 
@@ -160,7 +163,7 @@ function CREATE_GRID(obj) {
             };
         };
         DISABLE_GRID_BUTTONS(buttonDict);
-        ADD_BARRIER(obj);
+        //ADD_BARRIER(obj);
     }
     // else if (obj.isPracTrial) {
     //     for (var row = 0; row < nrow; row++) {
@@ -189,7 +192,12 @@ function CREATE_GRID(obj) {
                 if (item !== undefined){
                     $("#gridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>")
                     if (item !== SHAPE_DIR + "receiver.png" && item !== SHAPE_DIR + "signaler.png") {
-                        $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item]}));
+                        if (item.slice(-1) == "e"){
+                            $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item]}));
+                        } else {
+                            $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item.slice(0, -1)]}));
+                        }
+
                         var receiverDist = obj.receiverPath[item].length;
                         var signalerDist = obj.signalerPath[item].length;
                         ADD_HOVER_INFO("#" + shapeId, receiverDist, signalerDist);
@@ -219,9 +227,8 @@ function CREATE_GRID(obj) {
             };
         };
         DISABLE_GRID_BUTTONS(buttonDict);
-        ADD_BARRIER(obj);
+        //ADD_BARRIER(obj);
     }
-console.log("returning");
 return buttonDict;
 }
 
@@ -304,13 +311,13 @@ function MEET_DOWN_BARRIER(obj) {
 }
 function MOVE_UP(obj) {
     if(obj.signalerLocation[0]-1  >= 0){
-        if(!MEET_UP_BARRIER(obj)){
+        //if(!MEET_UP_BARRIER(obj)){
             FIRST_MOVE(obj);
             REMOVE_PREVIOUS(obj.signalerLocation);
             obj.signalerLocation = [(obj.signalerLocation[0]-1), obj.signalerLocation[1]];
             RECORD_SIGNALER_PATH(obj);
             NEW_SIGNALER_POSITION(obj.signalerLocation);
-        }
+       // }
     }
 }
 
@@ -326,13 +333,13 @@ function MOVE_RIGHT(obj) {
 
 function MOVE_DOWN(obj) {
     if((obj.signalerLocation[0]+1) < GRID_NROW){
-        if(!MEET_DOWN_BARRIER(obj)){
+       // if(!MEET_DOWN_BARRIER(obj)){
             FIRST_MOVE(obj);
             REMOVE_PREVIOUS(obj.signalerLocation);
             obj.signalerLocation = [(obj.signalerLocation[0]+1), obj.signalerLocation[1]];
             RECORD_SIGNALER_PATH(obj);
             NEW_SIGNALER_POSITION(obj.signalerLocation);
-        }
+        //}
     }
 }
 
@@ -452,19 +459,16 @@ function RESET_GAMEBOARD() {
 */
 function CREATE_EXPT_BUTTONS(obj) {
     if(obj.isTryMove && !obj.nextButCreated) {
-        console.log("1")
         $("#tryMoveMoveBut").click(function(){RECEIVER_AUTO_MOVE(obj)});
         //$("#tryMoveMoveBut").click(function(){RECEIVER_WALK_TO_CHOSEN_OBJECT(obj, 0)});
         $("#tryMoveResultBut").click(function(){NEXT_INSTR()});
         obj.nextButCreated = true;
     }
     else if (obj.isTrySay && !obj.nextButCreated) {
-        console.log("2")
         $("#trySayResultBut").click(function(){NEXT_INSTR()});
         obj.nextButCreated = true;
     }
     else if (obj.isSanityCheck) {
-        console.log("3")
         $("#sanityCheckMoveBut").click(function(){SIGNALER_AUTO_MOVE(obj)});
         $("#sanityCheckResultBut").click(function(){NEXT_TRIAL(obj)});
         $("#sanityCheckResultButDo").click(function(){NEXT_TRIAL(obj)});
@@ -474,7 +478,6 @@ function CREATE_EXPT_BUTTONS(obj) {
     //     $("#practiceResultBut").click(function(){NEXT_TRIAL(obj)});
     // }
     else if (obj.isExptTrial) {
-        console.log("4")
         $("#exptMoveBut").click(function(){SIGNALER_AUTO_MOVE(obj)});
         $("#resultBut").click(function(){NEXT_TRIAL(obj)});
         $("#resultButDo").click(function(){NEXT_TRIAL(obj)});
@@ -628,17 +631,17 @@ function CHANGE_IN_TRIAL_INSTR(decision) {
     SANITY_CHECK_INSTR_FADE();
     PRACTICE_EXPT_INSTR_FADE();
     EXPT_INSTR_FADE();
-    if(decision == "do"){
-        // $(".tryDecision").html("Please hit ENTER when you land on the item.");
-        // $("#sanityCheckDecision").html("Please hit ENTER when you land on the item.");
-        // $("#practiceDecision").html("Please hit ENTER when you land on the item.");
-        // $("#decision").html("Please hit ENTER when you land on the item.");
-    } else if(decision == "say") {
-        $(".tryDecision").html("<img class='inlineShape' src='shape/receiver.png' />" + " is responding to your signal.");
-        $("#sanityCheckDecision").html("<img class='inlineShape' src='shape/receiver.png' />" + " is responding to your signal.");
-        $("#practiceDecision").html("<img class='inlineShape' src='shape/receiver.png' />" + " is responding to your signal.");
-        $("#decision").html("<img class='inlineShape' src='shape/receiver.png' />" + " is responding to your signal.");
-    }
+    // if(decision == "do"){
+    //     // $(".tryDecision").html("Please hit ENTER when you land on the item.");
+    //     // $("#sanityCheckDecision").html("Please hit ENTER when you land on the item.");
+    //     // $("#practiceDecision").html("Please hit ENTER when you land on the item.");
+    //     // $("#decision").html("Please hit ENTER when you land on the item.");
+    // } else if(decision == "say") {
+    //     $(".tryDecision").html("<img class='inlineShape' src='shape/receiver.png' />" + " is responding to your signal.");
+    //     $("#sanityCheckDecision").html("<img class='inlineShape' src='shape/receiver.png' />" + " is responding to your signal.");
+    //     $("#practiceDecision").html("<img class='inlineShape' src='shape/receiver.png' />" + " is responding to your signal.");
+    //     $("#decision").html("<img class='inlineShape' src='shape/receiver.png' />" + " is responding to your signal.");
+    // }
 }
 
 /*
@@ -660,7 +663,7 @@ function SETUP_SCOREBOARD(obj) {
         $("#trySayGoal").attr("src", obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]);
         $("#trySayCost").html(obj.step.toFixed(0));
     } else if (obj.isSanityCheck){
-        $("#sanityCheckGoalShape").attr("src", PIC_DICT[obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]]);
+        $("#sanityCheckGoalShape").attr("src", SHAPE_DIR + "receiver.png");
         $("#sanityCheckTotalBonusBefore").html("$" + obj.totalScore.toFixed(2));
         $("#sanityCheckStep").html(obj.step.toFixed(0));
     }
@@ -670,7 +673,7 @@ function SETUP_SCOREBOARD(obj) {
     //     $(".practiceCost").html("-$" + obj.step.toFixed(2));
     // }
     else if (obj.isExptTrial){
-        $("#goalShape").attr("src", PIC_DICT[obj.gridArray[obj.goalCoord[0]][obj.goalCoord[1]]]);
+        $("#goalShape").attr("src", SHAPE_DIR + "receiver.png");
         $("#exptTotalBonusBefore").html("$" + obj.totalScore.toFixed(2));
         $("#exptStep").html(obj.step.toFixed(0));
     }
@@ -789,15 +792,15 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
         //$("#sanityCheckTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
 
         //$("#sanityCheckResult").show();
-        
+
         if(trialStrategy == "do"){
             $("#sanityCheckResultDo").show();
         }
         else{
         $("#sanityCheckResult").show();
         }
-        
-        
+
+
     }
     // else if (obj.isPracTrial){
     //     if(win){

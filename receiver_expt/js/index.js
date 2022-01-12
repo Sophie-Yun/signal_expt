@@ -11,6 +11,7 @@ const CONSECUTIVE_QUIT_MAX = 3;
 const CONSECUTIVE_FAST_DECISION_MAX = 3;
 const FAST_DECISION_TIME = 1; //in seconds
 const EXPONENTIAL_PARAMETER = 2; //mean of a exponential distribution; i.e., 1/lambda
+const SIMULATED_SIGNALER_DECISION_TIME = 5.2655 / 5  * 3;
 
 // object variables
 var instr, subj, tryMove, trySay, expt; //practice
@@ -44,15 +45,24 @@ function preload() {
     }
 }
 preload(
-    "shape/greenCircle.png",
-    "shape/greenSquare.png",
-    "shape/greenTriangle.png",
-    "shape/purpleCircle.png",
-    "shape/purpleSquare.png",
-    "shape/purpleTriangle.png",
-    "shape/redCircle.png",
-    "shape/redSquare.png",
-    "shape/redTriangle.png",
+    // "shape/greenCircle.png",
+    // "shape/greenSquare.png",
+    // "shape/greenTriangle.png",
+    // "shape/purpleCircle.png",
+    // "shape/purpleSquare.png",
+    // "shape/purpleTriangle.png",
+    // "shape/redCircle.png",
+    // "shape/redSquare.png",
+    // "shape/redTriangle.png",
+    "shape/gCircle.png",
+    "shape/gSquare.png",
+    "shape/gTriangle.png",
+    "shape/pCircle.png",
+    "shape/pSquare.png",
+    "shape/pTriangle.png",
+    "shape/oCircle.png",
+    "shape/oSquare.png",
+    "shape/oTriangle.png",
     "shape/receiver.png",
     "shape/signaler.png",
     "exampleGrid.png",
@@ -61,15 +71,15 @@ preload(
 )
 
 const PIC_DICT = {
-    "green circle": SHAPE_DIR + "greenCircle.png",
-    "green square": SHAPE_DIR + "greenSquare.png",
-    "green triangle": SHAPE_DIR + "greenTriangle.png",
-    "purple circle": SHAPE_DIR + "purpleCircle.png",
-    "purple square": SHAPE_DIR + "purpleSquare.png",
-    "purple triangle": SHAPE_DIR + "purpleTriangle.png",
-    "red circle": SHAPE_DIR + "redCircle.png",
-    "red square": SHAPE_DIR + "redSquare.png",
-    "red triangle": SHAPE_DIR + "redTriangle.png",
+    "green circle": SHAPE_DIR + "gCircle.png",
+    "green square": SHAPE_DIR + "gSquare.png",
+    "green triangle": SHAPE_DIR + "gTriangle.png",
+    "purple circle": SHAPE_DIR + "pCircle.png",
+    "purple square": SHAPE_DIR + "pSquare.png",
+    "purple triangle": SHAPE_DIR + "pTriangle.png",
+    "orange circle": SHAPE_DIR + "oCircle.png",
+    "orange square": SHAPE_DIR + "oSquare.png",
+    "orange triangle": SHAPE_DIR + "oTriangle.png",
 }
 
 // Import data
@@ -86,17 +96,13 @@ function PARSE_CSV(csvString) {
     predSignalIndex = headerArray.indexOf(",predSignalNoActionUtility")+1;
 
 
-
     for (i = 1; i < lines.length - 1; i++) {
         linesArray[i - 1] = {};
         currLineArray = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
         linesArray[i-1]["predSignalNoActionUtility"]=currLineArray[predSignalIndex];
-        //console.log(testarray);
-        //console.log(testarray[predSignalIndex+1]);
 
         tmp = lines[i].match(/\(\d, \d\)/g)[0];
         linesArray[i - 1]["signalerLocation"] = [parseInt(tmp.substring(1, 2)), parseInt(tmp.substring(4, 5))];
-        //console.log(linesArray);
 
         tmp = lines[i].match(/\(\d, \d\)/g)[1];
         linesArray[i - 1]["receiverLocation"] = [parseInt(tmp.substring(1)), parseInt(tmp.substring(4))];
@@ -256,7 +262,7 @@ $(document).ready(function() {
         BLOCK_MOBILE();                                             //xxx: comment to run on local
     } else if (subj.id !== null){                                   //xxx: comment to run on local
         //fetches CSV from file into a string
-        fetch("inputCSV/practiceTrials_pairedBarrier_20211229.csv")
+        fetch("inputCSV/practiceTrials_pairedBarrier_20220112.csv")
             .then(response => response.text())
             .then(textString => {
                 SANITY_CHECK_INPUT_DATA = PARSE_CSV(textString)
@@ -266,7 +272,7 @@ $(document).ready(function() {
             //     .then(textString => {
             //         PRACTICE_INPUT_DATA = PARSE_CSV(textString)
             //     })
-                .then( () => {fetch("inputCSV/experimentTrials_pairedBarrier_20211229.csv")
+                .then( () => {fetch("inputCSV/experimentTrials_pairedBarrier_20220112.csv")
                     .then(response => response.text())
                     .then(textString => {
                         EXPT_INPUT_DATA = PARSE_CSV(textString)
@@ -325,17 +331,14 @@ const TRIAL_TITLES = [
     "signalerAchievedGoal",
     "receiverAchievedGoal",
     "totalUtility",
-    "decisionTime",
+    "simSigDecisionTime",
+    "partiRecDecisionTime",
     "actionTime",
     "feedbackTime",
     "responseWarningPopup",
-    "sanityLikertSet",
-    "this.exptLikertSet",
-    "this.sanity",
-    "this.sanityChosenItemDict", 
-    "this.exptChosenItemDict",
-    "this.sanityHoverItems",
-    "this.exptHoverItems"
+    "chosenItem",
+    "confidence",
+    "hoverItems"
     // "quitWarningPopup"
 ];
 

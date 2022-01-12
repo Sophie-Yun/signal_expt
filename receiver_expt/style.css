@@ -367,6 +367,7 @@ body {
 #tryMoveResultBut, #trySayResultBut, #sanityCheckResultBut, #practiceResultBut, #resultBut, #resultButDo, #sanityCheckResultButDo {
     margin-left: 50%;
     transform: translate(-50%, 0px);
+    margin-top: 40px;
 }
 
 #instrNextBut {

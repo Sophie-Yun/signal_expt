@@ -1,4 +1,4 @@
-const FORMAL = true;
+const FORMAL = false;
 const EXPERIMENT_NAME = "recPRorJU";
 const SUBJ_NUM_FILE = "subjNum_" + EXPERIMENT_NAME + ".txt";
 const VISIT_FILE = "visit_" + EXPERIMENT_NAME + ".txt";
@@ -74,138 +74,110 @@ function LIST_FROM_ATTRIBUTE_NAMES(obj, string_list) {
 */
 
 function RECORD_LIKERT_ANSWER(obj, value){
-    //console.log("record called");
-    if(obj.isSanityCheck){
-        if(!obj.sanityLikertSet){
-            const scaleSet = {};
-            scaleSet[obj.trialIndex] = value;
-            //scaleSet.push(value);
-            obj.sanityLikertSet = scaleSet;
-            console.log(obj.sanityLikertSet);
-        }
-        else{
-            (obj.sanityLikertSet)[obj.trialIndex]=value;
-            console.log(obj.sanityLikertSet);
-        }
-    }
-    else if(obj.isExptTrial){
-        console.log(obj.randomizedTrialList[obj.trialIndex]);
-        //console.log("expt trial oo");
-        if(!obj.exptLikertSet){
-            const scaleSet = {};
-            scaleSet[obj.randomizedTrialList[obj.trialIndex]] = value;
-            //scaleSet.push(value);
-            obj.exptLikertSet = scaleSet;
-            console.log(obj.exptLikertSet);
-        }
-        else{
-            (obj.exptLikertSet)[obj.randomizedTrialList[obj.trialIndex]] = value;
-            console.log(obj.exptLikertSet);
-        }
-    }
+    obj.confidence = value;
 }
 
 function RECORD_CHOSEN_ITEM(obj, item, row, col){
-    var chosenItemLog = [item, row, col];
-    if(obj.isSanityCheck){
-        if(!obj.sanityChosenItemDict){
-            var itemDict = {};
-            itemDict[obj.trialIndex]=chosenItemLog;
-            obj.sanityChosenItemDict = itemDict;
-        }
-        else{
-            (obj.sanityChosenItemDict)[obj.trialIndex]=chosenItemLog; 
-        }
-        console.log(obj.sanityChosenItemDict);
-    }
-    else if(obj.isExptTrial){
-        if(!obj.exptChosenItemDict){
-            var itemDict ={};
-            itemDict[obj.randomizedTrialList[obj.trialIndex]] = chosenItemLog;
-            obj.exptChosenItemDict = itemDict;
-        }
-        else{
-            (obj.exptChosenItemDict)[obj.randomizedTrialList[obj.trialIndex]] = chosenItemLog;
-        }
-        console.log(obj.exptChosenItemDict);
-
-    }
-    //console.log(item);
+    var chosenItemLog = String(item) + String(GRID_NROW - row - 1);
+    obj.chosenItem = chosenItemLog;
 }
 
 function RECORD_HOVER_ITEMS(obj, name, coordinates){
-    var uniqueId = String(name) + ": " + String(coordinates[0]) + ", " + String(coordinates[1]);
-    if(obj.isSanityCheck){
-        if(!obj.sanityHoverItems){
-            var itemDict = {};
-            var innerDict = {};
-            innerDict[uniqueId] = 1;
-            itemDict[obj.trialIndex] = innerDict;
-            obj.sanityHoverItems = itemDict;
+    //var uniqueId = String(name) + ": " + String(coordinates[0]) + ", " + String(coordinates[1]);
+    var uniqueId = String(name) + String(GRID_NROW - coordinates[1] - 1);
+    console.log("record hover items");
+    if(obj.hoverItems === "N/A"){
+        var innerDict = {};
+        innerDict[uniqueId] = 1;
+        obj.hoverItems = innerDict;
+        console.log("first");
+    } else{
+        innerDict = obj.hoverItems;
+        var newVal = 0;
+        if(!(uniqueId in innerDict)){
+            newVal = 1;
         }
         else{
-            if(!obj.sanityHoverItems[obj.trialIndex]){
-                obj.sanityHoverItems[obj.trialIndex] = {};
-            }
-            innerDict = obj.sanityHoverItems[obj.trialIndex];
-            var newVal = 0;
-            if(!(uniqueId in innerDict)){
-                newVal = 1;
-            }
-            else{
-                newVal = innerDict[uniqueId] + 1;
-            }
-            obj.sanityHoverItems[obj.trialIndex][uniqueId] = newVal;
+            newVal = innerDict[uniqueId] + 1;
         }
-        console.log(obj.sanityHoverItems);
-        
+        obj.hoverItems[uniqueId] = newVal;
+        console.log("later");
     }
-    else if(obj.isExptTrial){
-        if(!obj.exptHoverItems){
-            console.log("First Hover");
-            var itemDict = {};
-            var innerDict = {};
-            innerDict[uniqueId] = 1;
-            itemDict[obj.randomizedTrialList[obj.trialIndex]] = innerDict;
-            obj.exptHoverItems = itemDict;
-        }
-        else{
-            if(!obj.exptHoverItems[obj.randomizedTrialList[obj.trialIndex]]){
-                obj.exptHoverItems[obj.randomizedTrialList[obj.trialIndex]] = {};
-            }
-            innerDict = obj.exptHoverItems[obj.randomizedTrialList[obj.trialIndex]];
-            var newVal = 0;
-            if(!(uniqueId in innerDict)){
-                console.log("First Hover of this item");
-                newVal = 1;
-            }
-            else{
-                newVal = innerDict[uniqueId] + 1;
-            }
-            obj.exptHoverItems[obj.randomizedTrialList[obj.trialIndex]][uniqueId] = newVal;
-        }
-        console.log(obj.exptHoverItems);
-    }
+    console.log(obj.hoverItems);
+    // if(obj.isSanityCheck){
+    //     if(obj.hoverItems == "N/A"){
+    //         // var itemDict = {};
+    //         var innerDict = {};
+    //         innerDict[uniqueId] = 1;
+    //         // itemDict[obj.trialIndex] = innerDict;
+    //         // obj.hoverItems = itemDict;
+    //         obj.hoverItems = innerDict;
+    //     }
+    //     else{
+    //         // if(obj.hoverItems[obj.trialIndex] == "N/A"){
+    //         //     obj.hoverItems[obj.trialIndex] = {};
+    //         // }
+    //         //innerDict = obj.hoverItems[obj.trialIndex];
+    //         innerDict = obj.hoverItems;
+    //         var newVal = 0;
+    //         if(!(uniqueId in innerDict)){
+    //             newVal = 1;
+    //         }
+    //         else{
+    //             newVal = innerDict[uniqueId] + 1;
+    //         }
+    //         //obj.hoverItems[obj.trialIndex][uniqueId] = newVal;
+    //         obj.hoverItems[uniqueId] = newVal;
+    //     }
 
-
+    // }
+    // else if(obj.isExptTrial){
+    //     if(obj.hoverItems == "N/A"){
+    //         console.log("First Hover");
+    //         var itemDict = {};
+    //         var innerDict = {};
+    //         innerDict[uniqueId] = 1;
+    //         itemDict[obj.randomizedTrialList[obj.trialIndex]] = innerDict;
+    //         obj.hoverItems = itemDict;
+    //     }
+    //     else{
+    //         if(obj.hoverItems[obj.randomizedTrialList[obj.trialIndex]] == "N/A"){
+    //             obj.hoverItems[obj.randomizedTrialList[obj.trialIndex]] = {};
+    //         }
+    //         innerDict = obj.hoverItems[obj.randomizedTrialList[obj.trialIndex]];
+    //         var newVal = 0;
+    //         if(!(uniqueId in innerDict)){
+    //             console.log("First Hover of this item");
+    //             newVal = 1;
+    //         }
+    //         else{
+    //             newVal = innerDict[uniqueId] + 1;
+    //         }
+    //         obj.hoverItems[obj.randomizedTrialList[obj.trialIndex]][uniqueId] = newVal;
+    //     }
+    //     console.log(obj.hoverItems);
+    // }
 }
 
-function RECORD_DECISION_DATA(obj, decision) {
+function RECORD_SIMULATED_SIG_DECISION_TIME(obj, waitoutTime) {
+    obj.simSigDecisionTime = waitoutTime;
+}
+
+function RECORD_PARTI_DECISION_DATA(obj, decision) {
     if(!obj.decisionRecorded){
         obj.decision = decision;
         var currentTime = Date.now();
-        obj.decisionTime = (currentTime - obj.startTime)/1000;
+        obj.partiRecDecisionTime = (currentTime - obj.startTime)/1000 - obj.simSigDecisionTime;
         CHECK_CONSECUTIVE_QUICK_DECISION(obj);
         obj.decisionRecorded = true;
     }
 }
 
 function CHECK_CONSECUTIVE_QUICK_DECISION(obj) {
-    if (obj.decisionTime < FAST_DECISION_TIME)
+    if (obj.partiRecDecisionTime < FAST_DECISION_TIME)
         obj.consecutiveQuickDecisionNum += 1;
     else
         obj.consecutiveQuickDecisionNum = 0;
-
     if (obj.consecutiveQuickDecisionNum >= CONSECUTIVE_FAST_DECISION_MAX) {
         alert("You have been making decisions too fast! Please do the future rounds more carefully.")
         obj.responseWarningPopup = true;
@@ -216,12 +188,16 @@ function CHECK_CONSECUTIVE_QUICK_DECISION(obj) {
 
 function RECORD_ACTION_TIME(obj) {
     var currentTime = Date.now();
-    obj.actionTime = (currentTime - obj.startTime)/1000 - obj.decisionTime;
+    obj.actionTime = (currentTime - obj.startTime)/1000 - obj.simSigDecisionTime - obj.partiRecDecisionTime;
 }
 
-function RECORD_SIGNAL_DATA(obj, signal) {
-    if(obj.isExptTrial || obj.isSanityCheck)
-        obj.signal = (signal == undefined) ? "N/A" : signal;
+function RECORD_SIGNAL_DATA(obj, decision) {
+    if (obj.isSanityCheck)
+        obj.signal = (decision == "say")? obj.inputData[obj.trialIndex]["predSignalNoActionUtility"]: "N/A";
+    else if (obj.isExptTrial)
+        obj.signal = (decision == "say")? obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["predSignalNoActionUtility"]: "N/A";
+    // if(obj.isExptTrial || obj.isSanityCheck)
+    //     obj.signal = (signal == undefined) ? "N/A" : signal;
 }
 
 function RECORD_SIGNALER_PATH(obj) {
