@@ -128,31 +128,31 @@ function PARSE_CSV(csvString) {
 
         linesArray[i - 1]["nTargets"] = parseInt(lines[i].match(/,\d,/)[0].substring(1, 2));
 
-        linesArray[i - 1]["receiverIntentionDict"] = {};
+        // linesArray[i - 1]["receiverIntentionDict"] = {};
 
-        tmp = lines[i].match(/'\w+': '\w+ \w+'/g);
-        for (j = 0; j < tmp.length; j++) {
-            signal = tmp[j].match(/'\w+'/)[0];
-            intention = tmp[j].match(/'\w+ \w+'/)[0];
-            linesArray[i - 1]["receiverIntentionDict"][signal.substring(1, signal.length - 1)] = intention.substring(1, intention.length - 1);
-        }
+        // tmp = lines[i].match(/'\w+': '\w+ \w+'/g);
+        // for (j = 0; j < tmp.length; j++) {
+        //     signal = tmp[j].match(/'\w+'/)[0];
+        //     intention = tmp[j].match(/'\w+ \w+'/)[0];
+        //     linesArray[i - 1]["receiverIntentionDict"][signal.substring(1, signal.length - 1)] = intention.substring(1, intention.length - 1);
+        // }
 
-        tmp = null;
-        var comma = lines[i].lastIndexOf(",");
-        tmp = lines[i].substring(comma + 1);
-        linesArray[i - 1]["trialStrategy"] = tmp;
+        // tmp = null;
+        // var comma = lines[i].lastIndexOf(",");
+        // tmp = lines[i].substring(comma + 1);
+        // linesArray[i - 1]["trialStrategy"] = tmp;
 
-        tmp = lines[i].match(/{'up'.*?}/g);
-        if (tmp != null){
-            linesArray[i - 1]["barrierDict"] = {
-                "up": tmp[0].match(/'([^']*)'/g)[1].substring(1, tmp[0].match(/'([^']*)'/g)[1].length - 1),
-                "down":  tmp[0].match(/'([^']*)'/g)[3].substring(1, tmp[0].match(/'([^']*)'/g)[3].length - 1),
-                "left":  tmp[0].match(/'([^']*)'/g)[5].substring(1, tmp[0].match(/'([^']*)'/g)[5].length - 1),
-                "right": tmp[0].match(/'([^']*)'/g)[7].substring(1, tmp[0].match(/'([^']*)'/g)[7].length - 1)
-            };
-        } else {
-            linesArray[i - 1]["barrierDict"] = tmp;
-        }
+        // tmp = lines[i].match(/{'up'.*?}/g);
+        // if (tmp != null){
+        //     linesArray[i - 1]["barrierDict"] = {
+        //         "up": tmp[0].match(/'([^']*)'/g)[1].substring(1, tmp[0].match(/'([^']*)'/g)[1].length - 1),
+        //         "down":  tmp[0].match(/'([^']*)'/g)[3].substring(1, tmp[0].match(/'([^']*)'/g)[3].length - 1),
+        //         "left":  tmp[0].match(/'([^']*)'/g)[5].substring(1, tmp[0].match(/'([^']*)'/g)[5].length - 1),
+        //         "right": tmp[0].match(/'([^']*)'/g)[7].substring(1, tmp[0].match(/'([^']*)'/g)[7].length - 1)
+        //     };
+        // } else {
+        //     linesArray[i - 1]["barrierDict"] = tmp;
+        // }
 
         tmp = lines[i].match(/{'\w+ \w+': \['.*?}/g);
         if (tmp != null){
@@ -262,7 +262,7 @@ $(document).ready(function() {
         BLOCK_MOBILE();                                             //xxx: comment to run on local
     } else if (subj.id !== null){                                   //xxx: comment to run on local
         //fetches CSV from file into a string
-        fetch("inputCSV/practiceTrials_pairedBarrier_20220112.csv")
+        fetch("inputCSV/practiceTrials_receiver_20220112.csv")
             .then(response => response.text())
             .then(textString => {
                 SANITY_CHECK_INPUT_DATA = PARSE_CSV(textString)
@@ -272,7 +272,7 @@ $(document).ready(function() {
             //     .then(textString => {
             //         PRACTICE_INPUT_DATA = PARSE_CSV(textString)
             //     })
-                .then( () => {fetch("inputCSV/experimentTrials_pairedBarrier_20220112.csv")
+                .then( () => {fetch("inputCSV/exptTrials_receiver_20220112.csv")
                     .then(response => response.text())
                     .then(textString => {
                         EXPT_INPUT_DATA = PARSE_CSV(textString)

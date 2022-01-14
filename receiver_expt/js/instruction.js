@@ -42,7 +42,7 @@ function ALLOW_SHORTCUTS_FOR_TESTING() {
 
 const REWARD = 0.4;
 const STEP_COST = 0.05;
-const COMPLETION_URL = "https://uclacomm.sona-systems.com/webstudy_credit.aspx?experiment_id=90&credit_token=a57df4dd48434b9084dd24f5336064f4&survey_code=";
+const COMPLETION_URL = "https://uclacomm.sona-systems.com/webstudy_credit.aspx?experiment_id=99&credit_token=8cef5b4d2aed4ba3a73fb8f5920af468&survey_code=XXXX";
 
 class instrObject {
     constructor(options = {}) {
@@ -133,7 +133,7 @@ instr_text[2] = "In this experiment, you are the player in white " + "<img class
 instr_text[3] = "At the beginning of each round, you and your partner will stand at different positions in a game board. <br><br>You will also see items scattered in the grids.";
 instr_text[4] = "The goal of each round is for you or your partner to reach an item which has been designated as the target. However, <strong>your partner " + "<img class='inlineShape' src='shape/signaler.png' />" + " is the only person who knows which item is the target.</strong> You do not know which item is the target.<br><br><img style='width: 130%; margin: 0px -15%' src='sigRecPOV.png' />";
 instr_text[5] = "Your partner will either send you a signal, or decide to move themselves.<br><br>If your partner sends a signal, you can move to an item by clicking on it in the grid. You will then automatically walk to the target, taking the shortest path possible.";
-instr_text[6] = "The signal your partner sends will contain <strong> only one feature (shape or color) </strong> of the target. <br><br>It can sometimes be ambiguous, but your partner is intelligent and cooperative to send you the most informative signal. Please do your best to figure out which item it refers to using the given information.";
+instr_text[6] = "Your partner can send a signal describing <strong>any single feature (shape or color)</strong> of the target.<br><br>It can sometimes be ambiguous, but your partner is intelligent and cooperative to send you the most informative signal. Please do your best to figure out which item it refers to using the given information.";
 instr_text[7] = "To help you figure out which item the signal refers to, you can look at how far each of you is from any given item. <br><br>If you move your mouse over an item, you will see the minimum number of steps it takes you or your partner to get there.<br><br><img style='width: 80%; margin-left: 50%; transform: translate(-40%, 0px);' src='utilityHoverEffect.png' />";
 instr_text[8] = "At the start of each round, your partner may take some time to decide.<br><br><strong>Please do NOT refresh your browser while waiting.</strong>";
 instr_text[9] = "";

@@ -49,7 +49,7 @@ class subjObject {
     }
 
     saveVisit() {
-        var data = "subjNum\tstartDate\tstartTime\tid\tuserAgent\tinView\tviewportW\tviewportH\n";
+        var data = "subjNum;startDate;startTime;id;userAgent;inView;viewportW;viewportH\n";
         this.viewport = this.viewportSize;
         this.inView = this.viewport["inView"];
         this.viewportW = this.viewport["w"];
@@ -111,7 +111,7 @@ class subjObject {
     }
 
     saveAttrition() {
-        var data = 'subjNum\tstartDate\tstartTime\tid\tuserAgent\tinView\tviewportW\tviewportH\n';
+        var data = 'subjNum;startDate;startTime;id;userAgent;inView;viewportW;viewportH\n';
         this.viewport = this.viewportSize;
         this.inView = this.viewport['inView'];
         this.viewportW = this.viewport['w'];

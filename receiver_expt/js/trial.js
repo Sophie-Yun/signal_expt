@@ -87,7 +87,8 @@ class trialObject {
             var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
             //var signal = "red";
             //var signal = "do";
-            var signal = this.inputData[this.trialIndex]["predSignalNoActionUtility"];
+            //var signal = this.inputData[this.trialIndex]["predSignalNoActionUtility"];
+            var signal = this.inputData[this.randomizedTrialList[this.trialIndex]]["predSignalNoActionUtility"];
             var waitoutTime = SIMULATED_SIGNALER_DECISION_TIME*1000;
             setTimeout(CHANGE_INSTRUCTION, waitoutTime + randExpo * 300, signal);
             if(signal == "do"){
@@ -197,10 +198,11 @@ class trialObject {
         this.feedbackTime = (currentTime - this.startTime) / 1000 - this.simSigDecisionTime - this.partiRecDecisionTime - this.actionTime; // in seconds
         if (this.isSanityCheck){
             this.trialType = "sanity";
-            this.exptId = this.trialIndex;
+            //this.exptId = this.trialIndex;
+            this.exptId = this.randomizedTrialList[this.trialIndex];
         } else if (this.isExptTrial) {
             this.trialType = "expt";
-            this.randomizedTrialList[this.trialIndex];
+            this.exptId = this.randomizedTrialList[this.trialIndex];
         }
         this.totalUtility = this.totalScore.toFixed(2);
         this.hoverItems = JSON.stringify(this.hoverItems);
@@ -331,8 +333,10 @@ function CREATE_RECEIVER_PATH_DICT(obj) {
 //         obj.receiverPath = obj.inputData[obj.trialIndex]["recActSeq"];
 //     } else
     if (obj.isSanityCheck){
-        obj.receiverPath = obj.inputData[obj.trialIndex]["recActSeq"]
-        obj.signalerPath = obj.inputData[obj.trialIndex]["sigActSeq"]
+        // obj.receiverPath = obj.inputData[obj.trialIndex]["recActSeq"]
+        // obj.signalerPath = obj.inputData[obj.trialIndex]["sigActSeq"]
+        obj.receiverPath = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["recActSeq"]
+        obj.signalerPath = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["sigActSeq"]
     } else if (obj.isExptTrial) {
         obj.receiverPath = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["recActSeq"]
         obj.signalerPath = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["sigActSeq"]
@@ -342,40 +346,43 @@ function CREATE_RECEIVER_PATH_DICT(obj) {
 
 function SET_RECEIVER_SIGNALER_LOCATION(obj) {
     if (obj.isSanityCheck)  { //obj.isPracTrial
-        obj.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.trialIndex]["receiverLocation"][0], obj.inputData[obj.trialIndex]["receiverLocation"][1]);
-        obj.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.trialIndex]["signalerLocation"][0], obj.inputData[obj.trialIndex]["signalerLocation"][1]);
+        // obj.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.trialIndex]["receiverLocation"][0], obj.inputData[obj.trialIndex]["receiverLocation"][1]);
+        // obj.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.trialIndex]["signalerLocation"][0], obj.inputData[obj.trialIndex]["signalerLocation"][1]);
+        obj.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"][0], obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"][1]);
+        obj.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalerLocation"][0], obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalerLocation"][1]);
+
     } else if (obj.isExptTrial) {
         obj.receiverLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"][0], obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"][1]);
         obj.signalerLocation = CONVERT_CSV_COORD_TO_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalerLocation"][0], obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalerLocation"][1]);
     }
 }
 
-function SET_BARRIER(obj) {
-    if (obj.isTryMove || obj.isTrySay) {
-        obj.barrier = {
-            "up": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.barrierInput.up),
-            "down": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.barrierInput.down),
-            "left": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.barrierInput.left),
-            "right": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.barrierInput.right)
-        }
-    }
-    else if (obj.isSanityCheck) { //obj.isPracTrial
-        obj.barrier = {
-            "up": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.trialIndex].barrierDict.up),
-            "down": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.trialIndex].barrierDict.down),
-            "left": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.trialIndex].barrierDict.left),
-            "right": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.trialIndex].barrierDict.right)
-        }
-    }
-    else if (obj.isExptTrial) {
-        obj.barrier = {
-            "up": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]].barrierDict.up),
-            "down": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]].barrierDict.down),
-            "left": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]].barrierDict.left),
-            "right": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]].barrierDict.right)
-        }
-    }
-}
+// function SET_BARRIER(obj) {
+//     if (obj.isTryMove || obj.isTrySay) {
+//         obj.barrier = {
+//             "up": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.barrierInput.up),
+//             "down": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.barrierInput.down),
+//             "left": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.barrierInput.left),
+//             "right": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.barrierInput.right)
+//         }
+//     }
+//     else if (obj.isSanityCheck) { //obj.isPracTrial
+//         obj.barrier = {
+//             "up": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.trialIndex].barrierDict.up),
+//             "down": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.trialIndex].barrierDict.down),
+//             "left": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.trialIndex].barrierDict.left),
+//             "right": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.trialIndex].barrierDict.right)
+//         }
+//     }
+//     else if (obj.isExptTrial) {
+//         obj.barrier = {
+//             "up": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]].barrierDict.up),
+//             "down": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]].barrierDict.down),
+//             "left": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]].barrierDict.left),
+//             "right": CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(obj.inputData[obj.randomizedTrialList[obj.trialIndex]].barrierDict.right)
+//         }
+//     }
+// }
 
 function TRIAL_SET_UP (obj) {
     $(".gridItem").remove();
@@ -401,8 +408,10 @@ function TRIAL_SET_UP (obj) {
     obj.gridArray[obj.signalerLocation[0]][obj.signalerLocation[1]] = SHAPE_DIR + "signaler.png";
 
     if (obj.isSanityCheck) {
-        obj.signalSpace = obj.inputData[obj.trialIndex].signalSpace;
-        obj.gridString= obj.inputData[obj.trialIndex].targetDictionary;
+        // obj.signalSpace = obj.inputData[obj.trialIndex].signalSpace;
+        // obj.gridString= obj.inputData[obj.trialIndex].targetDictionary;
+        obj.signalSpace = obj.inputData[obj.randomizedTrialList[obj.trialIndex]].signalSpace;
+        obj.gridString= obj.inputData[obj.randomizedTrialList[obj.trialIndex]].targetDictionary;
         $("#sanityCheckRound").html(obj.trialIndexOnInterface + 1);
     }
     // else if (obj.isPracTrial) {
@@ -468,8 +477,10 @@ function SIGNALER_AUTO_MOVE(obj) {
 
     if(obj.isTryMove)
         var path = ["up", "up", "left", "left", "up", "up", "up", "up", "right", "right", "right", "right", "right"];
-    else if (obj.isSanityCheck)
-        var path = obj.signalerPath[obj.inputData[obj.trialIndex].intention];
+    else if (obj.isSanityCheck){
+        var path = obj.signalerPath[obj.inputData[obj.randomizedTrialList[obj.trialIndex]].intention];
+        //var path = obj.signalerPath[obj.inputData[obj.trialIndex].intention];
+    }
     else if (obj.isExptTrial)
         var path = obj.signalerPath[obj.inputData[obj.randomizedTrialList[obj.trialIndex]].intention];
 
@@ -484,7 +495,7 @@ function SIGNALER_AUTO_MOVE(obj) {
 
     } else {
         obj.pathIndex++;
-        setTimeout(SIGNALER_AUTO_MOVE, RECEIVER_MOVE_SPEED * 1000, obj, signal);
+        setTimeout(SIGNALER_AUTO_MOVE, RECEIVER_MOVE_SPEED * 1000, obj);
     }
 }
 
@@ -656,7 +667,8 @@ function RECEIVER_WALK_AFTER_WAIT(obj, signal) {
     if (obj.isTrySay) {
         var path = obj.receiverPath[signal];
     } else if (obj.isSanityCheck){
-        var intendedItem = obj.inputData[obj.trialIndex].receiverIntentionDict[signal];
+        //var intendedItem = obj.inputData[obj.trialIndex].receiverIntentionDict[signal];
+        var intendedItem = obj.inputData[obj.randomizedTrialList[obj.trialIndex]].receiverIntentionDict[signal];
         var path = obj.receiverPath[intendedItem];
     } else if (obj.isExptTrial){
         var intendedItem = obj.inputData[obj.randomizedTrialList[obj.trialIndex]].receiverIntentionDict[signal];
@@ -712,17 +724,15 @@ function RECEIVER_WALK_TWO(obj, signal) {
     CHANGE_IN_TRIAL_INSTR("say");
     obj.allowMove = false;
 
-    var randUni = Math.random();
-    var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
     //RECORDING
     var row = signal.id[5];
     var col = signal.id[7];
     selectedItem = obj.gridArray[row][col];
-    RECORD_CHOSEN_ITEM(obj, selectedItem, row, col);
+    RECORD_CHOSEN_ITEM(obj, selectedItem);
 
 
     //
-    setTimeout(RECEIVER_WALK_TO_CHOSEN_OBJECT, randExpo * 400, obj, signal);
+    setTimeout(RECEIVER_WALK_TO_CHOSEN_OBJECT, 500, obj, signal);
 }
 
 
@@ -851,11 +861,11 @@ function NEXT_TRIAL(obj) {
         $("#instrText").show();
         $("#instrNextBut").show();
     } else if(obj.isSanityCheck){
-        var trialStrategy = obj.inputData[obj.trialIndex]["trialStrategy"];
+        //var trialStrategy = obj.inputData[obj.trialIndex]["predSignalNoActionUtility"];
+        var trialStrategy = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["predSignalNoActionUtility"];
         var selected = $("input[name='ConfidenceScale']:checked");
         var click = selected.val();
         $("input[name='ConfidenceScale']").prop('checked',false);
-
         if(click == undefined && trialStrategy != "do"){
             alert("Please select a response on the scale. Thank you!");
         }
@@ -874,7 +884,7 @@ function NEXT_TRIAL(obj) {
     //     obj.next()
     // }
     else if(obj.isExptTrial){
-        var trialStrategy = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["trialStrategy"];
+        var trialStrategy = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["predSignalNoActionUtility"];
         var selected = $("input[name='ConfidenceScale']:checked");
         var click = selected.val();
         $("input[name='ConfidenceScale']").prop('checked',false);
@@ -1075,6 +1085,12 @@ function START_SANITY_CHECK_TRIAL() {
     sanityCheck.isSanityCheck = true;
     sanityCheck.trialN = sanityCheck.inputData.length;
     sanityCheck.trialIndexOnInterface = sanityCheck.trialIndex;
+    sanityCheck.startTime = Date.now();
+    sanityCheck.exptSignalerPath = "N/A",
+    sanityCheck.exptReceiverPath = "N/A",
+    sanityCheck.chosenItem = "N/A";
+    sanityCheck.confidence = "N/A";
+    sanityCheck.hoverItems = "N/A";
 
     // random sampling for first trial; the following trials are handled in next()
     // idea: copy a random third trial of each type, remove that from object -- repeat for all three types
@@ -1091,18 +1107,12 @@ function START_SANITY_CHECK_TRIAL() {
     // conditionalDoTrial = JSON.parse(JSON.stringify(sanityCheck.inputData[randomIndexDo]));
     // sanityCheck.inputData.splice(randomIndexDo, 1);
 
-    //CREATE_RANDOM_LIST_FOR_EXPT(sanityCheck);
-
     // sanityCheck.inputData.push(conditionalCommunicateTrial, conditionalQuitTrial, conditionalDoTrial);
     // sanityCheck.randomizedTrialList.push("6", "7", "8");
 
-    sanityCheck.startTime = Date.now();
-    sanityCheck.exptSignalerPath = "N/A",
-    sanityCheck.exptReceiverPath = "N/A",
-    sanityCheck.chosenItem = "N/A";
-    sanityCheck.confidence = "N/A";
-    sanityCheck.hoverItems = "N/A";
 
+
+    CREATE_RANDOM_LIST_FOR_EXPT(sanityCheck);
     TRIAL_SET_UP(sanityCheck);
     buttonDict = CREATE_GRID(sanityCheck);
     //CREATE_SIGNAL_BUTTONS(sanityCheck, sanityCheck.signalSpace);
@@ -1116,13 +1126,14 @@ function START_SANITY_CHECK_TRIAL() {
     var randExpo = - (EXPONENTIAL_PARAMETER) * Math.log(randUni);
     //
     //console.log(sanityCheck.trialIndex);
-    var signal = sanityCheck.inputData[sanityCheck.trialIndex]["predSignalNoActionUtility"];
+    //var signal = sanityCheck.inputData[sanityCheck.trialIndex]["predSignalNoActionUtility"];
+    var signal = sanityCheck.inputData[sanityCheck.randomizedTrialList[sanityCheck.trialIndex]]["predSignalNoActionUtility"];
     //console.log(newsignal);
     //
 
     //var signal = "red";
     var waitoutTime = SIMULATED_SIGNALER_DECISION_TIME*1000;
-    setTimeout(CHANGE_INSTRUCTION_EXPT, waitoutTime + randExpo * 300, signal);
+    setTimeout(CHANGE_INSTRUCTION, waitoutTime + randExpo * 300, signal);
     if(signal == "do"){
         setTimeout(SIGNALER_AUTO_MOVE,waitoutTime + randExpo*300,sanityCheck);
         RECORD_SIMULATED_SIG_DECISION_TIME(sanityCheck, (waitoutTime + randExpo*300)/1000);
@@ -1159,7 +1170,6 @@ function RESET_INSTRUCTION(){
 }
 
 function CHANGE_INSTRUCTION_EXPT(signal){
-    console.log("Changing instr");
     var signalString = signal.charAt(0).toUpperCase() + signal.slice(1);
     $("#exptInstruct1").hide();
     if(signal == "do"){

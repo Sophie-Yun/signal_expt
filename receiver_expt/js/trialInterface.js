@@ -59,7 +59,6 @@ function ADD_HOVER_INFO(elem, recDist, sigDist) {
 
 function CREATE_GRID(obj) {
     var gridArray = obj.gridArray;
-    console.log(gridArray);
     var nrow = GRID_NROW;
     var ncol = GRID_NCOL;
     var shapeId;
@@ -145,10 +144,8 @@ function CREATE_GRID(obj) {
                         var newItem = document.querySelector("#"+shapeId);
                         (function(){
                             var nameOfShape = String(item);
-                            var coordinates = [row,col];
                             newItem.addEventListener("mouseenter", function( event ) {
-                                console.log("Moused over " + String(nameOfShape));
-                                RECORD_HOVER_ITEMS(obj, nameOfShape, coordinates)
+                                RECORD_HOVER_ITEMS(obj, nameOfShape);
                         } )
                         })();
                     } else {
@@ -212,10 +209,9 @@ function CREATE_GRID(obj) {
                         var newItem = document.querySelector("#"+shapeId);
                         (function(){
                             var nameOfShape = String(item);
-                            var coordinates = [row,col];
                             newItem.addEventListener("mouseenter", function( event ) {
-                                console.log("Moused over " + String(nameOfShape));
-                                RECORD_HOVER_ITEMS(obj, nameOfShape, coordinates)
+                                //RECORD_HOVER_ITEMS(obj, nameOfShape, coordinates)
+                                RECORD_HOVER_ITEMS(obj, nameOfShape);
                         } )
                         })();
                     } else {
@@ -719,19 +715,19 @@ function GET_ROUND_BONUS_STRING(bonus){
         return "-$" + (-1 * bonus).toFixed(2)
 }
 
-function getSanityCheckFeedback(obj, trialStrategy) {
-    if (trialStrategy == "do") {
-        feedback = "Some feedback: the ideal way to reach the target would've been for you to go.";
-        // reversedReceiverIntentionDict = Object.entries(obj.inputData[obj.trialIndex]["receiverIntentionDict"]).reduce((tmpObj, item) => (tmpObj[item[1]] = item[0]) && tmpObj, {});
-        // intention = obj.inputData[obj.trialIndex]["intention"];
-        // feedback = "Some feedback: the ideal way to reach the target would've been to signal " + reversedReceiverIntentionDict[intention] + ".";
-    } else if (trialStrategy == "ambiguous") {
-        feedback = "Some feedback: this was a difficult trial. There wasn't one signal that was better than the other.";
-    } else {
-        feedback = "Some feedback: the ideal way to reach the target would've been to send the signal: " + trialStrategy + ".";
-    }
-    return feedback;
-}
+// function getSanityCheckFeedback(obj, trialStrategy) {
+//     if (trialStrategy == "do") {
+//         feedback = "Some feedback: the ideal way to reach the target would've been for you to go.";
+//         // reversedReceiverIntentionDict = Object.entries(obj.inputData[obj.trialIndex]["receiverIntentionDict"]).reduce((tmpObj, item) => (tmpObj[item[1]] = item[0]) && tmpObj, {});
+//         // intention = obj.inputData[obj.trialIndex]["intention"];
+//         // feedback = "Some feedback: the ideal way to reach the target would've been to signal " + reversedReceiverIntentionDict[intention] + ".";
+//     } else if (trialStrategy == "ambiguous") {
+//         feedback = "Some feedback: this was a difficult trial. There wasn't one signal that was better than the other.";
+//     } else {
+//         feedback = "Some feedback: the ideal way to reach the target would've been to send the signal: " + trialStrategy + ".";
+//     }
+//     return feedback;
+// }
 
 function DISABLE_HOVER_INFO() {
         $(".gridItem").css({
@@ -759,7 +755,8 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
         $(".tryResult").show();
     } else if (obj.isSanityCheck){
         $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
-        var trialStrategy = obj.inputData[obj.trialIndex]["trialStrategy"];
+        //var trialStrategy = obj.inputData[obj.trialIndex]["predSignalNoActionUtility"];
+        var trialStrategy = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["predSignalNoActionUtility"];
         // if (trialStrategy == "do") {
         //     if (!win) {
         //         obj.sanityMoveFails++;
@@ -816,7 +813,7 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
     //     $("#practiceResult").show();
     // }
     else if (obj.isExptTrial){
-        var trialStrategy = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["trialStrategy"];
+        var trialStrategy = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["predSignalNoActionUtility"];
         var landedItem = $('#shape'+ obj.signalerLocation[0] + 'v' + obj.signalerLocation[1] + ' .shape').attr('src');
         $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
         if(win){
@@ -849,7 +846,7 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         $(".tryResult").show();
     } else if(obj.isSanityCheck){
         $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
-        trialStrategy = obj.inputData[obj.trialIndex]["trialStrategy"];
+        // trialStrategy = obj.inputData[obj.trialIndex]["trialStrategy"];
         // if (trialStrategy == "do") {
         //     obj.sanityMoveFails++;
         //     obj.sanityMoveAttempts++;
@@ -865,12 +862,12 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         var reward;
         if(win){ //RECIEVER MOVES TO TARGET RESULT BOX
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            if (trialStrategy == "ambiguous" || trialStrategy == "do" || trialStrategy !== obj.signal){
+            // if (trialStrategy == "ambiguous" || trialStrategy == "do" || trialStrategy !== obj.signal){
                 //$("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations! It is the target! <br>" + getSanityCheckFeedback(obj, trialStrategy));
                 $("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
-            } else {
-                $("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
-            }
+            // } else {
+            //     $("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
+            // }
             reward = REWARD;
         } else {
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
@@ -881,7 +878,6 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         $("#sanityCheckReward").html("$" + reward.toFixed(2));
         $("#sanityCheckRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.cost));
         $("#sanityCheckTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
-        console.log("Reached");
         $("#sanityCheckResult").show();
     }
     // else if(obj.isPracTrial){
@@ -917,61 +913,61 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
     }
 }
 
-function SHOW_QUIT_RESULT(obj) {
-    obj.allowMove = false;
-    obj.totalScore = (obj.totalScore >= 0)? obj.totalScore : 0;
-    obj.totalScore = (obj.totalScore <= MAX_BONUS)? obj.totalScore : MAX_BONUS;
-    CHECK_CONSECUTIVE_QUIT(obj);
-    CHANGE_IN_TRIAL_INSTR();
-    DISABLE_DEFAULT_KEYS();
-    if(obj.isSanityCheck){
-        trialStrategy = obj.inputData[obj.trialIndex]["trialStrategy"];
-        if (trialStrategy == "do") {
-            obj.sanityMoveFails++;
-            obj.sanityMoveAttempts++;
-        } else if (trialStrategy == "quit") {
-            obj.sanityQuitAttempts++;
-        } else if (trialStrategy == "communicate") {
-            obj.sanitySayFails++;
-            obj.sanitySayAttempts++;
-        }
-        reward = 0;
-        // if (trialStrategy == "quit") {
-        //     $("#sanityCheckResultText").html("Don't worry!<br>Good luck on your next round!");
-        // } else {
-        //     $("#sanityCheckResultText").html("Don't worry! <br>" + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");
-        // }
+// function SHOW_QUIT_RESULT(obj) {
+//     obj.allowMove = false;
+//     obj.totalScore = (obj.totalScore >= 0)? obj.totalScore : 0;
+//     obj.totalScore = (obj.totalScore <= MAX_BONUS)? obj.totalScore : MAX_BONUS;
+//     CHECK_CONSECUTIVE_QUIT(obj);
+//     CHANGE_IN_TRIAL_INSTR();
+//     DISABLE_DEFAULT_KEYS();
+//     if(obj.isSanityCheck){
+//         trialStrategy = obj.inputData[obj.trialIndex]["trialStrategy"];
+//         if (trialStrategy == "do") {
+//             obj.sanityMoveFails++;
+//             obj.sanityMoveAttempts++;
+//         } else if (trialStrategy == "quit") {
+//             obj.sanityQuitAttempts++;
+//         } else if (trialStrategy == "communicate") {
+//             obj.sanitySayFails++;
+//             obj.sanitySayAttempts++;
+//         }
+//         reward = 0;
+//         // if (trialStrategy == "quit") {
+//         //     $("#sanityCheckResultText").html("Don't worry!<br>Good luck on your next round!");
+//         // } else {
+//         //     $("#sanityCheckResultText").html("Don't worry! <br>" + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");
+//         // }
 
-        $("#sanityCheckReward").html("$" + reward.toFixed(2));
-        $("#sanityCheckRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.step));
-        $("#sanityCheckTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
-        $("#sanityCheckResult").show();
-    }
-    // else if(obj.isPracTrial){
-    //     reward = 0;
-    //     $("#practiceResultText").html("Don't worry!<br>Good luck on your next round!");
-    //     $("#practiceReward").html("$" + reward.toFixed(2));
-    //     $("#practiceRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.step));
-    //     $("#practiceTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
-    //     $("#practiceResult").show();
-    // }
-    else if(obj.isExptTrial){
-        RECORD_DECISION_DATA(obj, "quit");
-        RECORD_ACTION_TIME(obj);
-        reward = 0;
-        $("#resultText").html("Don't worry!<br>Good luck on your next round!");
-        $("#reward").html("$" + reward.toFixed(2));
-        $("#exptRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.cost));
-        $("#exptTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
-        $("#result").show();
-        RECORD_SIGNAL_DATA(obj);
-        RECORD_SIGNALER_END_LOCATION(obj);
-        RECORD_SIGNALER_ACHIEVED(obj);
-        RECORD_RECEIVER_END_LOCATION(obj);
-        RECORD_RECEIVER_ACHIEVED(obj);
-    }
+//         $("#sanityCheckReward").html("$" + reward.toFixed(2));
+//         $("#sanityCheckRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.step));
+//         $("#sanityCheckTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
+//         $("#sanityCheckResult").show();
+//     }
+//     // else if(obj.isPracTrial){
+//     //     reward = 0;
+//     //     $("#practiceResultText").html("Don't worry!<br>Good luck on your next round!");
+//     //     $("#practiceReward").html("$" + reward.toFixed(2));
+//     //     $("#practiceRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.step));
+//     //     $("#practiceTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
+//     //     $("#practiceResult").show();
+//     // }
+//     else if(obj.isExptTrial){
+//         RECORD_DECISION_DATA(obj, "quit");
+//         RECORD_ACTION_TIME(obj);
+//         reward = 0;
+//         $("#resultText").html("Don't worry!<br>Good luck on your next round!");
+//         $("#reward").html("$" + reward.toFixed(2));
+//         $("#exptRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.cost));
+//         $("#exptTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
+//         $("#result").show();
+//         RECORD_SIGNAL_DATA(obj);
+//         RECORD_SIGNALER_END_LOCATION(obj);
+//         RECORD_SIGNALER_ACHIEVED(obj);
+//         RECORD_RECEIVER_END_LOCATION(obj);
+//         RECORD_RECEIVER_ACHIEVED(obj);
+//     }
 
-};
+// };
 
 function CHECK_CONSECUTIVE_QUIT(obj) {
     obj.consecutiveQuitNum += 1;

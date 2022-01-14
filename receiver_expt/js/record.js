@@ -77,20 +77,17 @@ function RECORD_LIKERT_ANSWER(obj, value){
     obj.confidence = value;
 }
 
-function RECORD_CHOSEN_ITEM(obj, item, row, col){
-    var chosenItemLog = String(item) + String(GRID_NROW - row - 1);
-    obj.chosenItem = chosenItemLog;
+function RECORD_CHOSEN_ITEM(obj, item){
+    //var chosenItemLog = String(item) + String(GRID_NROW - row - 1);
+    obj.chosenItem = String(item);
 }
 
-function RECORD_HOVER_ITEMS(obj, name, coordinates){
+function RECORD_HOVER_ITEMS(obj, uniqueId){
     //var uniqueId = String(name) + ": " + String(coordinates[0]) + ", " + String(coordinates[1]);
-    var uniqueId = String(name) + String(GRID_NROW - coordinates[1] - 1);
-    console.log("record hover items");
     if(obj.hoverItems === "N/A"){
         var innerDict = {};
         innerDict[uniqueId] = 1;
         obj.hoverItems = innerDict;
-        console.log("first");
     } else{
         innerDict = obj.hoverItems;
         var newVal = 0;
@@ -101,9 +98,7 @@ function RECORD_HOVER_ITEMS(obj, name, coordinates){
             newVal = innerDict[uniqueId] + 1;
         }
         obj.hoverItems[uniqueId] = newVal;
-        console.log("later");
     }
-    console.log(obj.hoverItems);
     // if(obj.isSanityCheck){
     //     if(obj.hoverItems == "N/A"){
     //         // var itemDict = {};
@@ -192,8 +187,10 @@ function RECORD_ACTION_TIME(obj) {
 }
 
 function RECORD_SIGNAL_DATA(obj, decision) {
-    if (obj.isSanityCheck)
-        obj.signal = (decision == "say")? obj.inputData[obj.trialIndex]["predSignalNoActionUtility"]: "N/A";
+    if (obj.isSanityCheck){
+        obj.signal = (decision == "say")? obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["predSignalNoActionUtility"]: "N/A";
+        //obj.signal = (decision == "say")? obj.inputData[obj.trialIndex]["predSignalNoActionUtility"]: "N/A";
+    }
     else if (obj.isExptTrial)
         obj.signal = (decision == "say")? obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["predSignalNoActionUtility"]: "N/A";
     // if(obj.isExptTrial || obj.isSanityCheck)
@@ -231,7 +228,8 @@ function CONVERT_COORD_ARRAY_TO_STR (array) {
 function RECORD_SIGNALER_END_LOCATION(obj, signalerLocation) {
     var startingCoord;
     if(obj.isSanityCheck) {
-        startingCoord = obj.inputData[obj.trialIndex]["signalerLocation"];
+        //startingCoord = obj.inputData[obj.trialIndex]["signalerLocation"];
+        startingCoord = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalerLocation"];
     } else if(obj.isExptTrial){
         startingCoord = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["signalerLocation"];
     } else {
@@ -245,7 +243,8 @@ function RECORD_SIGNALER_END_LOCATION(obj, signalerLocation) {
 function RECORD_RECEIVER_END_LOCATION(obj, receiverLocation) {
     var startingCoord;
     if (obj.isSanityCheck) {
-        startingCoord = obj.inputData[obj.trialIndex]["receiverLocation"];
+        //startingCoord = obj.inputData[obj.trialIndex]["receiverLocation"];
+        startingCoord = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"];
     } else if(obj.isExptTrial){
         startingCoord = obj.inputData[obj.randomizedTrialList[obj.trialIndex]]["receiverLocation"];
     } else {
