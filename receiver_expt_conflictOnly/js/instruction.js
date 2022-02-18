@@ -9,7 +9,7 @@ function ALLOW_SHORTCUTS_FOR_TESTING() {
     document.onkeydown = function(event) {
         if(event.key == "s" || event.which == 83 || event.keyCode == 83) {
             console.log("s");
-            instr.index = 10;
+            instr.index = 11;
             instr.next();
         }
         // else if (event.key == "p" || event.which == 80 || event.keyCode == 80) {
@@ -19,11 +19,11 @@ function ALLOW_SHORTCUTS_FOR_TESTING() {
         // }
         else if (event.keyCode == "e" || event.which == 69 || event.keyCode == 69) {
             console.log("e");
-            instr.index = 12;
+            instr.index = 13;
             instr.next();
         } else if (event.keyCode == "d" || event.which == 68 || event.keyCode == 68) {
             console.log("d");
-            instr.index = 14;
+            instr.index = 15;
             instr.next();
         }
     };
@@ -136,15 +136,16 @@ instr_text[5] = "Your partner will either send you a signal, or decide to move t
 instr_text[6] = "Your partner can send a signal describing <strong>any single feature (shape or color)</strong> of the target.<br><br>It can sometimes be ambiguous, but your partner is intelligent and cooperative to send you the most informative signal. Please do your best to figure out which item it refers to using the given information.";
 instr_text[7] = "To help you figure out which item the signal refers to, you can look at how far each of you is from any given item. <br><br>If you move your mouse over an item, you will see the minimum number of steps it takes you or your partner to get there.<br><br><img style='width: 60%; margin-left: 50%; transform: translate(-40%, 0px);' src='utilityHoverEffect.png' />";
 instr_text[8] = "At the start of each round, your partner may take some time to decide.<br><br><strong>Please do NOT refresh your browser while waiting.</strong>";
-instr_text[9] = "";
-instr_text[10] = "By clicking on the NEXT button, I am acknowledged and hereby accept the terms. I understand the task in this experiment.";
-instr_text[11] = "Please start the practice rounds on the next page.";
-instr_text[12] = "";
-instr_text[13] = "You have finished all the practice rounds. You are now ready for the experiment. <br><br>Good luck!";
-instr_text[14] = "";
-instr_text[15] = "You have finished all the rounds in the first part of the experiment. Please answer all the questions on the next page.";
-instr_text[16] = "";
+instr_text[9] = "After you or your partner have reached an item, a feedback screen will appear. <br><br> If you become tired or distracted during the experiment, feel free to pause on these feedback screens to take a break. <br><br><strong>Please do NOT take a break in the middle of a trial round</strong>.<br><br><img style='width: 45%; margin-left: 50%; transform: translate(-40%, 0px);' src='breakpng.png' />";
+instr_text[10] = "";
+instr_text[11] = "By clicking on the NEXT button, I am acknowledged and hereby accept the terms. I understand the task in this experiment.";
+instr_text[12] = "Please start the practice rounds on the next page.";
+instr_text[13] = "";
+instr_text[14] = "You have finished all the practice rounds. You are now ready for the experiment. <br><br>Good luck!";
+instr_text[15] = "";
+instr_text[16] = "You have finished all the rounds in the first part of the experiment. Please answer all the questions on the next page.";
 instr_text[17] = "";
+instr_text[18] = "";
 
 
 const INSTR_FUNC_DICT = {
@@ -157,15 +158,16 @@ const INSTR_FUNC_DICT = {
     6: SHOW_INSTR,
     7: SHOW_INSTR,
     8: SHOW_INSTR,
-    9: SHOW_INSTR_QUESTION,
-    10: SHOW_CONSENT,
-    11: SHOW_INSTR,
-    12: START_SANITY_CHECK_TRIAL,
-    13: SHOW_INSTR,
-    14: START_EXPT,
-    15: SHOW_INSTR,
-    16: SHOW_DEBRIEFING_PAGE,
-    17: HIDE_NEXT_BUTTON,
+    9: SHOW_INSTR,
+    10: SHOW_INSTR_QUESTION,
+    11: SHOW_CONSENT,
+    12: SHOW_INSTR,
+    13: START_SANITY_CHECK_TRIAL,
+    14: SHOW_INSTR,
+    15: START_EXPT,
+    16: SHOW_INSTR,
+    17: SHOW_DEBRIEFING_PAGE,
+    18: HIDE_NEXT_BUTTON,
 };
 
 function HIDE_BACK_BUTTON(){
