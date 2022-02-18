@@ -27,7 +27,7 @@
                 <div id="quizBox">
                 <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="checkDist"><div class="optionText">You can check the minimum steps for either you or your partner to reach an item by moving your mouse over it.</div></div></label>
                 <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="sigView"><div class="optionText">Your partner can see all the items in the grids and knows which one the target is.</div></div></label>
-                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="recView"><div class="optionText">You can see all the items in the grids, but do not know which one the target is.</div></div></label>
+                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="recView"><div class="optionText">You can see all the items in the grids, but does not know which one the target is.</div></div></label>
                 <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="several"><div class="optionText">In each round, your partner can send you two signals that tell you both features of the target.</div></div></label>
                 </div>
                 <div class='warning' id='instrQWarning'></div>
@@ -503,18 +503,18 @@
     </div>
     <!--======== DEBRIEFING QUESTION ========-->
     <div class='pageBox' id='questionsBox'>
-        <p>Did you complete this experiment seriously throughout (without randomly responding)?</p>
+        <!-- <p>Did you complete this experiment seriously throughout (without randomly responding)?</p>
         <div class='smallDimText'>(You will receive your compensation regardless what your answer is here. Please be honest for science! Thanks!)</div>
         <label><div class="option"><input class='optionRadio' type='radio' name='serious' value='F' /><div class='optionText'>No, I didn't.</div></div></label>
         <label><div class="option"><input class='optionRadio' type='radio' name='serious' value='T' /><div class='optionText'>Yes, I did.</div></div></label>
-        <br><br>
+        <br><br> -->
         <p>What was the your strategy for solving this task?</p>
         <textarea id='strategy' name="debQ" rows="3"></textarea>
         <br><br><br>
-        <p>Was any part of the procedure unclear? Did you have any technical difficulty completing any of the tasks?</p>
-        <textarea id='problems' name="debQ" rows="3"></textarea>
+        <p>Was the strategy any different from your strategy in part one of experiment? If so, how?</p>
+        <textarea id='difference' name="debQ" rows="3"></textarea>
         <br><br>
-        <p>Please rate your partner's performance.</p>
+        <!-- <p>Please rate your partner's performance.</p>
         <div id="rating">
             <label><div class="option"><input class='optionRadio' type='radio' name='rating' value='1' /><div class='optionText'>Very Poor</div></div></label>
             <label><div class="option"><input class='optionRadio' type='radio' name='rating' value='2' /><div class='optionText'>Poor</div></div></label>
@@ -522,7 +522,7 @@
             <label><div class="option"><input class='optionRadio' type='radio' name='rating' value='4' /><div class='optionText'>Good</div></div></label>
             <label><div class="option"><input class='optionRadio' type='radio' name='rating' value='5' /><div class='optionText'>Excellent</div></div></label>
         </div>
-        <br><br>
+        <br><br> -->
         <!-- <p>To what extent do you think the potential money bonus motivated you?</p>
         <div id="motivation">
             <label><div class="option"><input class='optionRadio' type='radio' name='motivation' value='1' /><div class='optionText'>Not at all</div></div></label>
@@ -547,13 +547,9 @@
         <button class='butNext' onclick='SUBMIT_UID()'>SUBMIT</button>
     </div>
     <div class="pageBox" id="lastPage">
-        <div id="lastPageBox">
-            <p>Thank you for filling out the form!</p>
-            <br>
-            <p>Please click on "NEXT" to proceed to the second part of the experiment. It will open up a new webpage.</p>
-            <br>
-            <button class='butNext' onclick='END_TO_SONA()'>NEXT</button>
-        </div>
+        <p>Thank you for completing this experiment!</p>
+        <br><br>
+        <button class='butNext' onclick='END_TO_SONA()'>END</button>
     </div>
 
     <!--==========THANK YOU==========-->

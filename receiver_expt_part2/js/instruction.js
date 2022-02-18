@@ -7,23 +7,25 @@ function BLOCK_MOBILE() {
 
 function ALLOW_SHORTCUTS_FOR_TESTING() {
     document.onkeydown = function(event) {
-        if(event.key == "s" || event.which == 83 || event.keyCode == 83) {
-            console.log("s");
-            instr.index = 10;
-            instr.next();
-        }
-        // else if (event.key == "p" || event.which == 80 || event.keyCode == 80) {
-        //     console.log("p");
-        //     instr.index = 16;
+        // if(event.key == "s" || event.which == 83 || event.keyCode == 83) {
+        //     console.log("s");
+        //     instr.index = 10;
         //     instr.next();
         // }
-        else if (event.keyCode == "e" || event.which == 69 || event.keyCode == 69) {
-            console.log("e");
-            instr.index = 12;
-            instr.next();
-        } else if (event.keyCode == "d" || event.which == 68 || event.keyCode == 68) {
+        // // else if (event.key == "p" || event.which == 80 || event.keyCode == 80) {
+        // //     console.log("p");
+        // //     instr.index = 16;
+        // //     instr.next();
+        // // }
+        // else
+        // if (event.keyCode == "e" || event.which == 69 || event.keyCode == 69) {
+        //     console.log("e");
+        //     instr.index = 1;
+        //     instr.next();
+        // } else
+        if (event.keyCode == "d" || event.which == 68 || event.keyCode == 68) {
             console.log("d");
-            instr.index = 14;
+            instr.index = 1;
             instr.next();
         }
     };
@@ -42,7 +44,7 @@ function ALLOW_SHORTCUTS_FOR_TESTING() {
 
 const REWARD = 0.4;
 const STEP_COST = 0.05;
-const COMPLETION_URL = "https://sy.cvls.online/rec_expt_part2/?sonacode=";
+const COMPLETION_URL = "https://uclacomm.sona-systems.com/webstudy_credit.aspx?experiment_id=99&credit_token=8cef5b4d2aed4ba3a73fb8f5920af468&survey_code=";
 
 class instrObject {
     constructor(options = {}) {
@@ -127,46 +129,26 @@ var instr_text = new Array;
 // instr_text[21] = "";
 // instr_text[22] = "";
 // instr_text[23] = "";
-instr_text[0] = "<strong>Welcome!</strong><br><br>In this experiment, you will play a game that involves cooperating and communicating with another player to take as few steps as possible to reach a target goal item in the environment.<br><br>Hope you enjoy it!";
-instr_text[1] = "Please read the instructions on the next few pages carefully. You will be asked about the instructions later and see some practice rounds to make sure you understand the game.";
-instr_text[2] = "In this experiment, you are the player in white " + "<img class='inlineShape' src='shape/receiver.png'/>" + " and your partner is in blue " + "<img class='inlineShape' src='shape/signaler.png' />" + " .";
-instr_text[3] = "At the beginning of each round, you and your partner will stand at different positions in a game board. <br><br>You will also see items scattered in the grids.";
-instr_text[4] = "The goal of each round is for you or your partner to reach an item which has been designated as the target. However, <strong>your partner " + "<img class='inlineShape' src='shape/signaler.png' />" + " is the only person who knows which item is the target.</strong> You do not know which item is the target.<br><br><img style='width: 130%; margin: 0px -15%' src='sigRecPOV.png' />";
-instr_text[5] = "Your partner will either send you a signal, or decide to move themselves.<br><br>If your partner sends a signal, you can move to an item by clicking on it in the grid. You will then automatically walk to the target, taking the shortest path possible.";
-instr_text[6] = "Your partner can send a signal describing <strong>any single feature (shape or color)</strong> of the target.<br><br>It can sometimes be ambiguous, but your partner is intelligent and cooperative to send you the most informative signal. Please do your best to figure out which item it refers to using the given information.";
-instr_text[7] = "To help you figure out which item the signal refers to, you can look at how far each of you is from any given item. <br><br>If you move your mouse over an item, you will see the minimum number of steps it takes you or your partner to get there.<br><br><img style='width: 60%; margin-left: 50%; transform: translate(-40%, 0px);' src='utilityHoverEffect.png' />";
-instr_text[8] = "At the start of each round, your partner may take some time to decide.<br><br><strong>Please do NOT refresh your browser while waiting.</strong>";
-instr_text[9] = "";
-instr_text[10] = "By clicking on the NEXT button, I am acknowledged and hereby accept the terms. I understand the task in this experiment.";
-instr_text[11] = "Please start the practice rounds on the next page.";
-instr_text[12] = "";
-instr_text[13] = "You have finished all the practice rounds. You are now ready for the experiment. <br><br>Good luck!";
-instr_text[14] = "";
-instr_text[15] = "You have finished all the rounds in the first part of the experiment. Please answer all the questions on the next page.";
-instr_text[16] = "";
-instr_text[17] = "";
+instr_text[0] = "This is the last part of the experiment. Hope you have fun!";
+instr_text[1] = "";
+instr_text[2] = "You have finished all the rounds in the experiment. Please answer all the questions on the next page.";
+instr_text[3] = "";
+instr_text[4] = "";
 
 
 const INSTR_FUNC_DICT = {
     0: HIDE_BACK_BUTTON,
-    1: SHOW_BACK_BUTTON,
-    2: HIDE_EXAMPLE_GRID,
-    3: SHOW_EXAMPLE_GRID,
-    4: HIDE_EXAMPLE_GRID,
-    5: SHOW_INSTR,
-    6: SHOW_INSTR,
-    7: SHOW_INSTR,
-    8: SHOW_INSTR,
-    9: SHOW_INSTR_QUESTION,
-    10: SHOW_CONSENT,
-    11: SHOW_INSTR,
-    12: START_SANITY_CHECK_TRIAL,
-    13: SHOW_INSTR,
-    14: START_EXPT,
-    15: SHOW_INSTR,
-    16: SHOW_DEBRIEFING_PAGE,
-    17: HIDE_NEXT_BUTTON,
+    1: START_EXPT,
+    2: SHOW_INSTR,
+    3: SHOW_DEBRIEFING_PAGE,
+    4: SHOW_FINAL
 };
+
+function SHOW_FINAL() {
+    HIDE_NEXT_BUTTON;
+    SHOW_INSTR;
+    $("#lastPage").show();
+}
 
 function HIDE_BACK_BUTTON(){
     $("#instrBackBut").hide();
@@ -289,17 +271,18 @@ function SHOW_DEBRIEFING_PAGE() {
 }
 
 function SUBMIT_DEBRIEFING_Q() {
-    var serious = $("input[name='serious']:checked").val();
+    //var serious = $("input[name='serious']:checked").val();
     var strategy = $("#strategy").val();
-    var problems = $("#problems").val();
-    var rating = $("input[name='rating']:checked").val();
+    var difference = $("#difference").val();
+    //var problems = $("#problems").val();
+    //var rating = $("input[name='rating']:checked").val();
     // var motivation = $("input[name='motivation']:checked").val();
-    if (serious == undefined || strategy == "" || problems == "" || rating === undefined)
+    if (strategy == "" || difference == "")
     //if (serious == undefined || strategy == "" || problems == "" || rating === undefined || motivation === undefined)
         alert("Please finish all the questions. Thank you!")
     else {
         // RECORD_DEBRIEFING_ANSWERS(serious, strategy, problems, rating, motivation);
-        RECORD_DEBRIEFING_ANSWERS(serious, strategy, problems, rating);
+        RECORD_DEBRIEFING_ANSWERS(strategy, difference);
         subj.submitQ();
         $("#uidText").html("You have earned " + expt.totalScore.toFixed(2) + " in total. Please put down both your UID and email address if you'd like to receive the money bonus.")
         $("#questionsBox").hide();

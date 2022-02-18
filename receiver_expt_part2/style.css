@@ -20,7 +20,7 @@ body {
  ### #     #  #####     #    #     #
 
 */
-#instrBox, #lastPageBox {
+#instrBox {
     position: relative;
     width: 50%;
     left: 50%;
@@ -370,7 +370,7 @@ body {
     margin-top: 40px;
 }
 
-#instrNextBut, #lastPage button {
+#instrNextBut {
     position: absolute;
     display: inline-block;
     right: 0px;
@@ -424,14 +424,13 @@ body {
     border-width: 1px;
     color: black;
     margin: 0px auto;
-    /* padding: 10px; */
+    padding: 10px;
 }
 
 .option {
     position: relative;
     margin: auto;
-    padding: 5px;
-    /* padding: 10px; */
+    padding: 10px;
     /*text-align: justify;*/
     border-radius: 8px;
     cursor: pointer;
@@ -503,11 +502,11 @@ body {
     left: 50px;
 }
 
-/* #uidPage, #lastPage {
+#uidPage, #lastPage {
     display: none;
     position: relative;
     width: 60%;
     left: 50%;
     transform: translate(-50%, 100px);
-} */
+}
 

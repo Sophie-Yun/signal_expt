@@ -1,5 +1,5 @@
 const FORMAL = false;
-const EXPERIMENT_NAME = "recPRorJU";
+const EXPERIMENT_NAME = "recPilot";
 const SUBJ_NUM_FILE = "subjNum_" + EXPERIMENT_NAME + ".txt";
 const VISIT_FILE = "visit_" + EXPERIMENT_NAME + ".txt";
 const ATTRITION_FILE = 'attrition_' + EXPERIMENT_NAME + '.txt';
@@ -277,12 +277,13 @@ function RECORD_RECEIVER_ACHIEVED(obj, achieved) {
 
 */
 
-function RECORD_DEBRIEFING_ANSWERS(serious, strategy, problems, rating) {
-    subj.serious = serious;
+function RECORD_DEBRIEFING_ANSWERS(strategy, difference) {
+    // subj.serious = serious;
     subj.strategy = strategy;
-    subj.problems = problems;
-    subj.rating = rating;
-    //subj.motivation = motivation;
+    subj.difference = difference;
+    // subj.problems = problems;
+    // subj.rating = rating;
+    // subj.motivation = motivation;
 }
 
 function SAVE_UID(uid, email, totalBonus) {
