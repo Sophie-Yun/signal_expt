@@ -6,27 +6,27 @@ function BLOCK_MOBILE() {
 }
 
 function ALLOW_SHORTCUTS_FOR_TESTING() {
-    document.onkeydown = function(event) {
-        if(event.key == "s" || event.which == 83 || event.keyCode == 83) {
-            console.log("s");
-            instr.index = 11;
-            instr.next();
-        }
+    //document.onkeydown = function(event) {
+    //    if(event.key == "s" || event.which == 83 || event.keyCode == 83) {
+    //        console.log("s");
+    //        instr.index = 11;
+    //        instr.next();
+    //    }
         // else if (event.key == "p" || event.which == 80 || event.keyCode == 80) {
         //     console.log("p");
         //     instr.index = 16;
         //     instr.next();
         // }
-        else if (event.keyCode == "e" || event.which == 69 || event.keyCode == 69) {
-            console.log("e");
-            instr.index = 13;
-            instr.next();
-        } else if (event.keyCode == "d" || event.which == 68 || event.keyCode == 68) {
-            console.log("d");
-            instr.index = 15;
-            instr.next();
-        }
-    };
+    //    else if (event.keyCode == "e" || event.which == 69 || event.keyCode == 69) {
+    //        console.log("e");
+    //        instr.index = 13;
+    //        instr.next();
+    //    } else if (event.keyCode == "d" || event.which == 68 || event.keyCode == 68) {
+    //        console.log("d");
+    //        instr.index = 15;
+    //        instr.next();
+    //    }
+    //};
 
 }
 /*

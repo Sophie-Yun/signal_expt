@@ -1,4 +1,4 @@
-const FORMAL = false;
+const FORMAL = true; 
 const EXPERIMENT_NAME = "recPRorJU";
 const SUBJ_NUM_FILE = "subjNum_" + EXPERIMENT_NAME + ".txt";
 const VISIT_FILE = "visit_" + EXPERIMENT_NAME + ".txt";
@@ -170,14 +170,11 @@ function RECORD_PARTI_DECISION_DATA(obj, decision) {
 
 function CHECK_CONSECUTIVE_QUICK_DECISION(obj) {
     if (obj.partiRecDecisionTime < FAST_DECISION_TIME)
-        obj.consecutiveQuickDecisionNum += 1;
-    else
-        obj.consecutiveQuickDecisionNum = 0;
-    if (obj.consecutiveQuickDecisionNum >= CONSECUTIVE_FAST_DECISION_MAX) {
-        alert("You have been making decisions too fast! Please do the future rounds more carefully.")
-        obj.responseWarningPopup = true;
-    } else
-        obj.responseWarningPopup = false;
+        if(obj.decision != "do") {
+            alert("You have been making decisions too fast! Please do the future rounds more carefully.")
+            obj.responseWarningPopup = true;
+        } else
+            obj.responseWarningPopup = false;
 
 }
 
