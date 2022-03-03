@@ -288,8 +288,6 @@ $(document).ready(function() {
                         expt = new trialObject(trial_options);
                         expt.inputData = EXPT_INPUT_DATA;
                         instr.start();
-                        console.log(SANITY_CHECK_INPUT_DATA);
-                        console.log(EXPT_INPUT_DATA);
                         //ALLOW_SHORTCUTS_FOR_TESTING();
                         // console.log(sanityCheck.inputData);
                         // // console.log(practice.inputData);
