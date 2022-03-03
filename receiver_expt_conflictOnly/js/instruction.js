@@ -6,27 +6,27 @@ function BLOCK_MOBILE() {
 }
 
 function ALLOW_SHORTCUTS_FOR_TESTING() {
-    //document.onkeydown = function(event) {
-    //    if(event.key == "s" || event.which == 83 || event.keyCode == 83) {
-    //        console.log("s");
-    //        instr.index = 11;
-    //        instr.next();
-    //    }
-        // else if (event.key == "p" || event.which == 80 || event.keyCode == 80) {
-        //     console.log("p");
-        //     instr.index = 16;
-        //     instr.next();
-        // }
-    //    else if (event.keyCode == "e" || event.which == 69 || event.keyCode == 69) {
-    //        console.log("e");
-    //        instr.index = 13;
-    //        instr.next();
-    //    } else if (event.keyCode == "d" || event.which == 68 || event.keyCode == 68) {
-    //        console.log("d");
-    //        instr.index = 15;
-    //        instr.next();
-    //    }
-    //};
+    document.onkeydown = function(event) {
+       if(event.key == "s" || event.which == 83 || event.keyCode == 83) {
+           console.log("s");
+           instr.index = 11;
+           instr.next();
+       }
+        else if (event.key == "p" || event.which == 80 || event.keyCode == 80) {
+            console.log("p");
+            instr.index = 16;
+            instr.next();
+        }
+       else if (event.keyCode == "e" || event.which == 69 || event.keyCode == 69) {
+           console.log("e");
+           instr.index = 13;
+           instr.next();
+       } else if (event.keyCode == "d" || event.which == 68 || event.keyCode == 68) {
+           console.log("d");
+           instr.index = 15;
+           instr.next();
+       }
+    };
 
 }
 /*
@@ -42,7 +42,7 @@ function ALLOW_SHORTCUTS_FOR_TESTING() {
 
 const REWARD = 0.4;
 const STEP_COST = 0.05;
-const COMPLETION_URL = "https://sy.cvls.online/rec_expt_part2/?sonacode=";
+const COMPLETION_URL = "https://uclacomm.sona-systems.com/webstudy_credit.aspx?experiment_id=101&credit_token=ba49ffc4d07440b3bed00c58a257dd66&survey_code=";
 
 class instrObject {
     constructor(options = {}) {
@@ -143,7 +143,7 @@ instr_text[12] = "Please start the practice rounds on the next page.";
 instr_text[13] = "";
 instr_text[14] = "You have finished all the practice rounds. You are now ready for the experiment. <br><br>Good luck!";
 instr_text[15] = "";
-instr_text[16] = "You have finished all the rounds in the first part of the experiment. Please answer all the questions on the next page.";
+instr_text[16] = "You have finished all the rounds in the experiment. Please answer all the questions on the next page.";
 instr_text[17] = "";
 instr_text[18] = "";
 
@@ -167,8 +167,14 @@ const INSTR_FUNC_DICT = {
     15: START_EXPT,
     16: SHOW_INSTR,
     17: SHOW_DEBRIEFING_PAGE,
-    18: HIDE_NEXT_BUTTON,
+    18: SHOW_FINAL
 };
+
+function SHOW_FINAL() {
+    HIDE_NEXT_BUTTON;
+    SHOW_INSTR;
+    $("#lastPage").show();
+}
 
 function HIDE_BACK_BUTTON(){
     $("#instrBackBut").hide();
