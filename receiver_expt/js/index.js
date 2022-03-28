@@ -315,6 +315,7 @@ $(document).ready(function() {
 */
 const TRIAL_TITLES = [
     "subjNum",
+    "sonaID",
     "startDate",
     "startTime",
     "trialType",

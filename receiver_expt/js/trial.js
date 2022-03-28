@@ -40,6 +40,7 @@ class trialObject {
             ]
         }, options);
         this.subjID = this.subj.num;
+        this.sonaID = this.subj.id;
         this.subjStartDate = this.subj.date;
         this.subjStartTime = this.subj.startTime;
         this.trialIndex = 0;
@@ -206,7 +207,7 @@ class trialObject {
         }
         this.totalUtility = this.totalScore.toFixed(2);
         this.hoverItems = JSON.stringify(this.hoverItems);
-        var dataList = [this.subjID, this.subjStartDate, this.subjStartTime,
+        var dataList = [this.subjID, this.sonaID, this.subjStartDate, this.subjStartTime,
             this.trialType,
             this.trialIndex, this.exptId,
             this.decision, this.signal,

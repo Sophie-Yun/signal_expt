@@ -256,11 +256,11 @@ $(document).ready(function() {
     //tempDeletePlease();
     subj = new subjObject(subj_options);
     //                                                                 //MAX:
-    subj.id = subj.getID("sonacode"); // getting subject number     //xxx: comment to run on local
-    subj.saveVisit();                                               //xxx: comment to run on local
-    if (subj.phone) { // asking for subj.phone will detect phone    //xxx: comment to run on local
-        BLOCK_MOBILE();                                             //xxx: comment to run on local
-    } else if (subj.id !== null){                                   //xxx: comment to run on local
+    //subj.id = subj.getID("sonacode"); // getting subject number     //xxx: comment to run on local
+    //subj.saveVisit();                                               //xxx: comment to run on local
+    //if (subj.phone) { // asking for subj.phone will detect phone    //xxx: comment to run on local
+    //    BLOCK_MOBILE();                                             //xxx: comment to run on local
+    //} else if (subj.id !== null){                                   //xxx: comment to run on local
         //fetches CSV from file into a string
         fetch("inputCSV/practice_conflictDiyOnly_20220215.csv")
             .then(response => response.text())
@@ -298,9 +298,9 @@ $(document).ready(function() {
         sanity_check_options["subj"] = subj;
         trial_options["subj"] = subj;                                  //MAX:
 
-    } else {                                                        //xxx: comment to run on local
-        alert("Please make sure you are directed from SONA.")       //xxx: comment to run on local
-    }                                                               //xxx: comment to run on local
+    //} else {                                                        //xxx: comment to run on local
+     //   alert("Please make sure you are directed from SONA.")       //xxx: comment to run on local
+    //}                                                               //xxx: comment to run on local
 });
 
 
@@ -316,6 +316,7 @@ $(document).ready(function() {
 */
 const TRIAL_TITLES = [
     "subjNum",
+    "sonaID",
     "startDate",
     "startTime",
     "trialType",

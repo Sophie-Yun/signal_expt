@@ -40,6 +40,7 @@ class trialObject {
             ]
         }, options);
         this.subjID = this.subj.num;
+        this.sonaID = this.subj.id;
         this.subjStartDate = this.subj.date;
         this.subjStartTime = this.subj.startTime;
         this.trialIndex = 0;
@@ -91,13 +92,14 @@ class trialObject {
             var signal = this.inputData[this.randomizedTrialList[this.trialIndex]]["predSignalNoActionUtility"];
             var waitoutTime = SIMULATED_SIGNALER_DECISION_TIME*1000;
             setTimeout(CHANGE_INSTRUCTION, waitoutTime + randExpo * 300, signal);
+            var delay = waitoutTime + randExpo*300;
             if(signal == "do"){
-                setTimeout(SIGNALER_AUTO_MOVE,waitoutTime + randExpo*300,sanityCheck);
-                RECORD_SIMULATED_SIG_DECISION_TIME(this, (waitoutTime + randExpo*300)/1000);
+                setTimeout(SIGNALER_AUTO_MOVE,delay,sanityCheck);
+                RECORD_SIMULATED_SIG_DECISION_TIME(this, delay/1000);
             }
             else{
-                setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
-                RECORD_SIMULATED_SIG_DECISION_TIME(this, (waitoutTime + randExpo*400)/1000);
+                setTimeout(ENABLE_GRID_BUTTONS,delay,buttonDict);
+                RECORD_SIMULATED_SIG_DECISION_TIME(this, delay/1000);
             }
 
             //ENABLE_GRID_BUTTONS(buttonDict);
@@ -147,13 +149,14 @@ class trialObject {
                 console.log(signal);
                 var waitoutTime = SIMULATED_SIGNALER_DECISION_TIME*1000;
                 setTimeout(CHANGE_INSTRUCTION_EXPT, waitoutTime + randExpo * 300, signal);
+                var delay = waitoutTime + randExpo*300;
                 if(signal == "do"){
-                    setTimeout(SIGNALER_AUTO_MOVE,waitoutTime + randExpo*300,expt);
-                    RECORD_SIMULATED_SIG_DECISION_TIME(this, (waitoutTime + randExpo*300)/1000);
+                    setTimeout(SIGNALER_AUTO_MOVE,delay,expt);
+                    RECORD_SIMULATED_SIG_DECISION_TIME(this, delay/1000);
                 }
                 else{
-                    setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
-                    RECORD_SIMULATED_SIG_DECISION_TIME(this, (waitoutTime + randExpo*400)/1000);
+                    setTimeout(ENABLE_GRID_BUTTONS,delay,buttonDict);
+                    RECORD_SIMULATED_SIG_DECISION_TIME(this,delay/1000);
                 }
                 $("#exptInstr").show();
                 this.move();
@@ -206,7 +209,7 @@ class trialObject {
         }
         this.totalUtility = this.totalScore.toFixed(2);
         this.hoverItems = JSON.stringify(this.hoverItems);
-        var dataList = [this.subjID, this.subjStartDate, this.subjStartTime,
+        var dataList = [this.subjID, this.sonaID, this.subjStartDate, this.subjStartTime,
             this.trialType,
             this.trialIndex, this.exptId,
             this.decision, this.signal,
@@ -705,7 +708,12 @@ function ENABLE_GRID_BUTTONS(buttonDict){
 }
 }
 
+//Updated version of Receiver Walk, triggers once an object has been selected and clicked on
+//Disables hover info / disables click function on all onscreen buttons
+//Extracts desired location on grid, matches to the item there, records the chosen item, then calls RECEIVER_WALK_TO_CHOSEN_OBJECT after a delay
 function RECEIVER_WALK_TWO(obj, signal) {
+
+    //Removes Hover Info, stops cursor from activating buttons
     DISABLE_HOVER_INFO();
     if(obj.isTrySay) {
         $("#instrBackBut").css({
@@ -718,85 +726,55 @@ function RECEIVER_WALK_TWO(obj, signal) {
         });
     }
     obj.consecutiveQuitNum = 0;
+    //Disables all keyboard inputs
     DISABLE_DEFAULT_KEYS();
+    //Records data from decision and signal
     RECORD_PARTI_DECISION_DATA(obj, "say");
     RECORD_SIGNAL_DATA(obj, "say");
+    //Changes instructions on screen
     CHANGE_IN_TRIAL_INSTR("say");
     obj.allowMove = false;
 
-    //RECORDING
+    //RECORDING which item was selected
     var row = signal.id[5];
     var col = signal.id[7];
+    //Obtain desired item by indexing gridArray with row, col
     selectedItem = obj.gridArray[row][col];
     RECORD_CHOSEN_ITEM(obj, selectedItem);
 
 
-    //
+    //After a short delay (500), this function called will cause the receiver to actually walk to the object. 
     setTimeout(RECEIVER_WALK_TO_CHOSEN_OBJECT, 500, obj, signal);
 }
 
-
+//This function causes receiver to walk to the intended object.
+//It does one step at a time, recursively calling itself as long as
+//the receiver has not yet reached the object.
 function RECEIVER_WALK_TO_CHOSEN_OBJECT(obj, intendedItemtemp) {
-    //Change ? -- Button should be disabled at start. Once "waiting for..." changes to a signal, people should be able to click
-    //Change 1 -- hover over item changes cursor to hand
-        //"pointer-events": "revert",
-        //"cursor": "pointer"
-    //Change 2 -- once they click on a button, should not be able to click on other buttons / should disable other fxns
-        //Can use pointer-events to disable clicking on buttons
-    //Also need to update the changing text so that it sends right signal for each trial
-    //console.log(intendedItemtemp.id);
 
-    //if(intendedItemtemp == 0){
-    //    var row = 3;
-    //    var col = 7;
-    //}
-    //else{
+    //Re-obtain row,col information
     var row = intendedItemtemp.id[5];
     var col = intendedItemtemp.id[7];
-    //}
-
+    
+    //Obtain path to object
     intendedItem = obj.gridArray[row][col];
     var path = obj.receiverPath[intendedItem];
     var stepOnGrid = path[obj.pathIndex];
 
+    //Count/update current step to object and update grid to visually match
     UPDATE_STEPS(obj);
     UPDATE_GAME_GRID(obj, stepOnGrid, "receiver");
 
+    //Test if receiver has reached object
     if(obj.pathIndex == path.length - 1) {
+        //Triggers Receiver_Arrive if receiver is at object, indicating receiver is done walking.
         setTimeout(RECEIVER_ARRIVE, 1000, obj);
     } else {
+        //If receiver has not reached object, call receiver_walk_to_chosen_object again
         obj.pathIndex++;
         setTimeout(RECEIVER_WALK_TO_CHOSEN_OBJECT, RECEIVER_MOVE_SPEED * 1000, obj, intendedItemtemp);
     }
-    //intendedItemtemp
-    //id = "shape" row "v" col
-    //"shape1v3" --> str[5] = 1, str[7] = 3
-
-    //console.log("This item was: ");
-    //console.log(intendedItem);
-    //console.log(obj.inputData[obj.trialIndex].receiverIntentionDict["triangle"]);
-    /*
-    var intendedItem = obj.inputData[intendedItemtemp].receiverIntentionDict["triangle"];
-
-    //obj.inputData[obj.trialIndex].receiverIntentionDict[signal];
-
-    "red triangle"
-
-    console.log(intendedItem);
-    console.log(obj);
-    var path = obj.receiverPath[intendedItem];
-    console.log(path);
-    var stepOnGrid = path[obj.pathIndex];
-    UPDATE_STEPS(obj);
-    UPDATE_GAME_GRID(obj, stepOnGrid, "receiver");
-
-    if(obj.pathIndex == path.length - 1) {
-        setTimeout(RECEIVER_ARRIVE, 1000, obj);
-    } else {
-        obj.pathIndex++;
-        setTimeout(RECEIVER_WALK_TO_CHOSEN_OBJECT, RECEIVER_MOVE_SPEED * 1000, obj, signal);
-    }
-    */
+   
 }
 
 function RECEIVER_ARRIVE(obj) {
@@ -1134,13 +1112,14 @@ function START_SANITY_CHECK_TRIAL() {
     //var signal = "red";
     var waitoutTime = SIMULATED_SIGNALER_DECISION_TIME*1000;
     setTimeout(CHANGE_INSTRUCTION, waitoutTime + randExpo * 300, signal);
+    var delay = waitoutTime+randExpo*300;
     if(signal == "do"){
-        setTimeout(SIGNALER_AUTO_MOVE,waitoutTime + randExpo*300,sanityCheck);
-        RECORD_SIMULATED_SIG_DECISION_TIME(sanityCheck, (waitoutTime + randExpo*300)/1000);
+        setTimeout(SIGNALER_AUTO_MOVE,delay,sanityCheck);
+        RECORD_SIMULATED_SIG_DECISION_TIME(sanityCheck, delay/1000);
     }
     else{
-        setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
-        RECORD_SIMULATED_SIG_DECISION_TIME(sanityCheck, (waitoutTime + randExpo*400)/1000);
+        setTimeout(ENABLE_GRID_BUTTONS,delay,buttonDict);
+        RECORD_SIMULATED_SIG_DECISION_TIME(sanityCheck, delay/1000);
     }
 
 
@@ -1262,13 +1241,14 @@ function START_EXPT(){
     //var signal = "red";
     var waitoutTime = SIMULATED_SIGNALER_DECISION_TIME*1000;
     setTimeout(CHANGE_INSTRUCTION_EXPT, waitoutTime + randExpo * 300, signal);
+    var delay = waitoutTime + randExpo*300;
     if(signal == "do"){
-        setTimeout(SIGNALER_AUTO_MOVE,waitoutTime + randExpo*300,expt);
-        RECORD_SIMULATED_SIG_DECISION_TIME(expt, (waitoutTime + randExpo*300)/1000);
+        setTimeout(SIGNALER_AUTO_MOVE,delay,expt);
+        RECORD_SIMULATED_SIG_DECISION_TIME(expt, delay/1000);
     }
     else{
-        setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
-        RECORD_SIMULATED_SIG_DECISION_TIME(expt, (waitoutTime + randExpo*400)/1000);
+        setTimeout(ENABLE_GRID_BUTTONS,delay,buttonDict);
+        RECORD_SIMULATED_SIG_DECISION_TIME(expt, delay/1000);
     }
 
 

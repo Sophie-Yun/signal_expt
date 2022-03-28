@@ -73,6 +73,7 @@ function LIST_FROM_ATTRIBUTE_NAMES(obj, string_list) {
 
 */
 
+//Records Answer to Likert scale for each trial
 function RECORD_LIKERT_ANSWER(obj, value){
     obj.confidence = value;
 }
@@ -154,10 +155,12 @@ function RECORD_HOVER_ITEMS(obj, uniqueId){
     // }
 }
 
+//Records time from round starting to signal being sent
 function RECORD_SIMULATED_SIG_DECISION_TIME(obj, waitoutTime) {
     obj.simSigDecisionTime = waitoutTime;
 }
 
+//Records the decision time. This is the elapsed time from the signal being sent -> participant making a decision
 function RECORD_PARTI_DECISION_DATA(obj, decision) {
     if(!obj.decisionRecorded){
         obj.decision = decision;
@@ -168,11 +171,15 @@ function RECORD_PARTI_DECISION_DATA(obj, decision) {
     }
 }
 
+//Checks if user is answering too quickly
 function CHECK_CONSECUTIVE_QUICK_DECISION(obj) {
+    //If user responds faster than a static, set FAST_DECISION_TIME, augment number of consecutive quick decisions by 1
     if (obj.partiRecDecisionTime < FAST_DECISION_TIME)
         obj.consecutiveQuickDecisionNum += 1;
+    //If user does not respond faster than static, set FAST_DECISION_TIME, reset number of consecutive quick decisions to 0
     else
         obj.consecutiveQuickDecisionNum = 0;
+    //Test if user has made more consecutive quick decisions than static, set CONSECUTIVE_FAST_DECISION_MAX (integer). Triggers a warning if they have. 
     if (obj.consecutiveQuickDecisionNum >= CONSECUTIVE_FAST_DECISION_MAX) {
         alert("You have been making decisions too fast! Please do the future rounds more carefully.")
         obj.responseWarningPopup = true;
@@ -181,6 +188,7 @@ function CHECK_CONSECUTIVE_QUICK_DECISION(obj) {
 
 }
 
+//Records action time. This is the time elapsed from making a decision to arriving at object
 function RECORD_ACTION_TIME(obj) {
     var currentTime = Date.now();
     obj.actionTime = (currentTime - obj.startTime)/1000 - obj.simSigDecisionTime - obj.partiRecDecisionTime;
