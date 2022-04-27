@@ -1,3 +1,5 @@
+var timeoutId = -1;
+
 class trialObject {
     constructor(options = {}) {
         Object.assign(this, {
@@ -59,7 +61,7 @@ class trialObject {
         this.sanitySayAttempts = 0;
         this.sanityQuitAttempts = 0;
     }
-
+    
     next(){
         if(this.isTryMove || this.isTrySay) {
             $(".tryExptInstr").show();
@@ -99,6 +101,7 @@ class trialObject {
             else{
                 setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
                 RECORD_SIMULATED_SIG_DECISION_TIME(this, (waitoutTime + randExpo*400)/1000);
+                setTimeout(setResponseConstraint, waitoutTime + randExpo*400,this);
             }
 
             //ENABLE_GRID_BUTTONS(buttonDict);
@@ -155,6 +158,7 @@ class trialObject {
                 else{
                     setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
                     RECORD_SIMULATED_SIG_DECISION_TIME(this, (waitoutTime + randExpo*400)/1000);
+                    setTimeout(setResponseConstraint, waitoutTime + randExpo*400,this);
                 }
                 $("#exptInstr").show();
                 this.move();
@@ -239,6 +243,56 @@ class trialObject {
         });
     }
 }
+
+
+function cancelTimeout(){
+    if(timeoutId != -1){
+        console.log("timeout cleared");
+        clearTimeout(timeoutId);
+        timeoutId = -1;
+    }
+    else{
+        console.log("no timeout to clear")
+    }
+}
+
+function timeLimitReached(obj){
+    console.log("limit reached");
+    DISABLE_DEFAULT_KEYS();
+    RECORD_PARTI_DECISION_DATA(obj, "timeout");
+    RECORD_SIGNAL_DATA(obj, "timeout");
+    CHANGE_IN_TRIAL_INSTR("say");
+    obj.allowMove = false;
+
+    //RECORDING
+    //var row = signal.id[5];
+    //var col = signal.id[7];
+    //selectedItem = obj.gridArray[row][col];
+    RECORD_CHOSEN_ITEM(obj, "timeout");
+
+    //Receiver_arrive copy
+    //console.log(REWARD);
+    RECORD_ACTION_TIME(obj);
+    RECORD_SIGNALER_END_LOCATION(obj);
+    RECORD_RECEIVER_END_LOCATION(obj, obj.receiverLocation);
+    RECORD_SIGNALER_ACHIEVED(obj);
+    RECORD_RECEIVER_ACHIEVED(obj, "timedout");
+    UPDATE_RESULT_IN_OBJ(obj, 0);
+    console.log("init");
+    SHOW_WIN_RESULT_BOX_FOR_SAY(obj, false);
+    console.log("init 2");
+    obj.step = 0;
+    obj.pathIndex = 0;
+}
+
+function setResponseConstraint(obj){
+    console.log("baaaa");
+    console.log(timeoutId);
+    timeoutId = setTimeout(timeLimitReached, 10000, obj);
+    console.log(timeoutId);
+    console.log("pt 2");
+}
+
 
 function CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(str){
     if(str != "" && str != null) {
@@ -868,7 +922,17 @@ function NEXT_TRIAL(obj) {
         var click = selected.val();
         $("input[name='ConfidenceScale']").prop('checked',false);
         if(click == undefined && trialStrategy != "do"){
-            alert("Please select a response on the scale. Thank you!");
+            var checkHidden = document.getElementById("sanityLikertScale");
+            if(checkHidden.style.display != "none"){
+                alert("Please select a response on the scale. Thank you!");
+            }
+            else{
+                console.log("attempting pass")
+                RECORD_LIKERT_ANSWER(obj, -1);
+                RESET_GAMEBOARD();
+                SANITY_CHECK_INSTR_APPEAR();
+                obj.next();
+            }
         }
         else{
             if (trialStrategy != "do"){
@@ -890,7 +954,17 @@ function NEXT_TRIAL(obj) {
         var click = selected.val();
         $("input[name='ConfidenceScale']").prop('checked',false);
         if(click == undefined && trialStrategy != "do"){
-            alert("Please select a response on the scale. Thank you!");
+            var checkHidden = document.getElementById("exptLikertScale");
+            if(checkHidden.style.display != "none"){
+                alert("Please select a response on the scale. Thank you!");
+            }
+            else{
+                console.log("attempting pass")
+                RECORD_LIKERT_ANSWER(obj, -1);
+                RESET_GAMEBOARD();
+                EXPT_INSTR_APPEAR();
+                obj.next();
+            }
         }
         else{
             if (trialStrategy != "do"){
@@ -1142,6 +1216,7 @@ function START_SANITY_CHECK_TRIAL() {
     else{
         setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
         RECORD_SIMULATED_SIG_DECISION_TIME(sanityCheck, (waitoutTime + randExpo*400)/1000);
+        setTimeout(setResponseConstraint, waitoutTime + randExpo*400,this);
     }
 
 
@@ -1270,6 +1345,7 @@ function START_EXPT(){
     else{
         setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
         RECORD_SIMULATED_SIG_DECISION_TIME(expt, (waitoutTime + randExpo*400)/1000);
+        setTimeout(setResponseConstraint, waitoutTime + randExpo*400,this);
     }
 
 
