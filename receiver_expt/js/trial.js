@@ -278,19 +278,19 @@ function timeLimitReached(obj){
     RECORD_SIGNALER_ACHIEVED(obj);
     RECORD_RECEIVER_ACHIEVED(obj, "timedout");
     UPDATE_RESULT_IN_OBJ(obj, 0);
-    console.log("init");
+    //console.log("init");
     SHOW_WIN_RESULT_BOX_FOR_SAY(obj, false);
-    console.log("init 2");
+    //console.log("init 2");
     obj.step = 0;
     obj.pathIndex = 0;
 }
 
 function setResponseConstraint(obj){
-    console.log("baaaa");
-    console.log(timeoutId);
+    //console.log("baaaa");
+    //console.log(timeoutId);
     timeoutId = setTimeout(timeLimitReached, 10000, obj);
-    console.log(timeoutId);
-    console.log("pt 2");
+    //console.log(timeoutId);
+    //console.log("pt 2");
 }
 
 
