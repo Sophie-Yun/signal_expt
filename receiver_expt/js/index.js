@@ -1,6 +1,9 @@
 //const TRIAL_FILE = "trial_" + EXPERIMENT_NAME + ".txt";
+//GRID CHANGE
+const DIM_COORDS = 2;
 const GRID_NROW = 10;
-const GRID_NCOL = 9;
+//const GRID_NCOL = 9;
+const GRID_NCOL = 10;
 const SHAPE_DIR = "shape/";
 const RECEIVER_MOVE_SPEED = 0.5;
 const MAX_SAY_OPTION = 6;
@@ -177,6 +180,8 @@ function PARSE_CSV(csvString) {
         }
     }
     //console.log(linesArray[0]["predSignalNoActionUtility"]);
+    console.log("-----")
+    console.log(linesArray);
     return linesArray;
 }
 
@@ -256,13 +261,14 @@ $(document).ready(function() {
     //tempDeletePlease();
     subj = new subjObject(subj_options);
     //                                                                 //MAX:
-    subj.id = subj.getID("sonacode"); // getting subject number     //xxx: comment to run on local
-    subj.saveVisit();                                               //xxx: comment to run on local
-    if (subj.phone) { // asking for subj.phone will detect phone    //xxx: comment to run on local
-        BLOCK_MOBILE();                                             //xxx: comment to run on local
-    } else if (subj.id !== null){                                   //xxx: comment to run on local
+    //subj.id = subj.getID("sonacode"); // getting subject number     //xxx: comment to run on local
+    //subj.saveVisit();                                               //xxx: comment to run on local
+    //if (subj.phone) { // asking for subj.phone will detect phone    //xxx: comment to run on local
+    //    BLOCK_MOBILE();                                             //xxx: comment to run on local
+    //} else if (subj.id !== null){                                   //xxx: comment to run on local
         //fetches CSV from file into a string
-        fetch("inputCSV/practiceTrials_receiver_20220112.csv")
+        //fetch("inputCSV/practiceTrials_receiver_20220112.csv")
+        fetch("inputCSV/practiceTrials_rotation_20220428.csv")
             .then(response => response.text())
             .then(textString => {
                 SANITY_CHECK_INPUT_DATA = PARSE_CSV(textString)
@@ -272,7 +278,8 @@ $(document).ready(function() {
             //     .then(textString => {
             //         PRACTICE_INPUT_DATA = PARSE_CSV(textString)
             //     })
-                .then( () => {fetch("inputCSV/exptTrials_receiver_20220112.csv")
+                //.then( () => {fetch("inputCSV/exptTrials_receiver_20220112.csv")
+                .then( () => {fetch("inputCSV/exptTrials_rotation_20220428.csv")
                     .then(response => response.text())
                     .then(textString => {
                         EXPT_INPUT_DATA = PARSE_CSV(textString)
@@ -297,9 +304,9 @@ $(document).ready(function() {
                 });
         sanity_check_options["subj"] = subj;
         trial_options["subj"] = subj;                                  //MAX:
-    } else {                                                        //xxx: comment to run on local
-        alert("Please make sure you are directed from SONA.")       //xxx: comment to run on local
-    }                                                               //xxx: comment to run on local
+    //} else {                                                        //xxx: comment to run on local
+    //    alert("Please make sure you are directed from SONA.")       //xxx: comment to run on local
+    //}                                                               //xxx: comment to run on local
 });
 
 

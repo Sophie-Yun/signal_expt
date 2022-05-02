@@ -28,17 +28,30 @@ class trialObject {
             consecutiveQuickDecisionNum: 0,
             startTime: 0,
             signal: "N/A",
+            //GRID CHANGE
+            //gridArray: [
+            //    [,,,,,,,,],
+            //    [,,,,,,,,],
+            //    [,,,,,,,,],
+            //    [,,,,,,,,],
+            //    [,,,,,,,,],
+            //    [,,,,,,,,],
+            //    [,,,,,,,,],
+            //    [,,,,,,,,],
+            //    [,,,,,,,,],
+            //    [,,,,,,,,]
+            //]
             gridArray: [
-                [,,,,,,,,],
-                [,,,,,,,,],
-                [,,,,,,,,],
-                [,,,,,,,,],
-                [,,,,,,,,],
-                [,,,,,,,,],
-                [,,,,,,,,],
-                [,,,,,,,,],
-                [,,,,,,,,],
-                [,,,,,,,,]
+                [,,,,,,,,,],
+                [,,,,,,,,,],
+                [,,,,,,,,,],
+                [,,,,,,,,,],
+                [,,,,,,,,,],
+                [,,,,,,,,,],
+                [,,,,,,,,,],
+                [,,,,,,,,,],
+                [,,,,,,,,,],
+                [,,,,,,,,,]
             ]
         }, options);
         this.subjID = this.subj.num;
@@ -455,6 +468,19 @@ function TRIAL_SET_UP (obj) {
         [,,,,,,,,],
         [,,,,,,,,]
     ];
+    //GRID CHANGE
+    obj.gridArray = [
+        [,,,,,,,,,],
+        [,,,,,,,,,],
+        [,,,,,,,,,],
+        [,,,,,,,,,],
+        [,,,,,,,,,],
+        [,,,,,,,,,],
+        [,,,,,,,,,],
+        [,,,,,,,,,],
+        [,,,,,,,,,],
+        [,,,,,,,,,]
+    ]
 
     SET_RECEIVER_SIGNALER_LOCATION(obj);
     //SET_BARRIER(obj);
@@ -481,12 +507,17 @@ function TRIAL_SET_UP (obj) {
 
     var coordinates = Object.keys(obj.gridString);
     var shape = Object.values(obj.gridString);
+    console.log(coordinates);
+    console.log(shape);
+    console.log("-------- HERE");
 
     for (var i = 0; i < shape.length; i++) {
         var coordFromCSV = coordinates[i].split(",");
         var coordInArray = CONVERT_CSV_COORD_TO_ARRAY_COORD(coordFromCSV[0], coordFromCSV[1])
         var row = coordInArray[0];
         var col = coordInArray[1];
+        //console.log(row);
+        //console.log(col);
         obj.gridArray[row][col] = shape[i];
         // if(!obj.isExptTrial) {
         //     if (shape[i] == obj.inputData[obj.trialIndex].intention)
@@ -816,6 +847,7 @@ function RECEIVER_WALK_TO_CHOSEN_OBJECT(obj, intendedItemtemp) {
 
     UPDATE_STEPS(obj);
     UPDATE_GAME_GRID(obj, stepOnGrid, "receiver");
+    console.log(stepOnGrid);
 
     if(obj.pathIndex == path.length - 1) {
         setTimeout(RECEIVER_ARRIVE, 1000, obj);

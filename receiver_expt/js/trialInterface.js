@@ -59,6 +59,20 @@ function ADD_HOVER_INFO(elem, recDist, sigDist) {
 
 function CREATE_GRID(obj) {
     var gridArray = obj.gridArray;
+    //*
+    //gridArray = [
+    //    [,,,,,,,,,],
+    //    [,,,,,,,,,],
+    //    [,,,,,,,,,],
+    //    [,,,,,,,,,],
+    //    [,,,,,,,,,],
+    //    [,,,,,,,,,],
+    //    [,,,,,,,,,],
+    //    [,,,,,,,,,],
+    //    [,,,,,,,,,],
+    //    [,,,,,,,,,]
+    //]
+    //
     var nrow = GRID_NROW;
     var ncol = GRID_NCOL;
     var shapeId;
@@ -113,18 +127,30 @@ function CREATE_GRID(obj) {
     //     ADD_BARRIER(obj);
     // } else
     if (obj.isSanityCheck) {
+        //console.log("trig");
         for (var row = 0; row < nrow; row++) {
             for (var col = 0; col < ncol; col++) {
                 shapeId = "shape" + row + "v" + col;
+                //console.log("pre");
                 var item = gridArray[row][col];
+                //PULLING 4,0 OUT OF GRID ARRAY YIELDS UNDEFINED (0,5 ON GRID)
+                //console.log("post");
+                //if (row == 4 && col == 0){
+                    //console.log("at 4,0");
+                //}
                 if (item !== undefined){
+                    //console.log("not undefined");
                     $("#sanityCheckGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>");
                     if (item!== SHAPE_DIR + "receiver.png" && item!== SHAPE_DIR + "signaler.png") {
+                        console.log("pass 1");
                         if (item.slice(-1) == "e"){
+                            //console.log("pass 2");
                              $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item]}));
                         } else {
-                           $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item.slice(0, -1)]}));
+                            //console.log("pass 3");
+                           $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item.slice(0, -DIM_COORDS)]}));
                         }
+                        console.log(shapeId);
 
                         var receiverDist = obj.receiverPath[item].length;
                         var signalerDist = obj.signalerPath[item].length;
@@ -150,14 +176,19 @@ function CREATE_GRID(obj) {
                         } )
                         })();
                     } else {
+                        //console.log("pass 4");
                         $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
 
                     }
                 }
                 else{
+                    //console.log("pass 5");
                     $("#sanityCheckGridContainer").append("<div class='gridEmpty' id='" + shapeId + "'></div>");
 
                 }
+                //if (row == 4 && col == 0){
+                //console.log("finished");
+                //}
             };
         };
         DISABLE_GRID_BUTTONS(buttonDict);
@@ -193,7 +224,7 @@ function CREATE_GRID(obj) {
                         if (item.slice(-1) == "e"){
                             $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item]}));
                         } else {
-                            $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item.slice(0, -1)]}));
+                            $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item.slice(0, -DIM_COORDS)]}));
                         }
 
                         var receiverDist = obj.receiverPath[item].length;

@@ -1,3 +1,5 @@
+
+
 body {
     background-color: #f9f9f9;
     font-family: "Open Sans", sans-serif;
@@ -205,14 +207,14 @@ body {
     border: 2px solid black;
     display: inline-grid;
     grid-gap: 2px;
-    grid-template-columns: repeat(9, 50px);
+    grid-template-columns: repeat(10, 50px);
     grid-template-rows: repeat(10, 50px);
 }
 /* Right column */
 .tryColumn.text, .column.text {
     margin-left: 20px;
     position: relative;
-    width: 47%;
+    width: 40%;
 }
 /*
 #score {
