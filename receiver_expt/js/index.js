@@ -4,7 +4,7 @@ const DIM_COORDS = 2;
 const GRID_NROW = 10;
 //const GRID_NCOL = 9;
 const GRID_NCOL = 10;
-const SHAPE_DIR = "shape/";
+const SHAPE_DIR = "static/shape/";
 const RECEIVER_MOVE_SPEED = 0.5;
 const MAX_SAY_OPTION = 6;
 const TRIAL_DICT = {};
@@ -57,20 +57,20 @@ preload(
     // "shape/redCircle.png",
     // "shape/redSquare.png",
     // "shape/redTriangle.png",
-    "shape/gCircle.png",
-    "shape/gSquare.png",
-    "shape/gTriangle.png",
-    "shape/pCircle.png",
-    "shape/pSquare.png",
-    "shape/pTriangle.png",
-    "shape/oCircle.png",
-    "shape/oSquare.png",
-    "shape/oTriangle.png",
-    "shape/receiver.png",
-    "shape/signaler.png",
-    "exampleGrid.png",
-    "sigRecPOV.png",
-    "utilityHoverEffect.png"
+    "static/shape/gCircle.png",
+    "static/shape/gSquare.png",
+    "static/shape/gTriangle.png",
+    "static/shape/pCircle.png",
+    "static/shape/pSquare.png",
+    "static/shape/pTriangle.png",
+    "static/shape/oCircle.png",
+    "static/shape/oSquare.png",
+    "static/shape/oTriangle.png",
+    "static/shape/receiver.png",
+    "static/shape/signaler.png",
+    "static/exampleGrid.png",
+    "static/sigRecPOV.png",
+    "static/utilityHoverEffect.png"
 )
 
 const PIC_DICT = {
