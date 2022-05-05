@@ -9,7 +9,7 @@ const TRIAL_FILE = "trial_" + EXPERIMENT_NAME + ".txt";
 const UID_FILE = "uid_" + EXPERIMENT_NAME + ".txt";
 const VIEWPORT_MIN_W = 1000;
 const VIEWPORT_MIN_H = 600;
-const SAVING_SCRIPT = 'php/save.php';
+const SAVING_SCRIPT = 'save';
 const SAVING_DIR = FORMAL ? "data/formal":"data/testing";
 
 function LIST_TO_FORMATTED_STRING(data_list, divider) {

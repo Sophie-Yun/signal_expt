@@ -15,7 +15,7 @@ class trialObject {
             trialN: 0,
             titles: '',
             dataFile: 'exptData.txt',
-            savingScript: 'php/save.php',
+            savingScript: 'save',
             savingDir: '',
             trialFunc: false,
             endExptFunc: false,
@@ -74,7 +74,7 @@ class trialObject {
         this.sanitySayAttempts = 0;
         this.sanityQuitAttempts = 0;
     }
-    
+
     next(){
         if(this.isTryMove || this.isTrySay) {
             $(".tryExptInstr").show();
@@ -1262,11 +1262,11 @@ function CHANGE_INSTRUCTION(signal){
     var signalString = signal.charAt(0).toUpperCase() + signal.slice(1);
     $("#instruction").hide();
     if(signal == "do"){
-        $("#instruction_2").html( '<img class="inlineShape" src="shape/signaler.png">' + ' is walking to the target.');
+        $("#instruction_2").html( '<img class="inlineShape" src="' + SHAPE_DIR + 'signaler.png">' + ' is walking to the target.');
 
     }
     else{
-        $("#instruction_2").html( '<img class="inlineShape" src="shape/signaler.png">' + ' says: "' + signalString + '".');
+        $("#instruction_2").html( '<img class="inlineShape" src="' + SHAPE_DIR + 'signaler.png">' + ' says: "' + signalString + '".');
     }
     $("#instruction_2").show();
 }
@@ -1281,11 +1281,11 @@ function CHANGE_INSTRUCTION_EXPT(signal){
     var signalString = signal.charAt(0).toUpperCase() + signal.slice(1);
     $("#exptInstruct1").hide();
     if(signal == "do"){
-        $("#exptInstruct2").html( '<img class="inlineShape" src="shape/signaler.png">' + ' is walking to the target.');
+        $("#exptInstruct2").html( '<img class="inlineShape" src="' + SHAPE_DIR + 'signaler.png">' + ' is walking to the target.');
 
     }
     else{
-        $("#exptInstruct2").html( '<img class="inlineShape" src="shape/signaler.png">' + ' says: "' + signalString + '".');
+        $("#exptInstruct2").html( '<img class="inlineShape" src="' + SHAPE_DIR + 'signaler.png">' + ' says: "' + signalString + '".');
     }
     $("#exptInstruct2").show();
 }

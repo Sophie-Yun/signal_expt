@@ -806,10 +806,10 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
         if(win){ //SIGNALER MOVES TO TARGET RESULT BOX
             var landedItem = $('#shape'+ obj.signalerLocation[0] + 'v' + obj.signalerLocation[1] + ' .shape').attr('src');
             if (trialStrategy == "do") { //chckpt
-                $("#sanityCheckResultTextDo").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
+                $("#sanityCheckResultTextDo").html('<img class="inlineShape" src="' + SHAPE_DIR + 'signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
             }
             else {
-                $("#sanityCheckResultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
+                $("#sanityCheckResultText").html('<img class="inlineShape" src="' + SHAPE_DIR + 'signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
                 //$("#sanityCheckResultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps.<br>It is the target!<br>" + getSanityCheckFeedback(obj, trialStrategy));
             }
             reward = REWARD;
@@ -850,10 +850,10 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
         var landedItem = $('#shape'+ obj.signalerLocation[0] + 'v' + obj.signalerLocation[1] + ' .shape').attr('src');
         $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
         if(win){
-            $("#resultTextDo").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
+            $("#resultTextDo").html('<img class="inlineShape" src="' + SHAPE_DIR + 'shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
             reward = REWARD;
         } else {
-            $("#resultTextDo").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
+            $("#resultTextDo").html('<img class="inlineShape" src="' + SHAPE_DIR + 'shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
             reward = 0;
         }
         //$("#reward").html("$" + reward.toFixed(2));
@@ -873,7 +873,7 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         console.log("11");
         if(win){
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            $(".tryResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br><br>Congratulations! You reached the target!");
+            $(".tryResultText").html("<img class='inlineShape' src='static/shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br><br>Congratulations! You reached the target!");
         } else {
             console.log("1");
             $("#sanityCheckResultText").html("You did not answer within the time limit. Please respond within 10 seconds of the signal being sent!");
@@ -906,7 +906,7 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
             var toShow2 = document.getElementById("sanityLikertScale");
             toShow.style.display = "";
             toShow2.style.display = "";
-            
+
             // if (trialStrategy == "ambiguous" || trialStrategy == "do" || trialStrategy !== obj.signal){
                 //$("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations! It is the target! <br>" + getSanityCheckFeedback(obj, trialStrategy));
                 $("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
@@ -924,7 +924,7 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
             //console.log(toHide.style.display == "");
             toHide.style.display = "none";
             toHide2.style.display = "none";
-            
+
             //var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
             //$("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>");
             //$("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>It is not the target! <br>" + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");
@@ -954,13 +954,13 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         console.log("33");
         $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
         if(win){
-            
+
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
             var toShow = document.getElementById("exptLikert");
             var toShow2 = document.getElementById("exptLikertScale");
             toShow.style.display = "";
             toShow2.style.display = "";
-            
+
             $("#resultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
             reward = REWARD;
         } else {
@@ -970,7 +970,7 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
             var toHide2 = document.getElementById("exptLikertScale");
             toHide.style.display = "none";
             toHide2.style.display = "none";
-            
+
             //var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
             //$("#resultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>");
             reward = 0;
@@ -990,7 +990,7 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
             var toShow2 = document.getElementById("sanityLikertScale");
             toShow.style.display = "";
             toShow2.style.display = "";
-            
+
             // if (trialStrategy == "ambiguous" || trialStrategy == "do" || trialStrategy !== obj.signal){
                 //$("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations! It is the target! <br>" + getSanityCheckFeedback(obj, trialStrategy));
                 $("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
@@ -1002,9 +1002,9 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
             var toShow2 = document.getElementById("exptLikertScale");
             toShow.style.display = "";
             toShow2.style.display = "";
-            
+
             $("#resultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
-    
+
             reward = REWARD;
         } else {
             console.log("2");
@@ -1019,7 +1019,7 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
             toHide2 = document.getElementById("exptLikertScale");
             toHide.style.display = "none";
             toHide2.style.display = "none";
-            
+
             //var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
             //$("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>");
             //$("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>It is not the target! <br>" + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");
@@ -1031,7 +1031,7 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         $("#sanityCheckResult").show();
 
         $("#result").show();
-     
+
     }
 }
 

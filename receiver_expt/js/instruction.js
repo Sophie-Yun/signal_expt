@@ -129,12 +129,12 @@ var instr_text = new Array;
 // instr_text[23] = "";
 instr_text[0] = "<strong>Welcome!</strong><br><br>In this experiment, you will play a game that involves cooperating and communicating with another player to take as few steps as possible to reach a target goal item in the environment.<br><br>Hope you enjoy it!";
 instr_text[1] = "Please read the instructions on the next few pages carefully. You will be asked about the instructions later and see some practice rounds to make sure you understand the game.";
-instr_text[2] = "In this experiment, you are the player in white " + "<img class='inlineShape' src='shape/receiver.png'/>" + " and your partner is in blue " + "<img class='inlineShape' src='shape/signaler.png' />" + " .";
+instr_text[2] = "In this experiment, you are the player in white " + "<img class='inlineShape' src='static/shape/receiver.png'/>" + " and your partner is in blue " + "<img class='inlineShape' src='static/shape/signaler.png' />" + " .";
 instr_text[3] = "At the beginning of each round, you and your partner will stand at different positions in a game board. <br><br>You will also see items scattered in the grids.";
-instr_text[4] = "The goal of each round is for you or your partner to reach an item which has been designated as the target. However, <strong>your partner " + "<img class='inlineShape' src='shape/signaler.png' />" + " is the only person who knows which item is the target.</strong> You do not know which item is the target.<br><br><img style='width: 130%; margin: 0px -15%' src='sigRecPOV.png' />";
+instr_text[4] = "The goal of each round is for you or your partner to reach an item which has been designated as the target. However, <strong>your partner " + "<img class='inlineShape' src='static/shape/signaler.png' />" + " is the only person who knows which item is the target.</strong> You do not know which item is the target.<br><br><img style='width: 130%; margin: 0px -15%' src='static/sigRecPOV.png' />";
 instr_text[5] = "Your partner will either send you a signal, or decide to move themselves.<br><br>If your partner sends a signal, you can move to an item by clicking on it in the grid. You will then automatically walk to the target, taking the shortest path possible.";
 instr_text[6] = "Your partner can send a signal describing <strong>any single feature (shape or color)</strong> of the target.<br><br>It can sometimes be ambiguous, but your partner is intelligent and cooperative to send you the most informative signal. Please do your best to figure out which item it refers to using the given information.";
-instr_text[7] = "To help you figure out which item the signal refers to, you can look at how far each of you is from any given item. <br><br>If you move your mouse over an item, you will see the minimum number of steps it takes you or your partner to get there.<br><br><img style='width: 60%; margin-left: 50%; transform: translate(-40%, 0px);' src='utilityHoverEffect.png' />";
+instr_text[7] = "To help you figure out which item the signal refers to, you can look at how far each of you is from any given item. <br><br>If you move your mouse over an item, you will see the minimum number of steps it takes you or your partner to get there.<br><br><img style='width: 60%; margin-left: 50%; transform: translate(-40%, 0px);' src='static/utilityHoverEffect.png' />";
 instr_text[8] = "At the start of each round, your partner may take some time to decide.<br><br><strong>Please do NOT refresh your browser while waiting.</strong> <br><br><strong> At each trial, you will have only 10 seconds to respond. Make sure you select an object by clicking on it BEFORE this time is up!</strong>";
 instr_text[9] = "";
 instr_text[10] = "By clicking on the NEXT button, I am acknowledged and hereby accept the terms. I understand the task in this experiment.";
@@ -254,12 +254,12 @@ function RESET_INSTR_Q() {
 
 
 function BUFFER_ALL_IMG() {
-    $("#buffer").attr("src", "exampleGrid.png");
-    $("#buffer").attr("src", "signaler.png");
-    $("#buffer").attr("src", "receiver.png");
-    for (var i in PIC_DICT){
-        $("#buffer").attr("src", PIC_DICT[i]);
-    }
+    // $("#buffer").attr("src", "exampleGrid.png");
+    // $("#buffer").attr("src", "signaler.png");
+    // $("#buffer").attr("src", "receiver.png");
+    // for (var i in PIC_DICT){
+    //     $("#buffer").attr("src", PIC_DICT[i]);
+    // }
 }
 
 function END_TO_SONA() {

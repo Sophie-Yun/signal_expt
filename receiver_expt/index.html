@@ -2,33 +2,74 @@
 <head>
     <meta charset="utf-8">
     <title>Experiment</title>
-    <link rel="shortcut icon" href="static/ucla.png">
+    <link rel="shortcut icon" href=" {{ url_for('static', filename='ucla.png' )}}">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Work+Sans:wght@200;300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href=" {{ url_for('static', filename='style.css' )}}">
+
+    <!-- <link rel="shortcut icon" href="ucla.png">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Work+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css"> -->
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.3/mobile-detect.min.js'></script>
-    <script src="js/record.js"></script>
+    <script src="{{ url_for('static', filename='js/record.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/trialInterface.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/trial.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/instruction.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/subject.js' ) }}"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+
+    <!-- <script src="js/record.js"></script>
     <script src="js/trialInterface.js"></script>
     <script src="js/trial.js"></script>
     <script src="js/instruction.js"></script>
     <script src="js/subject.js"></script>
-    <script src="js/index.js"></script>
+    <script src="js/index.js"></script> -->
 </head>
 <body>
     <!--==========INSTRUCTIONS==========-->
     <div class="pageBox" id="instrPage">
         <div id="instrBox">
             <p></p>
-            <embed id="consent" src="2021_5-5_informedConsent.pdf"></iframe>
-            <p id="instrText"></p>
-            <img id="examGrid" src="static/exampleGrid.png" alt="An error occurred when loading the picture.">
+            <!-- <embed id="consent" src="2021_5-5_informedConsent.pdf"></iframe> -->
+                <embed id="consent" src="{{ url_for('static', filename='2021_5-5_informedConsent.pdf') }}"></iframe>
+
+                <p id="instrText"></p>
+            <!-- <img id="examGrid" src="exampleGrid.png" alt="An error occurred when loading the picture."> -->
+            <img id="examGrid" src="{{ url_for('static', filename='exampleGrid.png') }}"
+            alt="An error occurred when loading the picture.">
             <div class="pageBox" id="instrQBox">
                 <p id="instrQText">Which of the following is <b>not correct</b>?</p>
                 <div id="quizBox">
-                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="checkDist"><div class="optionText">You can check the minimum steps for either you or your partner to reach an item by moving your mouse over it.</div></div></label>
+                <!-- <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="checkDist"><div class="optionText">You can check the minimum steps for either you or your partner to reach an item by moving your mouse over it.</div></div></label>
                 <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="sigView"><div class="optionText">Your partner can see all the items in the grids and knows which one the target is.</div></div></label>
                 <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="recView"><div class="optionText">You can see all the items in the grids, but do not know which one the target is.</div></div></label>
                 <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="several"><div class="optionText">In each round, your partner can send you two signals that tell you both features of the target.</div></div></label>
+                </div> -->
+                <label>
+                    <div class="option"><input class="optionRadio" type="radio" name="instrQ" value="checkDist">
+                        <div class="optionText">You can check the minimum steps for either you or your partner to
+                            reach an item by moving your mouse over it.</div>
+                    </div>
+                </label>
+                <label>
+                    <div class="option"><input class="optionRadio" type="radio" name="instrQ" value="sigView">
+                        <div class="optionText">Your partner can see all the items in the grids and knows which one
+                            the target is.</div>
+                    </div>
+                </label>
+                <label>
+                    <div class="option"><input class="optionRadio" type="radio" name="instrQ" value="recView">
+                        <div class="optionText">You can see all the items in the grids, but do not know which one
+                            the target is.</div>
+                    </div>
+                </label>
+                <label>
+                    <div class="option"><input class="optionRadio" type="radio" name="instrQ" value="several">
+                        <div class="optionText">In each round, your partner can send you two signals that tell you
+                            both features of the target.</div>
+                    </div>
+                </label>
                 </div>
                 <div class='warning' id='instrQWarning'></div>
                 <button class="butNext" id="instrQBut" onclick="SUBMIT_INSTR_Q()">SUBMIT</button>
@@ -173,7 +214,7 @@
                     <img class="shape" id="sanityCheckGoalShape" alt="An error occurred when loading the picture.">
                 </div>
 
-                <div class ="info hiddenInfo">
+                <div class="info hiddenInfo">
                     <p>Total Score: </p>
                     <!-- BELOW LINE WAS ADDED AS PLACEHOLDER, NOT SURE WHAT
                     THE ACTUAL OBJECT FOR TOTAL SCORE WILL BE-->
@@ -221,8 +262,13 @@
                         </div>
                         <div id="sanityCheckDo">
                             <!-- <p class="inlineImg">Use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</p> -->
-                            <p id="instruction">Waiting for &nbsp; <img class="inlineShape" src="static/shape/signaler.png"> &nbsp; ...</p>
-                            <p id="instruction_2" style="display:none;"><img class="inlineShape" src="static/shape/signaler.png"> says: </p>
+                            <p id="instruction">Waiting for &nbsp; <img class="inlineShape"
+                                src="{{ url_for('static', filename='shape/signaler.png') }}">
+                            &nbsp; ...</p>
+                        <p id="instruction_2" style="display:none;"><img class="inlineShape"
+                                src="{{ url_for('static', filename='shape/signaler.png') }}"> says: </p>
+                            <!-- <p id="instruction">Waiting for &nbsp; <img class="inlineShape" src="shape/signaler.png"> &nbsp; ...</p>
+                            <p id="instruction_2" style="display:none;"><img class="inlineShape" src="shape/signaler.png"> says: </p> -->
                             <!--<button class="butExpt" id="sanityCheckMoveBut">Go</button>-->
                         </div>
                         <!-- <div id="sanityCheckQuit">
@@ -263,14 +309,15 @@
 
 
                 <div id = "sanityLikertScale" style = "margin: auto">
-                    <ul style = "font-size:15px; text-align: center" class="likert">
-                        <li class="likert"> Not Confident <input id="ConfStart" type="radio" name="ConfidenceScale" value="1" />
+                    <ul style="font-size:15px; text-align: center" class="likert">
+                        <li class="likert"> Not Confident <input id="ConfStart" type="radio" name="ConfidenceScale"  value="1" />
                         <li class="likert"><input type="radio" name="ConfidenceScale" value="2" />
                         <li class="likert"><input type="radio" name="ConfidenceScale" value="3" />
                         <li class="likert"><input type="radio" name="ConfidenceScale" value="4" />
                         <li class="likert"><input id="ConfEnd" type="radio" name="ConfidenceScale" value="5" /> Very Confident
                     </ul>
                 </div>
+                <p style="text-align: center"><br><br> Feel free to pause here and take a break before moving on.</p>
 
                 <!--  TO DO: Formatting, Remove confidence from trials where signaler moves
                 Tried creating a new div without the buttons which is called when trialstrategy = do, but it only
@@ -296,7 +343,7 @@
                 </div> -->
                 <button class="butNext" id="sanityCheckResultBut">NEXT</button>
             </div>
-            <div id = "sanityCheckResultDo">
+            <div id="sanityCheckResultDo">
                 <p id="sanityCheckResultTextDo"></p>
 
 
@@ -435,8 +482,14 @@
                         </div>
                         <div id="do">
                             <!-- <p class="inlineImg">Use arrow keys on your keyboard to move <img class="shape" src="shape/signaler.png">.</p> -->
-                            <p id="exptInstruct1">Waiting for &nbsp; <img class="inlineShape" src="static/shape/signaler.png"> &nbsp; ...</p>
-                            <p id="exptInstruct2" style="display:none;"><img class="inlineShape" src="static/shape/signaler.png"> says: </p>
+                            <!-- <p id="exptInstruct1">Waiting for &nbsp; <img class="inlineShape" src="shape/signaler.png"> &nbsp; ...</p>
+                            <p id="exptInstruct2" style="display:none;"><img class="inlineShape" src="shape/signaler.png"> says: </p> -->
+                            <p id="exptInstruct1">Waiting for &nbsp; <img class="inlineShape"
+                                src="{{ url_for('static', filename='shape/signaler.png') }}">
+                            &nbsp; ...</p>
+                        <p id="exptInstruct2" style="display:none;"><img class="inlineShape"
+                                src="{{ url_for('static', filename='shape/signaler.png') }}"> says: </p>
+
                         </div>
                         <!-- <div id="quit">
                             <p id="quitText">Give up on this trial: </p>
@@ -449,18 +502,16 @@
             <div id="result">
                 <p id="resultText"></p>
 
-                <p id = "exptLikert" style = "text-align: center">How confident are you that you selected the correct target object?</p>
+                <p id = "exptLikert" style="text-align: center">How confident are you that you selected the correct target object?</p>
 
                 <style type="text/css">
-                    .likert ul
-                    {
+                    .likert ul {
                         list-style-type: none;
                         margin: 0;
                         padding: 0;
                     }
 
-                    .likert li
-                    {
+                    .likert li {
                         float: left;
                         text-align: left;
                         list-style-type: none;
@@ -496,7 +547,7 @@
                 </div> -->
                 <button class="butNext" id="resultBut">NEXT</button>
             </div>
-            <div id = "resultDo">
+            <div id="resultDo">
                 <p id="resultTextDo"></p>
 
 
@@ -551,9 +602,9 @@
     </div>
     <div class="pageBox" id="lastPage">
         <div id="lastPageBox">
-            <p>Thank you for filling out the form!</p>
+            <p>Thank you so much for your time and effort!</p>
             <br>
-            <p>Please click on "NEXT" to proceed to the second part of the experiment. It will open up a new webpage.</p>
+            <p>Please click on "NEXT" to end the experiment.</p>
             <br>
             <button class='butNext' onclick='END_TO_SONA()'>NEXT</button>
         </div>

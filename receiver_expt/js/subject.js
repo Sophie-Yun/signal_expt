@@ -12,13 +12,13 @@ class subjObject {
     constructor(options = {}) {
         Object.assign(this, {
             num: "pre-post",
-            subjNumScript: "php/subjNum.php",
+            subjNumScript: "subjNum",
             subjNumFile: "",
             titles: [""],
             invalidIDFunc: false,
             viewportMinW: 0,
             viewportMinH: 0,
-            savingScript: 'php/save.php',
+            savingScript: 'save',
             attritionFile: "attrition.txt",
             visitFile: "visit.txt",
             subjFile: "subj.txt",
