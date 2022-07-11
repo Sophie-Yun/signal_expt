@@ -10,16 +10,6 @@ body {
     display: none;
 }
 
-
-#signalerImg, #receiverImg {
-    position: absolute;
-    top: 50px;
-    left: 20px;
-    visibility: hidden;
-    z-index: 100;
-}
-
-
 /*
  ### #     #  #####  ####### ######
   #  ##    # #     #    #    #     #
@@ -119,15 +109,11 @@ body {
     position: relative;
     display: inline-block;
     letter-spacing: 3px;
-    /*mpotter*/
-    visibility:hidden;
 }
 
 .tryVerticalAxis p, #sanityCheckVerticalAxis p, #practiceVerticalAxis p, #verticalAxis p {
     padding: 6px;
     margin: 0px;
-    /*mpotter*/
-    visibility:hidden;
 }
 
 #bufferContainer {
@@ -210,29 +196,23 @@ body {
     left: 5%;
     top: 610px;
     letter-spacing: 17px;
-    /*mpotter*/
-    visibility:hidden;
 }
 
 /* Left column */
 #tryMoveGridContainer, #trySayGridContainer, #sanityCheckGridContainer, #practiceGridContainer, #gridContainer {
     position: relative;
     background-color: black;
-    /*HIDING GRID IS DONE HERE*/
-    /*mpotter*/
     border: 2px solid black;
-    /*border: none;*/
     display: inline-grid;
-    /*grid-gap: 2px;*/
-    grid-gap: 0px;
-    grid-template-columns: repeat(10, 50px);
+    grid-gap: 2px;
+    grid-template-columns: repeat(9, 50px);
     grid-template-rows: repeat(10, 50px);
 }
 /* Right column */
 .tryColumn.text, .column.text {
     margin-left: 20px;
     position: relative;
-    width: 40%;
+    width: 47%;
 }
 /*
 #score {

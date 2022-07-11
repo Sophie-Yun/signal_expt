@@ -15,16 +15,6 @@
     <script src="js/index.js"></script>
 </head>
 <body>
-    <!-- mpotter -->
-    <!-- Signaler and Receiver PNGS for movement -->
-    
-    <div id="signalerImg">
-        <img class="shape" src="shape/signaler.png">
-    </div>
-    <div id="receiverImg">
-        <img class="shape" src="shape/receiver.png">
-    </div>
-
     <!--==========INSTRUCTIONS==========-->
     <div class="pageBox" id="instrPage">
         <div id="instrBox">
@@ -35,34 +25,10 @@
             <div class="pageBox" id="instrQBox">
                 <p id="instrQText">Which of the following is <b>not correct</b>?</p>
                 <div id="quizBox">
-                <!-- <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="checkDist"><div class="optionText">You can check the minimum steps for either you or your partner to reach an item by moving your mouse over it.</div></div></label>
+                <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="checkDist"><div class="optionText">You can check the minimum steps for either you or your partner to reach an item by moving your mouse over it.</div></div></label>
                 <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="sigView"><div class="optionText">Your partner can see all the items in the grids and knows which one the target is.</div></div></label>
                 <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="recView"><div class="optionText">You can see all the items in the grids, but do not know which one the target is.</div></div></label>
                 <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="several"><div class="optionText">In each round, your partner can send you two signals that tell you both features of the target.</div></div></label>
-                </div> -->
-                <label>
-                    <div class="option"><input class="optionRadio" type="radio" name="instrQ" value="checkDist">
-                        <div class="optionText">There is only one target object in each trial.</div>
-                    </div>
-                </label>
-                <label>
-                    <div class="option"><input class="optionRadio" type="radio" name="instrQ" value="sigView">
-                        <div class="optionText">Your partner can see all the items in the grids and knows which one
-                            the target is.</div>
-                    </div>
-                </label>
-                <label>
-                    <div class="option"><input class="optionRadio" type="radio" name="instrQ" value="recView">
-                        <div class="optionText">You can see all the items in the grids, but do not know which one
-                            the target is.</div>
-                    </div>
-                </label>
-                <label>
-                    <div class="option"><input class="optionRadio" type="radio" name="instrQ" value="several">
-                        <div class="optionText">In each round, your partner can send you two signals that tell you
-                            both features of the target.</div>
-                    </div>
-                </label>
                 </div>
                 <div class='warning' id='instrQWarning'></div>
                 <button class="butNext" id="instrQBut" onclick="SUBMIT_INSTR_Q()">SUBMIT</button>
@@ -207,7 +173,7 @@
                     <img class="shape" id="sanityCheckGoalShape" alt="An error occurred when loading the picture.">
                 </div>
 
-                <div class="info hiddenInfo">
+                <div class ="info hiddenInfo">
                     <p>Total Score: </p>
                     <!-- BELOW LINE WAS ADDED AS PLACEHOLDER, NOT SURE WHAT
                     THE ACTUAL OBJECT FOR TOTAL SCORE WILL BE-->
@@ -237,10 +203,7 @@
                 <p>0</p>
             </div>
             <div class="column" id="sanityCheckGridContainer"></div>
-            <!--<div id="sanityCheckHorizontalAxis">0 1 2 3 4 5 6 7 8</div> -->
-            <!-- GRID CHANGE -->
-            <div id="sanityCheckHorizontalAxis">0 1 2 3 4 5 6 7 8 9</div>
-            <!--            -->
+            <div id="sanityCheckHorizontalAxis">0 1 2 3 4 5 6 7 8</div>
             <div class="column text">
                 <div id="sanityCheckInstr">
                     <div id="sanityCheckFade">
@@ -270,7 +233,7 @@
             <div id="sanityCheckResult">
                 <p id="sanityCheckResultText"></p>
 
-                <p id="sanityCheckLikert" style = "text-align: center">How confident are you that you selected the correct target object?</p>
+                <p style = "text-align: center">How confident are you that you selected the correct target object?</p>
 
                 <!-- MAX: START HERE FOR THE CONFIDENCE Q -->
 
@@ -296,16 +259,16 @@
 
 
 
-                <div id = "sanityLikertScale" style = "margin: auto">
-                    <ul style="font-size:15px; text-align: center" class="likert">
-                        <li class="likert"> Not Confident <input id="ConfStart" type="radio" name="ConfidenceScale"  value="1" />
+                <div style = "margin: auto">
+                    <ul style = "font-size:15px; text-align: center" class="likert">
+                        <li class="likert"> Not Confident <input id="ConfStart" type="radio" name="ConfidenceScale" value="1" />
                         <li class="likert"><input type="radio" name="ConfidenceScale" value="2" />
                         <li class="likert"><input type="radio" name="ConfidenceScale" value="3" />
                         <li class="likert"><input type="radio" name="ConfidenceScale" value="4" />
                         <li class="likert"><input id="ConfEnd" type="radio" name="ConfidenceScale" value="5" /> Very Confident
                     </ul>
                 </div>
-                <p style="text-align: center"><br><br> Feel free to pause here and take a break before moving on.</p>
+                <p style = "text-align: center"><br><br> Feel free to pause here and take a break before moving on.</p>
 
                 <!--  TO DO: Formatting, Remove confidence from trials where signaler moves
                 Tried creating a new div without the buttons which is called when trialstrategy = do, but it only
@@ -331,7 +294,7 @@
                 </div> -->
                 <button class="butNext" id="sanityCheckResultBut">NEXT</button>
             </div>
-            <div id="sanityCheckResultDo">
+            <div id = "sanityCheckResultDo">
                 <p id="sanityCheckResultTextDo"></p>
 
 
@@ -455,7 +418,7 @@
                 <p>0</p>
             </div>
             <div class="column" id="gridContainer"></div>
-            <div id="horizontalAxis">0 1 2 3 4 5 6 7 8 9</div>
+            <div id="horizontalAxis">0 1 2 3 4 5 6 7 8</div>
             <div class="column text">
                 <div id="exptInstr">
                     <div id="exptFade">
@@ -484,16 +447,18 @@
             <div id="result">
                 <p id="resultText"></p>
 
-                <p id = "exptLikert" style="text-align: center">How confident are you that you selected the correct target object?</p>
+                <p style = "text-align: center">How confident are you that you selected the correct target object?</p>
 
                 <style type="text/css">
-                    .likert ul {
+                    .likert ul
+                    {
                         list-style-type: none;
                         margin: 0;
                         padding: 0;
                     }
 
-                    .likert li {
+                    .likert li
+                    {
                         float: left;
                         text-align: left;
                         list-style-type: none;
@@ -502,7 +467,7 @@
 
 
 
-                <div id = "exptLikertScale" style = "margin: auto">
+                <div style = "margin: auto">
                     <ul style = "font-size:15px; text-align: center" class="likert">
                         <li class="likert"> Not Confident <input id="ConfStart" type="radio" name="ConfidenceScale" value="1" />
                         <li class="likert"><input type="radio" name="ConfidenceScale" value="2" />
@@ -511,6 +476,7 @@
                         <li class="likert"><input id="ConfEnd" type="radio" name="ConfidenceScale" value="5" /> Very Confident
                     </ul>
                 </div>
+                <p style = "text-align: center"><br><br> Feel free to pause here and take a break before moving on.</p>
                 <!-- <div class="resultInfo">
                     <p class="title stepCostInResult"></p>
                     <p class="data" id="exptCost"></p>
@@ -529,7 +495,7 @@
                 </div> -->
                 <button class="butNext" id="resultBut">NEXT</button>
             </div>
-            <div id="resultDo">
+            <div id = "resultDo">
                 <p id="resultTextDo"></p>
 
 

@@ -1,9 +1,6 @@
 //const TRIAL_FILE = "trial_" + EXPERIMENT_NAME + ".txt";
-//GRID CHANGE
-const DIM_COORDS = 2;
 const GRID_NROW = 10;
-//const GRID_NCOL = 9;
-const GRID_NCOL = 10;
+const GRID_NCOL = 9;
 const SHAPE_DIR = "shape/";
 const RECEIVER_MOVE_SPEED = 0.5;
 const MAX_SAY_OPTION = 6;
@@ -14,7 +11,7 @@ const CONSECUTIVE_QUIT_MAX = 3;
 const CONSECUTIVE_FAST_DECISION_MAX = 3;
 const FAST_DECISION_TIME = 1; //in seconds
 const EXPONENTIAL_PARAMETER = 2; //mean of a exponential distribution; i.e., 1/lambda
-const SIMULATED_SIGNALER_DECISION_TIME = 5.2655 / 5 * 3;
+const SIMULATED_SIGNALER_DECISION_TIME = 5.2655 / 5  * 3;
 
 // object variables
 var instr, subj, tryMove, trySay, expt; //practice
@@ -70,8 +67,7 @@ preload(
     "shape/signaler.png",
     "exampleGrid.png",
     "sigRecPOV.png",
-    "utilityHoverEffect.png",
-    "2021_5-5_informedConsent.pdf"
+    "utilityHoverEffect.png"
 )
 
 const PIC_DICT = {
@@ -97,14 +93,13 @@ function PARSE_CSV(csvString) {
 
     //}
     var headerArray = lines[0].match(/,[A-Z]*/gi);
-    predSignalIndex = headerArray.indexOf(",predSignalNoActionUtility") + 1;
+    predSignalIndex = headerArray.indexOf(",predSignalNoActionUtility")+1;
 
 
     for (i = 1; i < lines.length - 1; i++) {
         linesArray[i - 1] = {};
         currLineArray = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
-        //linesArray[i - 1]["predSignalNoActionUtility"] = currLineArray[predSignalIndex].slice(1, -1); //remove ""
-        linesArray[i-1]["predSignalNoActionUtility"] = currLineArray[predSignalIndex];
+        linesArray[i-1]["predSignalNoActionUtility"]=currLineArray[predSignalIndex].slice(1, -1); //remove ""
 
         tmp = lines[i].match(/\(\d, \d\)/g)[0];
         linesArray[i - 1]["signalerLocation"] = [parseInt(tmp.substring(1, 2)), parseInt(tmp.substring(4, 5))];
@@ -160,12 +155,12 @@ function PARSE_CSV(csvString) {
         // }
 
         tmp = lines[i].match(/{'\w+ \w+': \['.*?}/g);
-        if (tmp != null) {
+        if (tmp != null){
             tmp = tmp[0].replace(/\'/g, "\"");
             linesArray[i - 1]["recActSeq"] = JSON.parse(tmp);
         } else {
             tmp = lines[i].match(/{'\w+': \['.*?}/g);
-            if (tmp != null) {
+            if (tmp != null){
                 tmp = tmp[0].replace(/\'/g, "\"");
                 linesArray[i - 1]["recActSeq"] = JSON.parse(tmp);
             } else {
@@ -174,7 +169,7 @@ function PARSE_CSV(csvString) {
         }
 
         tmp = lines[i].match(/{'\w+ \w+': \['.*?}/g);
-        if (tmp != null) {
+        if (tmp != null){
             tmp = tmp[1].replace(/\'/g, "\"");
             linesArray[i - 1]["sigActSeq"] = JSON.parse(tmp);
         } else {
@@ -196,7 +191,7 @@ function SHUFFLE_ARRAY(array) {
     return array;
 }
 
-function tempDeletePlease() {
+function tempDeletePlease(){
     fetch("inputCSV/trial_signal.txt")
         .then(response => response.text())
         .then(textString => {
@@ -210,28 +205,28 @@ function tempDeletePlease() {
             for (i = 1; i < lines.length - 1; i++) {
                 linesArray[i - 1] = {};
                 currLineArray = lines[i].match(/[;][a-zA-Z0-9_.,-]*/g);
-                linesArray[i - 1]["predSignalNoActionUtility"] = currLineArray[predSignalIndex];
+                linesArray[i-1]["predSignalNoActionUtility"]=currLineArray[predSignalIndex];
                 //console.log(linesArray[i-1]);
         }
         var sum = 0;
         var numelements = 0;
         var entryArray = [];
-        for (i = 1; i < lines.length - 1; i++) {
+        for(i = 1; i < lines.length - 1; i++){
             //console.log(i);
-            testElement = linesArray[i - 1]["predSignalNoActionUtility"].substring(1);
+            testElement = linesArray[i-1]["predSignalNoActionUtility"].substring(1);
             //console.log(testElement);
-            if (!isNaN(testElement)) {
+            if(!isNaN(testElement)){
                 numelements++;
-                sum += parseFloat(linesArray[i - 1]["predSignalNoActionUtility"].substring(1));
-                entryArray.push(parseFloat(linesArray[i - 1]["predSignalNoActionUtility"].substring(1)));
+                sum += parseFloat(linesArray[i-1]["predSignalNoActionUtility"].substring(1));
+                entryArray.push(parseFloat(linesArray[i-1]["predSignalNoActionUtility"].substring(1)));
             }
         }
         console.log(sum);
         console.log(numelements);
         //console.log(entryArray);
-        entryArray.sort((a, b) => a - b);
+        entryArray.sort((a,b)=>a-b);
         console.log(entryArray);
-        console.log(numelements / 2);
+        console.log(numelements/2);
         console.log(entryArray[Math.floor(numelements / 2)]);
         console.log(entryArray[Math.ceil(numelements / 2)]);
 
@@ -257,17 +252,17 @@ function CREATE_RANDOM_LIST_FOR_EXPT(obj) {
  #     # ####### #     # ######     #
 
 */
-$(document).ready(function () {
+$(document).ready(function() {
     //tempDeletePlease();
     subj = new subjObject(subj_options);
     //                                                                 //MAX:
-    //subj.id = subj.getID("sonacode"); // getting subject number     //xxx: comment to run on local
-    //subj.saveVisit();                                               //xxx: comment to run on local
-    //if (subj.phone) { // asking for subj.phone will detect phone    //xxx: comment to run on local
-    //    BLOCK_MOBILE();                                             //xxx: comment to run on local
-    //} else if (subj.id !== null){                                   //xxx: comment to run on local
+    subj.id = subj.getID("sonacode"); // getting subject number     //xxx: comment to run on local
+    subj.saveVisit();                                               //xxx: comment to run on local
+    if (subj.phone) { // asking for subj.phone will detect phone    //xxx: comment to run on local
+        BLOCK_MOBILE();                                             //xxx: comment to run on local
+    } else if (subj.id !== null){                                   //xxx: comment to run on local
         //fetches CSV from file into a string
-        fetch("inputCSV/sanityTest.csv")
+        fetch("inputCSV/practice_conflictDiyOnly_20220215.csv")
             .then(response => response.text())
             .then(textString => {
                 SANITY_CHECK_INPUT_DATA = PARSE_CSV(textString)
@@ -277,12 +272,12 @@ $(document).ready(function () {
             //     .then(textString => {
             //         PRACTICE_INPUT_DATA = PARSE_CSV(textString)
             //     })
-                .then( () => {fetch("inputCSV/exptTest.csv")
+                .then( () => {fetch("inputCSV/expt_conflictDiyOnly_20220215.csv")
                     .then(response => response.text())
                     .then(textString => {
                         EXPT_INPUT_DATA = PARSE_CSV(textString)
                     })
-                    .then(() => {
+                    .then (()=> {
                         instr = new instrObject(instr_options);
                         tryMove = new trialObject(trial_options);
                         trySay = new trialObject(trial_options);
@@ -293,7 +288,7 @@ $(document).ready(function () {
                         expt = new trialObject(trial_options);
                         expt.inputData = EXPT_INPUT_DATA;
                         instr.start();
-                        ALLOW_SHORTCUTS_FOR_TESTING();
+                        //ALLOW_SHORTCUTS_FOR_TESTING();
                         // console.log(sanityCheck.inputData);
                         // // console.log(practice.inputData);
                         // console.log(expt.inputData);
@@ -303,9 +298,9 @@ $(document).ready(function () {
         sanity_check_options["subj"] = subj;
         trial_options["subj"] = subj;                                  //MAX:
 
-    //} else {                                                        //xxx: comment to run on local
-    //    alert("Please make sure you are directed from SONA.")       //xxx: comment to run on local
-    //}                                                               //xxx: comment to run on local
+    } else {                                                        //xxx: comment to run on local
+        alert("Please make sure you are directed from SONA.")       //xxx: comment to run on local
+    }                                                               //xxx: comment to run on local
 });
 
 
@@ -349,7 +344,7 @@ const TRIAL_TITLES = [
     // "quitWarningPopup"
 ];
 
-var sanity_check_options = {
+var sanity_check_options= {
     subj: 'pre-define', // assign after subj is created
     titles: TRIAL_TITLES,
     dataFile: SANITY_FILE,
