@@ -12,13 +12,13 @@ class subjObject {
     constructor(options = {}) {
         Object.assign(this, {
             num: "pre-post",
-            subjNumScript: "subjNum",
+            subjNumScript: "php/subjNum.php",
             subjNumFile: "",
             titles: [""],
             invalidIDFunc: false,
             viewportMinW: 0,
             viewportMinH: 0,
-            savingScript: 'save',
+            savingScript: 'php/save.php',
             attritionFile: "attrition.txt",
             visitFile: "visit.txt",
             subjFile: "subj.txt",
@@ -49,13 +49,13 @@ class subjObject {
     }
 
     saveVisit() {
-        var data = "subjNum;startDate;startTime;id;userAgent;inView;viewportW;viewportH\n";
+        var data = "subjNum,startDate,startTime,id,userAgent,inView,viewportW,viewportH\n";
         this.viewport = this.viewportSize;
         this.inView = this.viewport["inView"];
         this.viewportW = this.viewport["w"];
         this.viewportH = this.viewport["h"];
         var dataList = [this.num, this.date, this.startTime, this.id, this.userAgent, this.inView, this.viewportW, this.viewportH];
-        data += LIST_TO_FORMATTED_STRING(dataList, ";");
+        data += LIST_TO_FORMATTED_STRING(dataList, ",");
         var postData = {
             "directory_path": this.savingDir,
             "file_name": this.visitFile,
@@ -111,13 +111,13 @@ class subjObject {
     }
 
     saveAttrition() {
-        var data = 'subjNum;startDate;startTime;id;userAgent;inView;viewportW;viewportH\n';
+        var data = 'subjNum,startDate,startTime,id,userAgent,inView,viewportW,viewportH\n';
         this.viewport = this.viewportSize;
         this.inView = this.viewport['inView'];
         this.viewportW = this.viewport['w'];
         this.viewportH = this.viewport['h'];
         var dataList = [this.num, this.date, this.startTime, this.id, this.userAgent, this.inView, this.viewportW, this.viewportH];
-        data += LIST_TO_FORMATTED_STRING(dataList, ";");
+        data += LIST_TO_FORMATTED_STRING(dataList, ",");
         var postData = {
             'directory_path': this.savingDir,
             'file_name': this.attritionFile,
@@ -138,7 +138,7 @@ class subjObject {
             this.serious, this.strategy, this.problems, this.rating,
             //this.motivation,
             this.inView, this.viewportW, this.viewportH];
-        this.data += LIST_TO_FORMATTED_STRING(dataList);
+        this.data += LIST_TO_FORMATTED_STRING(dataList, ";");
         var postData = {
             'directory_path': this.savingDir,
             'file_name': this.subjFile,

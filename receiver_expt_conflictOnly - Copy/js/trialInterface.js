@@ -59,20 +59,6 @@ function ADD_HOVER_INFO(elem, recDist, sigDist) {
 
 function CREATE_GRID(obj) {
     var gridArray = obj.gridArray;
-    //*
-    //gridArray = [
-    //    [,,,,,,,,,],
-    //    [,,,,,,,,,],
-    //    [,,,,,,,,,],
-    //    [,,,,,,,,,],
-    //    [,,,,,,,,,],
-    //    [,,,,,,,,,],
-    //    [,,,,,,,,,],
-    //    [,,,,,,,,,],
-    //    [,,,,,,,,,],
-    //    [,,,,,,,,,]
-    //]
-    //
     var nrow = GRID_NROW;
     var ncol = GRID_NCOL;
     var shapeId;
@@ -127,52 +113,21 @@ function CREATE_GRID(obj) {
     //     ADD_BARRIER(obj);
     // } else
     if (obj.isSanityCheck) {
-        //console.log("trig");
         for (var row = 0; row < nrow; row++) {
             for (var col = 0; col < ncol; col++) {
                 shapeId = "shape" + row + "v" + col;
-                //console.log("pre");
                 var item = gridArray[row][col];
-                //PULLING 4,0 OUT OF GRID ARRAY YIELDS UNDEFINED (0,5 ON GRID)
-                //console.log("post");
-                //if (row == 4 && col == 0){
-                    //console.log("at 4,0");
-                //}
                 if (item !== undefined){
-                    //console.log("not undefined");
                     $("#sanityCheckGridContainer").append("<div class='gridItem' id='" + shapeId + "'></div>");
                     if (item!== SHAPE_DIR + "receiver.png" && item!== SHAPE_DIR + "signaler.png") {
-                        //console.log("pass 1");
                         if (item.slice(-1) == "e"){
-                            //console.log("pass 2");
                              $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item]}));
-                             //console.log(item);
-                             //console.log(PIC_DICT[item]);
                         } else {
-                            //console.log("pass 3");
-                           $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item.slice(0, -DIM_COORDS)]}));
-                           //console.log(item.slice(0, -DIM_COORDS));
+                           $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item.slice(0, -1)]}));
                         }
-                        //console.log(shapeId);
 
-                        //var receiverDist = obj.receiverPath[item].length;
-
-                        //var signalerDist = obj.signalerPath[item].length;
-
-                        console.log("shapeID: ", shapeId);
-                        console.log("receiver Loc: ", obj.receiverLocation);
-                        console.log("Row and Col: ", row, col);
-
-                        totalRecDistance = euclideanDistance(obj.receiverLocation,[row,col]);
-                        //console.log("total Distance: ", totalDistance)
-                        receiverDist = Math.round(totalRecDistance);
-
-                        totalSigDistance = euclideanDistance(obj.signalerLocation,[row,col]);
-                        //console.log("total Distance: ", totalDistance)
-                        signalerDist = Math.round(totalSigDistance);
-
-
-
+                        var receiverDist = obj.receiverPath[item].length;
+                        var signalerDist = obj.signalerPath[item].length;
                         ADD_HOVER_INFO("#" + shapeId, receiverDist, signalerDist);
                         //var saveItem = item;
                         //console.log(row_save);
@@ -182,7 +137,6 @@ function CREATE_GRID(obj) {
                         buttonDict[("#"+shapeId)] = (this)
                         $("#"+shapeId).click(function(){
                             $("#"+shapeId).css("pointer-events","none");
-                            cancelTimeout();
                             //console.log(row_save);
                             RECEIVER_WALK_TWO(obj, this);
                             $("#"+shapeId).css("pointer-events","auto");
@@ -195,19 +149,14 @@ function CREATE_GRID(obj) {
                         } )
                         })();
                     } else {
-                        //console.log("pass 4");
                         $("#" + shapeId).append($("<img>", {class: "shape", src: item}));
 
                     }
                 }
                 else{
-                    //console.log("pass 5");
                     $("#sanityCheckGridContainer").append("<div class='gridEmpty' id='" + shapeId + "'></div>");
 
                 }
-                //if (row == 4 && col == 0){
-                //console.log("finished");
-                //}
             };
         };
         DISABLE_GRID_BUTTONS(buttonDict);
@@ -243,28 +192,16 @@ function CREATE_GRID(obj) {
                         if (item.slice(-1) == "e"){
                             $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item]}));
                         } else {
-                            $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item.slice(0, -DIM_COORDS)]}));
+                            $("#" + shapeId).append($("<img>", {class: "shape", src: PIC_DICT[item.slice(0, -1)]}));
                         }
 
-                        //var receiverDist = obj.receiverPath[item].length;
-                        //var signalerDist = obj.signalerPath[item].length;
-                        totalRecDistance = euclideanDistance(obj.receiverLocation,[row,col]);
-                        //console.log("total Distance: ", totalDistance)
-                        receiverDist = Math.round(totalRecDistance);
-
-                        totalSigDistance = euclideanDistance(obj.signalerLocation,[row,col]);
-                        //console.log("total Distance: ", totalDistance)
-                        signalerDist = Math.round(totalSigDistance);
-
-
-
-
+                        var receiverDist = obj.receiverPath[item].length;
+                        var signalerDist = obj.signalerPath[item].length;
                         ADD_HOVER_INFO("#" + shapeId, receiverDist, signalerDist);
 
                         buttonDict[("#"+shapeId)] = (this)
                         $("#"+shapeId).click(function(){
                             $("#"+shapeId).css("pointer-events","none");
-                            cancelTimeout();
                             //console.log(row_save);
                             RECEIVER_WALK_TWO(obj, this);
                             $("#"+shapeId).css("pointer-events","auto");
@@ -299,7 +236,6 @@ function REMOVE_PREVIOUS(actor) {
 }
 
 function NEW_SIGNALER_POSITION(signalerLocation) {
-    //console.log("newsigposition");   
     var signalerImg = "signaler.png";
     if($("#shape"+ signalerLocation[0] + "v" + signalerLocation[1]).hasClass("gridItem"))
         $("#shape" + signalerLocation[0] + "v" + signalerLocation[1]).append($("<img>", {class: "top", src: SHAPE_DIR + signalerImg}));
@@ -310,10 +246,10 @@ function NEW_SIGNALER_POSITION(signalerLocation) {
 function NEW_RECEIVER_POSITION(receiverLocation) {
     var receiverImg = "receiver.png";
     if($("#shape"+ receiverLocation[0] + "v" + receiverLocation[1]).hasClass("gridItem")){
-        //console.log("new receiver position has class griditem");
+        console.log("new receiver position has class griditem");
         $("#shape" + receiverLocation[0] + "v" + receiverLocation[1]).append($("<img>", {class: "top", src: SHAPE_DIR + receiverImg}));
     }else{
-        //console.log("new receiver position does not have class griditem");
+        console.log("new receiver position does not have class griditem");
         $("#shape" + receiverLocation[0] + "v" + receiverLocation[1]).append($("<img>", {class: "shape", src: SHAPE_DIR + receiverImg}));
     }
 }
@@ -505,17 +441,17 @@ function calculate_Euclidean_Steps(obj, targetX, targetY, player){
         startY = obj.receiverLocation[1];
     }
 
-    //console.log("startX", startX);
-    //console.log("startY", startY);
+    console.log("startX", startX);
+    console.log("startY", startY);
 
     totalDistance = euclideanDistance([startX,startY],[targetX,targetY]);
-    //console.log("total Distance: ", totalDistance)
+    console.log("total Distance: ", totalDistance)
     totalSteppe = Math.round(totalDistance);
 
     eachStep = [(targetX - startX)/totalSteppe,(targetY - startY)/totalSteppe];
 
-    //console.log("eachStep:");
-    //console.log(eachStep);
+    console.log("eachStep:");
+    console.log(eachStep);
 
     return eachStep
 }
@@ -525,7 +461,7 @@ function calculate_Euclidean_Steps_IntermittentCoord(obj, targetX, targetY, play
     var startY;
     if(player == "signaler"){
         var sigSquare = document.querySelector("#shape"+ obj.signalerLocation[0] + "v" + obj.signalerLocation[1]);
-        var sigRect = sigSquare.getBoundingClientRect();
+        var sigRect = recSquare.getBoundingClientRect();
         startX = sigRect.x;
         startY = sigRect.y;
     }
@@ -536,8 +472,8 @@ function calculate_Euclidean_Steps_IntermittentCoord(obj, targetX, targetY, play
         startY = recRect.y;
     }
 
-    //console.log("startX", startX);
-    //console.log("startY", startY);
+    console.log("startX", startX);
+    console.log("startY", startY);
 
     //totalDistance = euclideanDistance([startX,startY],[targetX,targetY]);
     //console.log("total Distance: ", totalDistance)
@@ -545,8 +481,8 @@ function calculate_Euclidean_Steps_IntermittentCoord(obj, targetX, targetY, play
 
     eachCorrStep = [(targetX - startX)/totalDistance,(targetY - startY)/totalDistance];
 
-    //console.log("eachCorrStep:");
-    //console.log(eachCorrStep);
+    console.log("eachCorrStep:");
+    console.log(eachCorrStep);
 
     return eachCorrStep
 }
@@ -557,20 +493,20 @@ function euclideanDistance(start, end){
     y1 = start[1]
     y2 = end[1];
 
-    //console.log("start", start);
-    //console.log("end", end);
+    console.log("start", start);
+    console.log("end", end);
 
-    //console.log("Collection of x and y: ");
-    //console.log(x1);
-    //console.log(y1);
-    //console.log(x2);
-    //console.log(y2);
+    console.log("Collection of x and y: ");
+    console.log(x1);
+    console.log(y1);
+    console.log(x2);
+    console.log(y2);
 
 
     x = x2-x1;
     y = y2-y1;
 
-    //console.log("calc x and y:" , (x,y))
+    console.log("calc x and y:" , (x,y))
 
     distance = Math.sqrt((x*x)+(y*y));
 
@@ -589,15 +525,15 @@ function convertEachStepToGridMovement(eachStep){
 
     var xStep = -eachStep[1];
     var yStep = eachStep[0];
-    //console.log("Corrected step");
-    //console.log(xStep);
-    //console.log(yStep);
+    console.log("Corrected step");
+    console.log(xStep);
+    console.log(yStep);
     return [xStep, yStep]
 }
 
 
 //mpotter
-function SIGNALER_MOVES_EUCLIDEAN(obj, correctedStep, eachCoordStep){
+function SIGNALER_MOVES_EUCLIDEAN(obj, correctedStep, correctedStep){
     FIRST_MOVE(obj);
     REMOVE_PREVIOUS(obj.signalerLocation);
     obj.signalerLocation = [obj.signalerLocation[0] + correctedStep[0], obj.signalerLocation[1] + correctedStep[1]]
@@ -605,13 +541,13 @@ function SIGNALER_MOVES_EUCLIDEAN(obj, correctedStep, eachCoordStep){
     NEW_SIGNALER_POSITION(obj.signalerLocation)
 
     mySigPic = document.getElementById('signalerImg');
-    var topStyle = parseFloat(mySigPic.style.top,10);
-    var leftStyle = parseFloat(mySigPic.style.left,10);
-    mySigPic.style.top = topStyle + eachCoordStep[1] + "px";
-    mySigPic.style.left = leftStyle + eachCoordStep[0] + "px";
+    var topStyle = parseInt(mySigPic.style.top,10);
+    var leftStyle = parseInt(mySigPic.style.left,10);
+    mySigPic.style.top = topStyle + 50 + "px";
+    mySigPic.style.left = leftStyle + 50 + "px";
 
-    //console.log(mySigPic.style.top);
-    //console.log(MySigPic.style.left);
+    console.log(mySigPic.style.top);
+    console.log(MySigPic.style.left);
 
 }
 
@@ -625,25 +561,25 @@ function RECEIVER_MOVES_EUCLIDEAN(obj, correctedStep, eachCoordStep){
 
     myRecPic = document.getElementById('receiverImg');
     //console.log("myRecPic in receiver move func: ", myRecPic);
-    //console.log("myRecPic top style: ", myRecPic.style.top);
-    //console.log("myRecPic style left", myRecPic.style.left);
+    console.log("myRecPic top style: ", myRecPic.style.top);
+    console.log("myRecPic style left", myRecPic.style.left);
     var topStyle = parseFloat(myRecPic.style.top,10);
     var leftStyle = parseFloat(myRecPic.style.left,10);
-    //console.log("top new: ", topStyle + eachCoordStep[1] + "px");
-    //console.log("left new: ", leftStyle + eachCoordStep[0] + "px");
+    console.log("top new: ", topStyle + eachCoordStep[1] + "px");
+    console.log("left new: ", leftStyle + eachCoordStep[0] + "px");
     myRecPic.style.top = topStyle + eachCoordStep[1] + "px";
     myRecPic.style.left = leftStyle + eachCoordStep[0] + "px";
-    //console.log("eachcoordstep: ", eachCoordStep, eachCoordStep[0], eachCoordStep[1]);
+    console.log("eachcoordstep: ", eachCoordStep, eachCoordStep[0], eachCoordStep[1]);
 
-    //console.log("recpic top:", myRecPic.style.top);
-    //console.log("recpic left:", myRecPic.style.left);
+    console.log("recpic top:", myRecPic.style.top);
+    console.log("recpic left:", myRecPic.style.left);
 }
 
 
 //mpotter
 function UPDATE_GAME_GRID_EUCLIDEAN(obj, eachStep, eachCoordStep, player) {
-    //console.log("Update Game Grid");
-    //console.log(obj);
+    console.log("Update Game Grid");
+    console.log(obj);
     convertedMovement = eachStep;
     //convertedMovement = convertEachStepToGridMovement(eachStep);
     if (player == "signaler"){
@@ -1001,10 +937,10 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
         if(win){ //SIGNALER MOVES TO TARGET RESULT BOX
             var landedItem = $('#shape'+ obj.signalerLocation[0] + 'v' + obj.signalerLocation[1] + ' .shape').attr('src');
             if (trialStrategy == "do") { //chckpt
-                $("#sanityCheckResultTextDo").html('<img class="inlineShape" src="' + SHAPE_DIR + 'signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
+                $("#sanityCheckResultTextDo").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
             }
             else {
-                $("#sanityCheckResultText").html('<img class="inlineShape" src="' + SHAPE_DIR + 'signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
+                $("#sanityCheckResultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
                 //$("#sanityCheckResultText").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps.<br>It is the target!<br>" + getSanityCheckFeedback(obj, trialStrategy));
             }
             reward = REWARD;
@@ -1045,10 +981,10 @@ function SHOW_WIN_RESULT_BOX_FOR_MOVE(obj,win) {
         var landedItem = $('#shape'+ obj.signalerLocation[0] + 'v' + obj.signalerLocation[1] + ' .shape').attr('src');
         $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
         if(win){
-            $("#resultTextDo").html('<img class="inlineShape" src="' + SHAPE_DIR + 'signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
+            $("#resultTextDo").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
             reward = REWARD;
         } else {
-            $("#resultTextDo").html('<img class="inlineShape" src="' + SHAPE_DIR + 'signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
+            $("#resultTextDo").html('<img class="inlineShape" src="shape/signaler.png">' + " took " + obj.step.toFixed(0) + " steps to land on " + "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
             reward = 0;
         }
         //$("#reward").html("$" + reward.toFixed(2));
@@ -1063,23 +999,16 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
     var reward;
     obj.totalScore = (obj.totalScore >= 0)? obj.totalScore : 0;
     obj.totalScore = (obj.totalScore <= MAX_BONUS)? obj.totalScore : MAX_BONUS;
-    //console.log("init 3");
     if (obj.isTrySay || obj.isTryMove) {
-        //console.log("11");
         if(win){
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            $(".tryResultText").html("<img class='inlineShape' src='' + SHAPE_DIR + 'receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br><br>Congratulations! You reached the target!");
+            $(".tryResultText").html("<img class='inlineShape' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br><br>Congratulations! You reached the target!");
         } else {
-            //console.log("1");
-            $("#sanityCheckResultText").html("You did not answer within the time limit. Please respond within 10 seconds of the signal being sent!");
-            //var toHide = document.getElementById("sanityCheckResult");
-            //toHide.style.display = "none";
-            //var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            //$(".tryResultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br><br>Sorry, you did not reach the target.<br>Good luck on your next round!");
+            var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
+            $(".tryResultText").html("<img class='inlineShape' style='background-color: white;' src='shape/receiver.png'/>" + " lands on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br><br>Sorry, you did not reach the target.<br>Good luck on your next round!");
         }
         $(".tryResult").show();
     } else if(obj.isSanityCheck){
-        //console.log("22");
         $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
         // trialStrategy = obj.inputData[obj.trialIndex]["trialStrategy"];
         // if (trialStrategy == "do") {
@@ -1097,11 +1026,6 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
         var reward;
         if(win){ //RECIEVER MOVES TO TARGET RESULT BOX
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            var toShow = document.getElementById("sanityCheckLikert");
-            var toShow2 = document.getElementById("sanityLikertScale");
-            toShow.style.display = "";
-            toShow2.style.display = "";
-
             // if (trialStrategy == "ambiguous" || trialStrategy == "do" || trialStrategy !== obj.signal){
                 //$("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations! It is the target! <br>" + getSanityCheckFeedback(obj, trialStrategy));
                 $("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
@@ -1110,18 +1034,8 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
             // }
             reward = REWARD;
         } else {
-            //console.log("2");
-            $("#sanityCheckResultText").html("You did not answer within the time limit. Please respond within 10 seconds of the signal being sent!");
-            var toHide = document.getElementById("sanityCheckLikert");
-            var toHide2 = document.getElementById("sanityLikertScale");
-            //style = toHide2.style.display
-            //console.log(style);
-            //console.log(toHide.style.display == "");
-            toHide.style.display = "none";
-            toHide2.style.display = "none";
-
-            //var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            //$("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>");
+            var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
+            $("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>");
             //$("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>It is not the target! <br>" + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");
             reward = 0;
         }
@@ -1146,86 +1060,20 @@ function SHOW_WIN_RESULT_BOX_FOR_SAY(obj,win) {
     //     $("#practiceResult").show();
     // }
     else if (obj.isExptTrial){
-        //console.log("33");
         $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
         if(win){
             var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            var toShow = document.getElementById("exptLikert");
-            var toShow2 = document.getElementById("exptLikertScale");
-            toShow.style.display = "";
-            toShow2.style.display = "";
-
             $("#resultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
             reward = REWARD;
         } else {
-            //console.log("3");
-            $("#resultText").html("You did not answer within the time limit. Please respond within 10 seconds of the signal being sent!");
-            var toHide = document.getElementById("exptLikert");
-            var toHide2 = document.getElementById("exptLikertScale");
-            toHide.style.display = "none";
-            toHide2.style.display = "none";
-
-            //var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            //$("#resultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>");
+            var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
+            $("#resultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>");
             reward = 0;
         }
         $("#reward").html("$" + reward.toFixed(2));
         $("#exptRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.cost));
         $("#exptTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
         $("#result").show();
-    }
-    else{
-        //console.log("else");
-        $(".stepCostInResult").html("Cost ($" + STEP_COST.toFixed(2) + "/Step):");
-        var reward;
-        if(win){ //RECIEVER MOVES TO TARGET RESULT BOX
-            var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            var toShow = document.getElementById("sanityCheckLikert");
-            var toShow2 = document.getElementById("sanityLikertScale");
-            toShow.style.display = "";
-            toShow2.style.display = "";
-
-            // if (trialStrategy == "ambiguous" || trialStrategy == "do" || trialStrategy !== obj.signal){
-                //$("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>" + "<br>Congratulations! It is the target! <br>" + getSanityCheckFeedback(obj, trialStrategy));
-                $("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
-            // } else {
-            //     $("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
-            // }
-
-            var toShow = document.getElementById("exptLikert");
-            var toShow2 = document.getElementById("exptLikertScale");
-            toShow.style.display = "";
-            toShow2.style.display = "";
-
-            $("#resultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9; padding: 2px;' src='" + landedItem + "'>");
-
-            reward = REWARD;
-        } else {
-            //console.log("2");
-            //console.log(obj.isExptTrial);
-            $("#sanityCheckResultText").html("You did not answer within the time limit. Please respond within 10 seconds of the signal being sent!");
-            var toHide = document.getElementById("sanityCheckLikert");
-            var toHide2 = document.getElementById("sanityLikertScale");
-            toHide.style.display = "none";
-            toHide2.style.display = "none";
-            $("#resultText").html("You did not answer within the time limit. Please respond within 10 seconds of the signal being sent!");
-            toHide = document.getElementById("exptLikert");
-            toHide2 = document.getElementById("exptLikertScale");
-            toHide.style.display = "none";
-            toHide2.style.display = "none";
-
-            //var landedItem = $('#shape'+ obj.receiverLocation[0] + 'v' + obj.receiverLocation[1] + ' .shape').attr('src');
-            //$("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>");
-            //$("#sanityCheckResultText").html("You took " + obj.step + " steps to land on " +  "<img class='inlineShape' style='background-color: #f9f9f9' src='" + landedItem + "'>" + "<br>It is not the target! <br>" + getSanityCheckFeedback(obj, trialStrategy) + "<br>Good luck on your next round!");
-            reward = 0;
-        }
-        $("#sanityCheckReward").html("$" + reward.toFixed(2));
-        $("#sanityCheckRoundBonus").html(GET_ROUND_BONUS_STRING(reward - obj.cost));
-        $("#sanityCheckTotalBonusAfter").html("$" + obj.totalScore.toFixed(2));
-        $("#sanityCheckResult").show();
-
-        $("#result").show();
-
     }
 }
 

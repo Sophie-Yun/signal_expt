@@ -11,7 +11,7 @@ const CONSECUTIVE_QUIT_MAX = 3;
 const CONSECUTIVE_FAST_DECISION_MAX = 3;
 const FAST_DECISION_TIME = 1; //in seconds
 const EXPONENTIAL_PARAMETER = 2; //mean of a exponential distribution; i.e., 1/lambda
-const SIMULATED_SIGNALER_DECISION_TIME = 5.2655 / 5  * 4;
+const SIMULATED_SIGNALER_DECISION_TIME = 5.2655 / 5  * 3;
 
 // object variables
 var instr, subj, tryMove, trySay, expt; //practice
@@ -99,8 +99,9 @@ function PARSE_CSV(csvString) {
     for (i = 1; i < lines.length - 1; i++) {
         linesArray[i - 1] = {};
         currLineArray = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
-        linesArray[i-1]["predSignalNoActionUtility"]=currLineArray[predSignalIndex];
-
+        //linesArray[i-1]["predSignalNoActionUtility"]=currLineArray[predSignalIndex].slice(1, -1); //remove ""
+        linesArray[i-1]["predSignalNoActionUtility"]=currLineArray[predSignalIndex]
+        
         tmp = lines[i].match(/\(\d, \d\)/g)[0];
         linesArray[i - 1]["signalerLocation"] = [parseInt(tmp.substring(1, 2)), parseInt(tmp.substring(4, 5))];
 
@@ -262,7 +263,7 @@ $(document).ready(function() {
     //    BLOCK_MOBILE();                                             //xxx: comment to run on local
     //} else if (subj.id !== null){                                   //xxx: comment to run on local
         //fetches CSV from file into a string
-        fetch("inputCSV/practiceTrials_receiver_20220112.csv")
+        fetch("inputCSV/sanityTest.csv")
             .then(response => response.text())
             .then(textString => {
                 SANITY_CHECK_INPUT_DATA = PARSE_CSV(textString)
@@ -272,7 +273,7 @@ $(document).ready(function() {
             //     .then(textString => {
             //         PRACTICE_INPUT_DATA = PARSE_CSV(textString)
             //     })
-                .then( () => {fetch("inputCSV/exptTrials_receiver_20220112.csv")
+                .then( () => {fetch("inputCSV/exptTest.csv")
                     .then(response => response.text())
                     .then(textString => {
                         EXPT_INPUT_DATA = PARSE_CSV(textString)
@@ -297,6 +298,7 @@ $(document).ready(function() {
                 });
         sanity_check_options["subj"] = subj;
         trial_options["subj"] = subj;                                  //MAX:
+
     //} else {                                                        //xxx: comment to run on local
     //    alert("Please make sure you are directed from SONA.")       //xxx: comment to run on local
     //}                                                               //xxx: comment to run on local

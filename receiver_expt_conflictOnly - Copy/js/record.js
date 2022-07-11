@@ -9,7 +9,7 @@ const TRIAL_FILE = "trial_" + EXPERIMENT_NAME + ".txt";
 const UID_FILE = "uid_" + EXPERIMENT_NAME + ".txt";
 const VIEWPORT_MIN_W = 1000;
 const VIEWPORT_MIN_H = 600;
-const SAVING_SCRIPT = 'save';
+const SAVING_SCRIPT = 'php/save.php';
 const SAVING_DIR = FORMAL ? "data/formal":"data/testing";
 
 function LIST_TO_FORMATTED_STRING(data_list, divider) {
@@ -169,17 +169,15 @@ function RECORD_PARTI_DECISION_DATA(obj, decision) {
 }
 
 function CHECK_CONSECUTIVE_QUICK_DECISION(obj) {
-    if(obj.decision != "do"){
-        if (obj.partiRecDecisionTime < FAST_DECISION_TIME)
-            obj.consecutiveQuickDecisionNum += 1;
-        else
-            obj.consecutiveQuickDecisionNum = 0;
-        if (obj.consecutiveQuickDecisionNum >= CONSECUTIVE_FAST_DECISION_MAX) {
+    if (obj.partiRecDecisionTime < FAST_DECISION_TIME){
+        if(obj.decision != "do") {
             alert("You have been making decisions too fast! Please do the future rounds more carefully.")
             obj.responseWarningPopup = true;
         } else
             obj.responseWarningPopup = false;
-}
+    } else
+        obj.responseWarningPopup = false;
+
 }
 
 function RECORD_ACTION_TIME(obj) {
@@ -264,9 +262,6 @@ function RECORD_SIGNALER_ACHIEVED(obj, achieved) {
 function RECORD_RECEIVER_ACHIEVED(obj, achieved) {
     if(obj.isExptTrial || obj.isSanityCheck){
         obj.receiverAchievedGoal = (achieved == undefined) ? false : true;
-        if(achieved == "timedout"){
-            obj.receiverAchievedGoal = false;
-        }
     }
 }
 

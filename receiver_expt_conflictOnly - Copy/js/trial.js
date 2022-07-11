@@ -1,5 +1,3 @@
-var timeoutId = -1;
-
 class trialObject {
     constructor(options = {}) {
         Object.assign(this, {
@@ -15,7 +13,7 @@ class trialObject {
             trialN: 0,
             titles: '',
             dataFile: 'exptData.txt',
-            savingScript: 'save',
+            savingScript: 'php/save.php',
             savingDir: '',
             trialFunc: false,
             endExptFunc: false,
@@ -28,30 +26,17 @@ class trialObject {
             consecutiveQuickDecisionNum: 0,
             startTime: 0,
             signal: "N/A",
-            //GRID CHANGE
-            //gridArray: [
-            //    [,,,,,,,,],
-            //    [,,,,,,,,],
-            //    [,,,,,,,,],
-            //    [,,,,,,,,],
-            //    [,,,,,,,,],
-            //    [,,,,,,,,],
-            //    [,,,,,,,,],
-            //    [,,,,,,,,],
-            //    [,,,,,,,,],
-            //    [,,,,,,,,]
-            //]
             gridArray: [
-                [,,,,,,,,,],
-                [,,,,,,,,,],
-                [,,,,,,,,,],
-                [,,,,,,,,,],
-                [,,,,,,,,,],
-                [,,,,,,,,,],
-                [,,,,,,,,,],
-                [,,,,,,,,,],
-                [,,,,,,,,,],
-                [,,,,,,,,,]
+                [,,,,,,,,],
+                [,,,,,,,,],
+                [,,,,,,,,],
+                [,,,,,,,,],
+                [,,,,,,,,],
+                [,,,,,,,,],
+                [,,,,,,,,],
+                [,,,,,,,,],
+                [,,,,,,,,],
+                [,,,,,,,,]
             ]
         }, options);
         this.subjID = this.subj.num;
@@ -105,18 +90,15 @@ class trialObject {
             //var signal = "do";
             //var signal = this.inputData[this.trialIndex]["predSignalNoActionUtility"];
             var signal = this.inputData[this.randomizedTrialList[this.trialIndex]]["predSignalNoActionUtility"];
-            //console.log("prechange");
-            //console.log(signal);
             var waitoutTime = SIMULATED_SIGNALER_DECISION_TIME*1000;
             setTimeout(CHANGE_INSTRUCTION, waitoutTime + randExpo * 300, signal);
             if(signal == "do"){
-                setTimeout(SIGNALER_WALK_TWO,waitoutTime + randExpo*300,sanityCheck);
+                setTimeout(SIGNALER_AUTO_MOVE,waitoutTime + randExpo*300,sanityCheck);
                 RECORD_SIMULATED_SIG_DECISION_TIME(this, (waitoutTime + randExpo*300)/1000);
             }
             else{
                 setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
                 RECORD_SIMULATED_SIG_DECISION_TIME(this, (waitoutTime + randExpo*400)/1000);
-                setTimeout(setResponseConstraint, waitoutTime + randExpo*400,this);
             }
 
             //ENABLE_GRID_BUTTONS(buttonDict);
@@ -163,17 +145,16 @@ class trialObject {
                 //var signal = "red";
                 //var signal = "do";
                 var signal = this.inputData[this.randomizedTrialList[this.trialIndex]]["predSignalNoActionUtility"];
-                //console.log(signal);
+                console.log(signal);
                 var waitoutTime = SIMULATED_SIGNALER_DECISION_TIME*1000;
                 setTimeout(CHANGE_INSTRUCTION_EXPT, waitoutTime + randExpo * 300, signal);
                 if(signal == "do"){
-                    setTimeout(SIGNALER_WALK_TWO,waitoutTime + randExpo*300,expt);
+                    setTimeout(SIGNALER_AUTO_MOVE,waitoutTime + randExpo*300,expt);
                     RECORD_SIMULATED_SIG_DECISION_TIME(this, (waitoutTime + randExpo*300)/1000);
                 }
                 else{
                     setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
                     RECORD_SIMULATED_SIG_DECISION_TIME(this, (waitoutTime + randExpo*400)/1000);
-                    setTimeout(setResponseConstraint, waitoutTime + randExpo*400,this);
                 }
                 $("#exptInstr").show();
                 this.move();
@@ -259,56 +240,6 @@ class trialObject {
     }
 }
 
-
-function cancelTimeout(){
-    if(timeoutId != -1){
-        console.log("timeout cleared");
-        clearTimeout(timeoutId);
-        timeoutId = -1;
-    }
-    else{
-        console.log("no timeout to clear")
-    }
-}
-
-function timeLimitReached(obj){
-    console.log("limit reached");
-    DISABLE_DEFAULT_KEYS();
-    RECORD_PARTI_DECISION_DATA(obj, "timeout");
-    RECORD_SIGNAL_DATA(obj, "timeout");
-    CHANGE_IN_TRIAL_INSTR("say");
-    obj.allowMove = false;
-
-    //RECORDING
-    //var row = signal.id[5];
-    //var col = signal.id[7];
-    //selectedItem = obj.gridArray[row][col];
-    RECORD_CHOSEN_ITEM(obj, "timeout");
-
-    //Receiver_arrive copy
-    //console.log(REWARD);
-    RECORD_ACTION_TIME(obj);
-    RECORD_SIGNALER_END_LOCATION(obj);
-    RECORD_RECEIVER_END_LOCATION(obj, obj.receiverLocation);
-    RECORD_SIGNALER_ACHIEVED(obj);
-    RECORD_RECEIVER_ACHIEVED(obj, "timedout");
-    UPDATE_RESULT_IN_OBJ(obj, 0);
-    //console.log("init");
-    SHOW_WIN_RESULT_BOX_FOR_SAY(obj, false);
-    //console.log("init 2");
-    obj.step = 0;
-    obj.pathIndex = 0;
-}
-
-function setResponseConstraint(obj){
-    //console.log("baaaa");
-    //console.log(timeoutId);
-    timeoutId = setTimeout(timeLimitReached, 10000, obj);
-    //console.log(timeoutId);
-    //console.log("pt 2");
-}
-
-
 function CONVERT_BARRIER_STRING_TO_LIST_OF_ARRAY_COORD(str){
     if(str != "" && str != null) {
         var listOfString = str.match(/\d, \d/g);
@@ -390,7 +321,7 @@ function FIND_PATH(receiverLocation, receiverIntentionLocation) {
             break;
 
         default:
-            //console.log("ERROR: invalid initialDirection");
+            console.log("ERROR: invalid initialDirection");
             break;
     }
     return path;
@@ -470,19 +401,6 @@ function TRIAL_SET_UP (obj) {
         [,,,,,,,,],
         [,,,,,,,,]
     ];
-    //GRID CHANGE
-    obj.gridArray = [
-        [,,,,,,,,,],
-        [,,,,,,,,,],
-        [,,,,,,,,,],
-        [,,,,,,,,,],
-        [,,,,,,,,,],
-        [,,,,,,,,,],
-        [,,,,,,,,,],
-        [,,,,,,,,,],
-        [,,,,,,,,,],
-        [,,,,,,,,,]
-    ]
 
     SET_RECEIVER_SIGNALER_LOCATION(obj);
     //SET_BARRIER(obj);
@@ -509,17 +427,12 @@ function TRIAL_SET_UP (obj) {
 
     var coordinates = Object.keys(obj.gridString);
     var shape = Object.values(obj.gridString);
-    //console.log(coordinates);
-    //console.log(shape);
-    //console.log("-------- HERE");
 
     for (var i = 0; i < shape.length; i++) {
         var coordFromCSV = coordinates[i].split(",");
         var coordInArray = CONVERT_CSV_COORD_TO_ARRAY_COORD(coordFromCSV[0], coordFromCSV[1])
         var row = coordInArray[0];
         var col = coordInArray[1];
-        //console.log(row);
-        //console.log(col);
         obj.gridArray[row][col] = shape[i];
         // if(!obj.isExptTrial) {
         //     if (shape[i] == obj.inputData[obj.trialIndex].intention)
@@ -794,7 +707,7 @@ function ENABLE_GRID_BUTTONS(buttonDict){
 }
 
 //mpotter
-function SIGNALER_WALK_TWO(obj){
+function SIGNALER_WALK_TWO(obj, myButton){
     DISABLE_HOVER_INFO();
     if(obj.isTrySay) {
         $("#instrBackBut").css({
@@ -814,130 +727,9 @@ function SIGNALER_WALK_TWO(obj){
     CHANGE_IN_TRIAL_INSTR("do");
     obj.allowMove = false;
 
+    console.log("intention: ", obj.inputData[obj.randomizedTrialList[obj.trialIndex]]);
 
-    var trueItem = getHTMLandCoordsofIntendedItem(obj);
-    var trueCoords = trueItem[1];
-    var row = trueCoords[0];
-    var col = trueCoords[1];
-    selectedItem = obj.gridArray[row][col];
-
-    var sigSquare = document.querySelector("#shape"+ obj.signalerLocation[0] + "v" + obj.signalerLocation[1]);
-    var selectSquare = document.querySelector("#shape"+ String(row) + "v" + String(col));
-    //console.log("recSquare style: ", recSquare.style.left);
-    //recSquare.style.position = "absolute";
-    //recSquare.style.left = "300px";
-    //https://stackoverflow.com/questions/614962/how-to-insert-an-element-in-div-at-position-x-y
-    //console.log("recSquare style: ", recSquare.style.left);
-
-    var sigRect = sigSquare.getBoundingClientRect();
-    var selectRect = selectSquare.getBoundingClientRect();
-    //console.log("position of selectedItem: ", [selectRect.x,selectRect.y]);
-    //console.log("position of recLocation: ", [recRect.x,recRect.y]);
-    RECORD_CHOSEN_ITEM(obj, selectedItem);
-
-
-    //mpotter
-    //setTimeout(RECEIVER_WALK_TO_CHOSEN_OBJECT, 500, obj, myButton);
-
-    totalSteps = Math.round(euclideanDistance((obj.signalerLocation), [row,col]));
-    //console.log("toitalsteps:", totalSteps);
-    eachStep = calculate_Euclidean_Steps(obj, row, col, "signaler");
-    eachCoordStep = calculate_Euclidean_Steps_IntermittentCoord(obj, selectRect.x, selectRect.y, "signaler", totalSteps);
-    //console.log(eachStep);
-    var finalDestination = [row,col];
-
-    mySigPic = document.getElementById('signalerImg');
-    //YOU NEED TO MANUALLY SET ITS TOP AND LEFT I THINK
-    mySigPic.style.top = sigRect.y + "px";
-    mySigPic.style.left = sigRect.x + 10 + "px" ;
-    mySigPic.style.zIndex = "1000"; 
-    //myRecPic.style.top = "50px";
-    //myRecPic.style.left = "50px";
-    //console.log("recpic: ", myRecPic);
-    //console.log("visibility: ", myRecPic.style.visibility);
-    //console.log("top, and left", myRecPic.style.top, myRecPic.style.left);
-    mySigPic.style.visibility = "visible";
-    //console.log("total steps again:", totalSteps);
     
-
-
-
-    setTimeout(SIGNALER_WALK_TO_CHOSEN_OBJECT_EUCLIDEAN, 500, obj, totalSteps, eachStep, eachCoordStep, finalDestination);
-}
-
-//mpotter
-function SIGNALER_WALK_TO_CHOSEN_OBJECT_EUCLIDEAN(obj, totalSteps, eachStep, eachCoordStep, finalDestination){
-    //console.log("rec euclid call", totalSteps);
-    //console.log(obj);
-    UPDATE_STEPS(obj);
-    UPDATE_GAME_GRID_EUCLIDEAN(obj, eachStep, eachCoordStep, "signaler");
-    //console.log("rec location after step: ", obj.receiverLocation);
-
-    if (totalSteps == 1){
-        //console.log("Arriving");
-        setTimeout(SIGNALER_ARRIVE_EUCLIDEAN, 1000, obj, finalDestination);
-    } else {
-        setTimeout(SIGNALER_WALK_TO_CHOSEN_OBJECT_EUCLIDEAN, RECEIVER_MOVE_SPEED * 1000, obj, totalSteps-1, eachStep, eachCoordStep, finalDestination)
-    }
-    
-}
-
-//mpotter
-function SIGNALER_ARRIVE_EUCLIDEAN(obj, finalDestination){
-    mySigPic = document.getElementById('signalerImg');
-    //console.log("my Rec Pic arrive: ", myRecPic);
-    mySigPic.style.visibility = "hidden";
-
-    if(obj.isTrySay) {
-        $("#instrBackBut").css({
-            "cursor": "pointer",
-            "pointer-events": "revert"
-        });
-        $("#instrNextBut").css({
-            "cursor": "pointer",
-            "pointer-events": "revert"
-        });
-    }
-    //if(obj.receiverLocation[0] == obj.goalCoord[0] && obj.receiverLocation[1] == obj.goalCoord[1]) {
-
-        REMOVE_PREVIOUS(obj.signalerLocation); //
-        obj.signalerLocation = finalDestination;//
-        //console.log("rec loc:", obj.receiverLocation);
-        //console.log("???");
-        NEW_SIGNALER_POSITION(obj.signalerLocation);//
-
-        
-        RECORD_ACTION_TIME(obj);
-        RECORD_SIGNALER_END_LOCATION(obj, obj.signalerLocation);
-        RECORD_RECEIVER_END_LOCATION(obj);
-        RECORD_SIGNALER_ACHIEVED(obj, "achieved")
-        RECORD_RECEIVER_ACHIEVED(obj);
-        UPDATE_RESULT_IN_OBJ(obj, REWARD);
-        SHOW_WIN_RESULT_BOX_FOR_MOVE(obj, true);
-
-        obj.pathIndex = 0;
-        obj.step = 0;
-}
-
-
-//mpotter
-function getHTMLandCoordsofIntendedItem(obj){
-    var intent = obj.inputData[obj.randomizedTrialList[obj.trialIndex]].intention;
-    console.log(intent);
-    intentx = intent.slice(-2,-1);
-    intenty = intent.slice(-1);
-    convertedCoords = convertRealGridToExpRepresentation(intentx,intenty)
-    intendedShape = document.querySelector("#shape"+ convertedCoords[0] + "v" + convertedCoords[1]);
-    console.log("Original: ", intentx, intenty, "Converted: ", convertedCoords);
-    return [intendedShape, convertedCoords];
-}
-
-//mpotter
-function convertRealGridToExpRepresentation(realX, realY){
-    convertedX = String((GRID_NROW-1) - realY);
-    convertedY = realX;
-    return [convertedX, convertedY];
-
 }
 
 //mpotter -- changed 'signal' to 'myButton' in func below
@@ -954,7 +746,7 @@ function RECEIVER_WALK_TWO(obj, myButton) {
         });
     }
     //console.log("index: ", obj.trialIndex);
-    var intent = getHTMLandCoordsofIntendedItem(obj);
+    //console.log("intention: ", obj.inputData[obj.randomizedTrialList[obj.trialIndex]]);
     obj.consecutiveQuitNum = 0;
     DISABLE_DEFAULT_KEYS();
     RECORD_PARTI_DECISION_DATA(obj, "say");
@@ -966,7 +758,6 @@ function RECEIVER_WALK_TWO(obj, myButton) {
     var row = myButton.id[5];
     var col = myButton.id[7];
     selectedItem = obj.gridArray[row][col];
-    console.log("True row/col: ", row, col);
 
     var recSquare = document.querySelector("#shape"+ obj.receiverLocation[0] + "v" + obj.receiverLocation[1]);
     var selectSquare = document.querySelector("#shape"+ String(row) + "v" + String(col));
@@ -1203,17 +994,7 @@ function NEXT_TRIAL(obj) {
         var click = selected.val();
         $("input[name='ConfidenceScale']").prop('checked',false);
         if(click == undefined && trialStrategy != "do"){
-            var checkHidden = document.getElementById("sanityLikertScale");
-            if(checkHidden.style.display != "none"){
-                alert("Please select a response on the scale. Thank you!");
-            }
-            else{
-                //console.log("attempting pass")
-                RECORD_LIKERT_ANSWER(obj, -1);
-                RESET_GAMEBOARD();
-                SANITY_CHECK_INSTR_APPEAR();
-                obj.next();
-            }
+            alert("Please select a response on the scale. Thank you!");
         }
         else{
             if (trialStrategy != "do"){
@@ -1235,17 +1016,7 @@ function NEXT_TRIAL(obj) {
         var click = selected.val();
         $("input[name='ConfidenceScale']").prop('checked',false);
         if(click == undefined && trialStrategy != "do"){
-            var checkHidden = document.getElementById("exptLikertScale");
-            if(checkHidden.style.display != "none"){
-                alert("Please select a response on the scale. Thank you!");
-            }
-            else{
-                //console.log("attempting pass")
-                RECORD_LIKERT_ANSWER(obj, -1);
-                RESET_GAMEBOARD();
-                EXPT_INSTR_APPEAR();
-                obj.next();
-            }
+            alert("Please select a response on the scale. Thank you!");
         }
         else{
             if (trialStrategy != "do"){
@@ -1486,20 +1257,17 @@ function START_SANITY_CHECK_TRIAL() {
     var signal = sanityCheck.inputData[sanityCheck.randomizedTrialList[sanityCheck.trialIndex]]["predSignalNoActionUtility"];
     //console.log(newsignal);
     //
-    //console.log("prechange");
-    //console.log(signal);
-    //console.log(sanityCheck.inputData[sanityCheck.randomizedTrialList[sanityCheck.trialIndex]]);
+
     //var signal = "red";
     var waitoutTime = SIMULATED_SIGNALER_DECISION_TIME*1000;
     setTimeout(CHANGE_INSTRUCTION, waitoutTime + randExpo * 300, signal);
     if(signal == "do"){
-        setTimeout(SIGNALER_WALK_TWO,waitoutTime + randExpo*300,sanityCheck);
+        setTimeout(SIGNALER_AUTO_MOVE,waitoutTime + randExpo*300,sanityCheck);
         RECORD_SIMULATED_SIG_DECISION_TIME(sanityCheck, (waitoutTime + randExpo*300)/1000);
     }
     else{
         setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
         RECORD_SIMULATED_SIG_DECISION_TIME(sanityCheck, (waitoutTime + randExpo*400)/1000);
-        setTimeout(setResponseConstraint, waitoutTime + randExpo*400,this);
     }
 
 
@@ -1509,16 +1277,15 @@ function START_SANITY_CHECK_TRIAL() {
 }
 
 function CHANGE_INSTRUCTION(signal){
-    //console.log(signal);
-    //console.log("changing");
+
     var signalString = signal.charAt(0).toUpperCase() + signal.slice(1);
     $("#instruction").hide();
     if(signal == "do"){
-        $("#instruction_2").html( '<img class="inlineShape" src="' + SHAPE_DIR + 'signaler.png">' + ' is walking to the target.');
+        $("#instruction_2").html( '<img class="inlineShape" src="shape/signaler.png">' + ' is walking to the target.');
 
     }
     else{
-        $("#instruction_2").html( '<img class="inlineShape" src="' + SHAPE_DIR + 'signaler.png">' + ' says: "' + signalString + '".');
+        $("#instruction_2").html( '<img class="inlineShape" src="shape/signaler.png">' + ' says: "' + signalString + '".');
     }
     $("#instruction_2").show();
 }
@@ -1533,11 +1300,11 @@ function CHANGE_INSTRUCTION_EXPT(signal){
     var signalString = signal.charAt(0).toUpperCase() + signal.slice(1);
     $("#exptInstruct1").hide();
     if(signal == "do"){
-        $("#exptInstruct2").html( '<img class="inlineShape" src="' + SHAPE_DIR + 'signaler.png">' + ' is walking to the target.');
+        $("#exptInstruct2").html( '<img class="inlineShape" src="shape/signaler.png">' + ' is walking to the target.');
 
     }
     else{
-        $("#exptInstruct2").html( '<img class="inlineShape" src="' + SHAPE_DIR + 'signaler.png">' + ' says: "' + signalString + '".');
+        $("#exptInstruct2").html( '<img class="inlineShape" src="shape/signaler.png">' + ' says: "' + signalString + '".');
     }
     $("#exptInstruct2").show();
 }
@@ -1623,13 +1390,12 @@ function START_EXPT(){
     var waitoutTime = SIMULATED_SIGNALER_DECISION_TIME*1000;
     setTimeout(CHANGE_INSTRUCTION_EXPT, waitoutTime + randExpo * 300, signal);
     if(signal == "do"){
-        setTimeout(SIGNALER_WALK_TWO,waitoutTime + randExpo*300,expt);
+        setTimeout(SIGNALER_AUTO_MOVE,waitoutTime + randExpo*300,expt);
         RECORD_SIMULATED_SIG_DECISION_TIME(expt, (waitoutTime + randExpo*300)/1000);
     }
     else{
         setTimeout(ENABLE_GRID_BUTTONS,waitoutTime + randExpo*400,buttonDict);
         RECORD_SIMULATED_SIG_DECISION_TIME(expt, (waitoutTime + randExpo*400)/1000);
-        setTimeout(setResponseConstraint, waitoutTime + randExpo*400,this);
     }
 
 
